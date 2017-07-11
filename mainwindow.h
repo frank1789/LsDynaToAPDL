@@ -21,6 +21,8 @@ private slots:
 
     void on_Exit_released();
 
+    void on_Convert_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

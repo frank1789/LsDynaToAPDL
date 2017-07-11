@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->Convert->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -18,24 +19,38 @@ MainWindow::~MainWindow()
 }
 
 ConverterSintaX* converter = new ConverterSintaX();
-
+LsDynaSintax::Node* test = new LsDynaSintax::Node();
 void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"open file dialog...";
     QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
-    qDebug()<<"file imported: "<<fileName;
-    QFile inputFile(fileName);
-
-    if (inputFile.open(QIODevice::ReadOnly))
+    if(fileName != NULL)
     {
-        QTextStream in(&inputFile);
-        while (!in.atEnd())
+        ui->lineEdit->setText(fileName);
+        ui->Convert->setEnabled(true);
+        qDebug()<<"file imported: "<<fileName;
+        QFile inputFile(fileName);
+
+        if (inputFile.open(QIODevice::ReadOnly))
         {
-            converter->getInputLine(in.readLine());
+            QTextStream in(&inputFile);
+            while (!in.atEnd())
+            {
+                converter->getInputLine(in.readLine(), test);
+            }
+            inputFile.close();
         }
-        inputFile.close();
     }
 
+}
+
+
+void MainWindow::on_Convert_clicked()
+{
+    //ui->Convert->
+    APDLsintax::Node* node = new APDLsintax::Node(test->getNodeStructure());
+    node->setNodeWriter();
+    delete test;
 }
 
 void MainWindow::on_Exit_released()
