@@ -15,49 +15,49 @@ void ConverterSintaX::getInputLine(QString p_linefile)
     if(p_linefile.contains("$"))
     {
         qDebug()<<"start reading Header";
-        _mode = LsDyna::$;
+        _mode = LsDynaSintax::$;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*KEYWORD"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::KEYWORD;
+        _mode = LsDynaSintax::KEYWORD;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*NODE"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::NODE;
+        _mode = LsDynaSintax::NODE;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*ELEMENT_SHELL_THICKNESS"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::ELEMENTSHELL;
+        _mode = LsDynaSintax::ELEMENTSHELL;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*ELEMENT_SOLID"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::ELEMENTSOLID;
+        _mode = LsDynaSintax::ELEMENTSOLID;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*INITIAL_STRAIN_SOLID"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::INITIALSTRAINSOLID;
+        _mode = LsDynaSintax::INITIALSTRAINSOLID;
         qDebug()<<"set mode"<<_mode;
     }
 
     if(p_linefile.contains("*INITIAL_STRESS_SHELL"))
     {
         qDebug()<<"start reading node declaration";
-        _mode = LsDyna::INITIALSTRESSSHELL;
+        _mode = LsDynaSintax::INITIALSTRESSSHELL;
         qDebug()<<"set mode"<<_mode;
     }
 
@@ -74,37 +74,38 @@ ConverterSintaX::~ConverterSintaX()
 int ConverterSintaX::test(QString p_linefile)
 {
     switch (_mode) {
-    case LsDyna::$:{
+    case LsDynaSintax::$:{
         return -1;
     }break;
 
-    case LsDyna::KEYWORD:{
+    case LsDynaSintax::KEYWORD:{
         return -1;
     }break;
 
-    case LsDyna::NODE:
+    case LsDynaSintax::NODE:
     {
         LsDynaSintax::Node* test = new LsDynaSintax::Node();
         test->setNodeReader(p_linefile);
         QVector<NodeProperty> pr = test->getNodeStructure();
+        _LineNumber += _LineNumber;
         for (int i= 0; i < pr.size(); i++)
             qDebug()<<"print vector id"<<pr[i].id;
         delete test;
     }
-    break;
-
-    case LsDyna::ELEMENTSHELL:
         break;
 
-    case LsDyna::ELEMENTSOLID:
+    case LsDynaSintax::ELEMENTSHELL:
+        break;
+
+    case LsDynaSintax::ELEMENTSOLID:
         return -1;
         break;
 
-    case LsDyna::INITIALSTRAINSOLID:
+    case LsDynaSintax::INITIALSTRAINSOLID:
         return -1;
         break;
 
-    case LsDyna::INITIALSTRESSSHELL:
+    case LsDynaSintax::INITIALSTRESSSHELL:
         return -1;
         break;
 
@@ -112,4 +113,6 @@ int ConverterSintaX::test(QString p_linefile)
         return -1;
         break;
     }
+
+    return 0;
 }

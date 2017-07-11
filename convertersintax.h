@@ -7,18 +7,7 @@
 #include <QRegularExpression>
 #include "lsdynainterpreter.h"
 
-namespace LsDyna {
-enum KeywordDyna
-{
-    $,
-    KEYWORD,
-    NODE,
-    ELEMENTSHELL,
-    ELEMENTSOLID,
-    INITIALSTRAINSOLID,
-    INITIALSTRESSSHELL
-};
-}
+
 
 
 class ConverterSintaX
@@ -33,7 +22,7 @@ public:
 private:
    int _LineNumber;
    QVector<QString> _InputLine;
-   LsDyna::KeywordDyna _mode;
+   LsDynaSintax::KeywordDyna _mode;
 };
 
 #endif // CONVERTERSINTAX_H
