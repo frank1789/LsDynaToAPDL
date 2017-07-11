@@ -27,10 +27,10 @@ void LsDynaSintax::Node::setNodeReader(QString pInputFile)
     }
 
     //convert string in number and store in field struct in vector
-    _TempOutputNode.id         = _IDnode.toInt();
-    _TempOutputNode.cordinatex = _CoordinateNodeX.toDouble();
-    _TempOutputNode.cordinatey = _CoordinateNodeY.toDouble();
-    _TempOutputNode.cordinatez = _CoordinateNodeZ.toDouble();
+    _TempOutputNode.id         = _IDnode;
+    _TempOutputNode.cordinatex = _CoordinateNodeX;
+    _TempOutputNode.cordinatey = _CoordinateNodeY;
+    _TempOutputNode.cordinatez = _CoordinateNodeZ;
     _OutputNode.append(_TempOutputNode);
 }
 

@@ -6,9 +6,7 @@
 #include <QFile>
 #include <QRegularExpression>
 #include "lsdynainterpreter.h"
-
-
-
+#include "apdlinterpreter.h"
 
 class ConverterSintaX
 {
@@ -17,8 +15,8 @@ public:
     //virtual void APDLSintax() = 0;
    ConverterSintaX();
    ~ConverterSintaX();
-   void getInputLine(QString p_linefile);
-   int test(QString p_linefile);
+   void getInputLine(QString p_linefile, LsDynaSintax::Node *ptest);
+   int test(QString p_linefile,LsDynaSintax::Node *ptest);
 private:
    int _LineNumber;
    QVector<QString> _InputLine;
@@ -33,7 +31,7 @@ void HeaderApdl()
 {
     QString header = "FINISH\n";
     header += "/CLEAR,START,NEW\n\n";
-    header += "/PREP7";
+    header += "/PREP7\n\n";
 }
 
 void MakeElemenType()

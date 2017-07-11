@@ -1,5 +1,6 @@
 #include "convertersintax.h"
 
+
 ConverterSintaX::ConverterSintaX()
 {
     _LineNumber = 0;
@@ -9,7 +10,7 @@ ConverterSintaX::ConverterSintaX()
 
 }
 
-void ConverterSintaX::getInputLine(QString p_linefile)
+void ConverterSintaX::getInputLine(QString p_linefile, LsDynaSintax::Node *ptest )
 {
     qDebug()<< p_linefile;
     if(p_linefile.contains("$"))
@@ -61,7 +62,7 @@ void ConverterSintaX::getInputLine(QString p_linefile)
         qDebug()<<"set mode"<<_mode;
     }
 
-    ConverterSintaX::test(p_linefile);
+    ConverterSintaX::test(p_linefile, ptest);
 
 }
 
@@ -71,7 +72,7 @@ ConverterSintaX::~ConverterSintaX()
     _InputLine.clear();
 }
 
-int ConverterSintaX::test(QString p_linefile)
+int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *ptest)
 {
     switch (_mode) {
     case LsDynaSintax::$:{
@@ -84,17 +85,16 @@ int ConverterSintaX::test(QString p_linefile)
 
     case LsDynaSintax::NODE:
     {
-        LsDynaSintax::Node* test = new LsDynaSintax::Node();
-        test->setNodeReader(p_linefile);
-        QVector<NodeProperty> pr = test->getNodeStructure();
+
+        ptest->setNodeReader(p_linefile);
+        QVector<NodeProperty> pr = ptest->getNodeStructure();
         _LineNumber += _LineNumber;
-        for (int i= 0; i < pr.size(); i++)
-            qDebug()<<"print vector id"<<pr[i].id;
-        delete test;
     }
         break;
 
     case LsDynaSintax::ELEMENTSHELL:
+        //LsDynaSintax::ElementShell* shell = new ElementShell();
+
         break;
 
     case LsDynaSintax::ELEMENTSOLID:
@@ -113,6 +113,7 @@ int ConverterSintaX::test(QString p_linefile)
         return -1;
         break;
     }
+
 
     return 0;
 }

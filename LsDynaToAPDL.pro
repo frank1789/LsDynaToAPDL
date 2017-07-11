@@ -26,15 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    typeelement.cpp \
     convertersintax.cpp \
-    lsdynainterpreter.cpp
+    lsdynainterpreter.cpp \
+    apdlinterpreter.cpp
 
 HEADERS += \
         mainwindow.h \
-    typeelement.h \
     convertersintax.h \
-    lsdynainterpreter.h
+    lsdynainterpreter.h \
+    apdlinterpreter.h
 
 FORMS += \
         mainwindow.ui

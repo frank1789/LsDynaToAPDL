@@ -8,10 +8,10 @@
 
 struct NodeProperty
 {
-    int id;
-    double cordinatex;
-    double cordinatey;
-    double cordinatez;
+    QString id;
+    QString cordinatex;
+    QString cordinatey;
+    QString cordinatez;
 };
 
 namespace LsDynaSintax {
@@ -49,18 +49,19 @@ private:
     QString _CoordinateNodeX;
     QString _CoordinateNodeY;
     QString _CoordinateNodeZ;
-    NodeProperty _TempOutputNode;
     QVector<NodeProperty> _OutputNode;
+    NodeProperty _TempOutputNode;
 };
 
 //define class to interpret element shell
+/*
 class ElementShell : public LsDynaInterpreter
 {
 public:
     ElementShell();
 private:
 };
-
+*/
 }
 
 #endif // LSDYNAINTERPRETER_H
