@@ -3,14 +3,14 @@
 
 ConverterSintaX::ConverterSintaX()
 {
-    _LineNumber = 0;
+    //_LineNumber = pCountLine;
     _InputLine.clear();
     qDebug()<<"Constructor start...";
     qDebug()<<"set line number: "<<_LineNumber;
 
 }
 
-void ConverterSintaX::getInputLine(QString p_linefile, LsDynaSintax::Node *ptest )
+void ConverterSintaX::setInputLine(QString p_linefile, LsDynaSintax::Node *ptest )
 {
     qDebug()<< p_linefile;
     if(p_linefile.contains("$"))
@@ -85,10 +85,7 @@ int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *ptest)
 
     case LsDynaSintax::NODE:
     {
-
         ptest->setNodeReader(p_linefile);
-        QVector<NodeProperty> pr = ptest->getNodeStructure();
-        _LineNumber += _LineNumber;
     }
         break;
 

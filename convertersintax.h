@@ -15,7 +15,7 @@ public:
     //virtual void APDLSintax() = 0;
    ConverterSintaX();
    ~ConverterSintaX();
-   void getInputLine(QString p_linefile, LsDynaSintax::Node *ptest);
+   void setInputLine(QString p_linefile, LsDynaSintax::Node *ptest);
    int test(QString p_linefile,LsDynaSintax::Node *ptest);
 private:
    int _LineNumber;
