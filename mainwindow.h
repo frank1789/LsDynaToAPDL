@@ -4,8 +4,6 @@
 #include <QMainWindow>
 #include <QFileDialog>
 
-#include "convertersintax.h"
-
 namespace Ui {
 class MainWindow;
 }

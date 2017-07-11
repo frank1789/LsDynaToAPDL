@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QFile>
 
+#include "convertersintax.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
