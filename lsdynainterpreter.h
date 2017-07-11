@@ -16,11 +16,25 @@ struct NodeProperty
 
 namespace LsDynaSintax {
 
+//define keyword for languange LsDyna to move different mode to interpret the data
+enum KeywordDyna
+{
+    $,
+    KEYWORD,
+    NODE,
+    ELEMENTSHELL,
+    ELEMENTSOLID,
+    INITIALSTRAINSOLID,
+    INITIALSTRESSSHELL
+};
+
+//define virtual class for interpreter
 class LsDynaInterpreter
 {
     virtual void setNodeReader(QString pInputFile) = 0;
 };
 
+//define class to interpret node
 class Node : public LsDynaInterpreter
 {
 public:
@@ -39,10 +53,11 @@ private:
     QVector<NodeProperty> _OutputNode;
 };
 
-class Element : public LsDynaInterpreter
+//define class to interpret element shell
+class ElementShell : public LsDynaInterpreter
 {
 public:
-
+    ElementShell();
 private:
 };
 
