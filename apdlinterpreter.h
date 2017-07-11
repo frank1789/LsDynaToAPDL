@@ -1,14 +1,27 @@
-#ifndef TYPEELEMENT_H
-#define TYPEELEMENT_H
+#ifndef APDLINTERPRETER_H
+#define APDLINTERPRETER_H
+#include <QString>
+#include "lsdynainterpreter.h"
 
 namespace APDLsintax {
 
 
-}
-class TypeElement
+
+class ApdlInterpreter
+{
+    virtual void setNodeWriter() = 0;
+    //virtual void setElementSheelWriter() = 0;
+};
+
+class Node : public ApdlInterpreter
 {
 public:
-    TypeElement();
+   Node(QVector<NodeProperty> pvectornode);
+   void setNodeWriter();
+   QString _header;
+   QString _NodeStringOutput;
+   QVector<NodeProperty> _NodeToWrite;
 };
+}
 
 #endif // TYPEELEMENT_H
