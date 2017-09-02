@@ -23,6 +23,8 @@ MainWindow::~MainWindow()
 
 ConverterSintaX* converter = new ConverterSintaX();
 LsDynaSintax::Node* test = new LsDynaSintax::Node();
+LsDynaSintax::ElementShell* testshell = new LsDynaSintax::ElementShell();
+
 /*
 int countLineNumber(QString pfileinput)
 {
@@ -76,7 +78,7 @@ void MainWindow::on_LoadFile_clicked()
                 CountNumberLine += 1;
 
                 //store data
-                converter->setInputLine(line, test);
+                converter->setInputLine(line, test, testshell);
 
                 //refresh progress bar
                 ui->progressBar->setValue(CountNumberLine);

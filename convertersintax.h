@@ -15,8 +15,8 @@ public:
     //virtual void APDLSintax() = 0;
    ConverterSintaX();
    ~ConverterSintaX();
-   void setInputLine(QString p_linefile, LsDynaSintax::Node *ptest);
-   int test(QString p_linefile,LsDynaSintax::Node *ptest);
+   void setInputLine(QString p_linefile, LsDynaSintax::Node *ptest, LsDynaSintax::ElementShell *testshell);
+   int test(QString p_linefile, LsDynaSintax::Node *ptest, LsDynaSintax::ElementShell *testshell);
 private:
    int _LineNumber;
    QVector<QString> _InputLine;
