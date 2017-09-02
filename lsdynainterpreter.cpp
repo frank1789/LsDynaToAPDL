@@ -10,11 +10,11 @@ LsDynaSintax::Node::Node()
     //                   +                     +                         +                        +
     re.setPattern("(\\d+) ?\\s*     (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
 
-    //clean teh vector
+    //clean the vector
     _OutputNode.clear();
 }
 
-void LsDynaSintax::Node::setNodeReader(QString pInputFile)
+void LsDynaSintax::Node::setReader(QString pInputFile)
 {
     _match = re.match(pInputFile);
     qDebug()<<"fonud groups:" << re.captureCount();
@@ -49,4 +49,14 @@ QVector<NodeProperty> LsDynaSintax::Node::getNodeStructure() {return _OutputNode
 LsDynaSintax::Node::~Node()
 {
     _OutputNode.clear();
+}
+
+LsDynaSintax::ElementShell::ElementShell()
+{
+    qDebug()<<a;
+}
+
+void LsDynaSintax::ElementShell::setReader(QString pInputFile)
+{
+    qDebug() << "success!";
 }

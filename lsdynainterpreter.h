@@ -31,7 +31,7 @@ enum KeywordDyna
 //define virtual class for interpreter
 class LsDynaInterpreter
 {
-    virtual void setNodeReader(QString pInputFile) = 0;
+    virtual void setReader(QString pInputFile) = 0;
 };
 
 //define class to interpret node
@@ -40,7 +40,7 @@ class Node : public LsDynaInterpreter
 public:
     Node();
     ~Node();
-    void setNodeReader(QString pInputFile);
+    void setReader(QString pInputFile);
     QVector<NodeProperty> getNodeStructure();
 private:
     QRegularExpression re;
@@ -54,14 +54,15 @@ private:
 };
 
 //define class to interpret element shell
-/*
 class ElementShell : public LsDynaInterpreter
 {
 public:
     ElementShell();
+    ~ElementShell();
+    void setReader(QString pInputFile);
 private:
+    int a =0;
 };
-*/
 }
 
 #endif // LSDYNAINTERPRETER_H
