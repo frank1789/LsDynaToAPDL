@@ -1,5 +1,10 @@
 #include "lsdynainterpreter.h"
 
+LsDynaSintax::LsDynaInterpreter::~LsDynaInterpreter()
+{
+    qDebug() << "Pure virtual destructor is called for LsDynaInterpreter";
+}
+
 LsDynaSintax::Node::Node()
 {
     //set pattern for search scheme of node definition
@@ -8,7 +13,7 @@ LsDynaSintax::Node::Node()
     //extract coordinate x from string --------+                         |                        |
     //extract node id ---+                     |                         |                        |
     //                   +                     +                         +                        +
-    re.setPattern("(\\d+) ?\\s*     (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
+    _re.setPattern("(\\d+) ?\\s*     (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
 
     //clean the vector
     _OutputNode.clear();
@@ -16,8 +21,8 @@ LsDynaSintax::Node::Node()
 
 void LsDynaSintax::Node::setReader(QString pInputFile)
 {
-    _match = re.match(pInputFile);
-    qDebug()<<"fonud groups:" << re.captureCount();
+    _match = _re.match(pInputFile);
+    qDebug()<<"fonud groups:" << _re.captureCount();
     if (_match.hasMatch())
     {
         //capture id node = number's node
@@ -48,15 +53,24 @@ QVector<NodeProperty> LsDynaSintax::Node::getNodeStructure() {return _OutputNode
 
 LsDynaSintax::Node::~Node()
 {
+    //clear vector of node
     _OutputNode.clear();
+    qDebug() <<"Called ~Node()";
 }
 
 LsDynaSintax::ElementShell::ElementShell()
 {
     qDebug()<<a;
+    _re.setPattern("(\\d+)       (\\d+) (\\d+) (\\d+) (\\d+) (\\d+)");
 }
 
 void LsDynaSintax::ElementShell::setReader(QString pInputFile)
 {
-    qDebug() << "success!";
+    _match = _re.match(pInputFile);
+    qDebug()<<"fonud groups:" << _re.captureCount();
+}
+
+LsDynaSintax::ElementShell::~ElementShell()
+{
+    qDebug()<<"Call ~ElementShell";
 }
