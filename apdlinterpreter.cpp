@@ -42,7 +42,7 @@ void APDLsintax::Node::setWriter()
 
 APDLsintax::Node::~Node()
 {
-    qDebug()<<"Call ~Node()";
+    qDebug()<<"Called ~Node()";
 
 }
 
@@ -54,4 +54,9 @@ APDLsintax::ElementShell::ElementShell()
 void APDLsintax::ElementShell::setWriter()
 {
     qDebug() << "success!";
+}
+
+APDLsintax::ElementShell::~ElementShell()
+{
+    qDebug() <<"Called ~ElementShell()";
 }
