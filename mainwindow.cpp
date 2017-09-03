@@ -13,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Convert->setDisabled(true);
     ui->progressBar->setMinimum(0);
     ui->progressBar->setValue(0);
-    ui->label->setText("Dimension:    Mb");
+    ui->label->setText("Dimension: 0 Mb");
+    ui->Nodeinfo->setText("Total number node: 0");
+    ui->ElemInfo->setText("Total number element shell: 0");
 }
 
 MainWindow::~MainWindow()
@@ -47,10 +49,12 @@ int countLineNumber(QString pfileinput)
     return CountNumberLine;
 }
 */
+QString fileName;
 void MainWindow::on_LoadFile_clicked()
 {
-    qDebug()<<"open file dialog...";
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+    qDebug()<<"Open file dialog...";
+    fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+    qDebug()<<fileName;
     if(fileName != NULL)
     {
         //initilalize the counter line for progress bar
@@ -92,13 +96,24 @@ void MainWindow::on_LoadFile_clicked()
         ui->Convert->setEnabled(true);
         ui->lineEdit_2->setText(fileName);
     }
+    int *numnode = new int(test->getNodeStructure().size());
+    ui->Nodeinfo->setText("Total number node: " + QString(*numnode) );
+    ui->ElemInfo->setText("Total number element shell: " + QString(testshell->getElementStructure().size()));
+    qDebug()<<fileName;
 }
 
 
 void MainWindow::on_Convert_clicked()
 {
-    APDLsintax::Node* node = new APDLsintax::Node(test->getNodeStructure());
-    node->setWriter();
+   //
+    QRegularExpression re("(\\w+.\\w+)$");
+    re.match(fileName);
+    QString replace = "ApdlConverted.txt";
+    qDebug() << fileName.replace(re, replace);
+    APDLsintax::Writer(fileName, test->getNodeStructure(), testshell->getElementStructure());
+
+    //APDLsintax::Node* node = new APDLsintax::Node(test->getNodeStructure());
+    //node->setWriter();
     //delete test;
 }
 
@@ -110,3 +125,4 @@ void MainWindow::on_Exit_released()
     delete testshell;
     QApplication::quit();
 }
+

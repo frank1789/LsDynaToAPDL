@@ -102,9 +102,6 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
         qDebug()<<_shell4node.node2;
         qDebug()<<_shell4node.node3;
         qDebug()<<_shell4node.node4;
-
-        //temporary shell thickness -> costant zero
-        _shell4node.thickness = "0";
     }
 
     //verify second linestring
@@ -117,12 +114,8 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
         _shell4node.thickness = _match.captured(1);
         qDebug()<<_shell4node.thickness;
     }
-
-    if(_shell4node.thickness != "0")
-    {
         //store in output vector
         _OutputElmentShell.append(_shell4node);
-    }
 }
 
 QVector<ShellProperty> LsDynaSintax::ElementShell::getElementStructure() {return _OutputElmentShell;}
