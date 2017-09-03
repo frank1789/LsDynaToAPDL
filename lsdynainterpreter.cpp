@@ -13,7 +13,7 @@ LsDynaSintax::Node::Node()
     //extract coordinate x from string --------+                         |                        |
     //extract node id ---+                     |                         |                        |
     //                   +                     +                         +                        +
-    _re.setPattern("(\\d+) ?\\s*     (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
+    _re.setPattern("(\\d+) ?\\s*   (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
 
     //clean the vector
     _OutputNode.clear();
