@@ -98,7 +98,7 @@ void MainWindow::on_LoadFile_clicked()
 void MainWindow::on_Convert_clicked()
 {
     APDLsintax::Node* node = new APDLsintax::Node(test->getNodeStructure());
-    node->setNodeWriter();
+    node->setWriter();
     //delete test;
 }
 
@@ -106,5 +106,7 @@ void MainWindow::on_Exit_released()
 {
     //delete converter;
     qDebug()<<"closing app...";
+    delete test;
+    delete testshell;
     QApplication::quit();
 }

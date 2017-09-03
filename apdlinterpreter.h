@@ -5,22 +5,30 @@
 
 namespace APDLsintax {
 
-
-
 class ApdlInterpreter
 {
-    virtual void setNodeWriter() = 0;
-    //virtual void setElementSheelWriter() = 0;
+    virtual void setWriter() = 0;
+public:
+    virtual ~ApdlInterpreter() = 0;
 };
 
 class Node : public ApdlInterpreter
 {
 public:
    Node(QVector<NodeProperty> pvectornode);
-   void setNodeWriter();
+   ~Node();
+   void setWriter();
    QString _header;
    QString _NodeStringOutput;
    QVector<NodeProperty> _NodeToWrite;
+};
+
+class ElementShell : public ApdlInterpreter
+{
+public:
+    ElementShell();
+    ~ElementShell();
+    void setWriter();
 };
 }
 

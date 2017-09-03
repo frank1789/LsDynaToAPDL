@@ -1,6 +1,11 @@
 #include "apdlinterpreter.h"
 #include "lsdynainterpreter.h"
 
+APDLsintax::ApdlInterpreter::~ApdlInterpreter()
+{
+    qDebug() << "Pure virtual destructor is called for ApdlInterpreter()";
+}
+
 APDLsintax::Node::Node(QVector<NodeProperty> pvectornode)
 {
     _NodeToWrite = pvectornode;
@@ -12,7 +17,7 @@ APDLsintax::Node::Node(QVector<NodeProperty> pvectornode)
 
 }
 
-void APDLsintax::Node::setNodeWriter()
+void APDLsintax::Node::setWriter()
 {
     for(int it = 0; it < _NodeToWrite.size(); it++)
     {
@@ -33,4 +38,20 @@ void APDLsintax::Node::setNodeWriter()
         qDebug()<<_NodeStringOutput;
     }
     qDebug()<<"End make node command APDL!";
+}
+
+APDLsintax::Node::~Node()
+{
+    qDebug()<<"Call ~Node()";
+
+}
+
+APDLsintax::ElementShell::ElementShell()
+{
+     qDebug() << "success!";
+}
+
+void APDLsintax::ElementShell::setWriter()
+{
+    qDebug() << "success!";
 }
