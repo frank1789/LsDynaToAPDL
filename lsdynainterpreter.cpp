@@ -60,17 +60,66 @@ LsDynaSintax::Node::~Node()
 
 LsDynaSintax::ElementShell::ElementShell()
 {
-    qDebug()<<a;
-    _re.setPattern("(\\d+)       (\\d+) (\\d+) (\\d+) (\\d+) (\\d+)");
+    qDebug()<<"Call ElementShell";
+    //clear the vector
+    _OutputElmentShell.clear();
 }
 
 void LsDynaSintax::ElementShell::setReader(QString pInputFile)
 {
+    //set pattern for search scheme of element definition
+    //extract node element 4 from string -----------------------------------------------------------------+
+    //extract node element 3 from string -------------------------------------------------+               |
+    //extract node element 2 from string --------------------------------+                |               |
+    //extract node element 1 from string ---------------+                |                |               |
+    //extract element card ignored -----+               |                |                |               |
+    //extract id -------+               |               |                |                |               |
+    //                  +               +               +                +                +               +
+    _re.setPattern("(?<id>\\d+)\\s+(?<card>\\d+)\\s(?<node1>\\d+)\\s(?<node2>\\d+)\\s(?<node3>\\d+)\\s(?<node4>\\d+)");
+
+    //verify captured groups
     _match = _re.match(pInputFile);
-    qDebug()<<"fonud groups:" << _re.captureCount();
+    if(_match.hasMatch())
+    {
+        qDebug()<<"has match: "<<_match.hasMatch() <<", fonud groups:" << _re.captureCount();
+        //capture id
+        _shell4node.id_element = _match.captured("id");
+
+        //capture node1
+        _shell4node.node1 = _match.captured("node1");
+
+        //capture node2
+        _shell4node.node2 = _match.captured("node2");
+
+        //capture node3
+        _shell4node.node3 = _match.captured("node3");
+
+        //capture node4
+        _shell4node.node4 = _match.captured("node4");
+        qDebug()<<_shell4node.id_element;
+        qDebug()<<_shell4node.node1;
+        qDebug()<<_shell4node.node2;
+        qDebug()<<_shell4node.node3;
+        qDebug()<<_shell4node.node4;
+    }
+
+    //verify second linestring
+    //element thickeness replicated four time costant for element
+    _re.setPattern("(\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)");
+    _match = _re.match(pInputFile);
+    if(_match.hasMatch())
+    {
+        qDebug()<<"has match: "<<_match.hasMatch() <<", fonud groups:" << _re.captureCount();
+        _shell4node.thickness = _match.captured(1);
+        qDebug()<<_shell4node.thickness;
+    }
+
+    //store in output vector
+    _OutputElmentShell.append(_shell4node);
 }
 
 LsDynaSintax::ElementShell::~ElementShell()
 {
     qDebug()<<"Call ~ElementShell";
+    _OutputElmentShell.clear();
 }

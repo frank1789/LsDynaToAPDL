@@ -14,6 +14,16 @@ struct NodeProperty
     QString cordinatez;
 };
 
+struct ShellProperty
+{
+    QString id_element;
+    QString node1;
+    QString node2;
+    QString node3;
+    QString node4;
+    QString thickness;
+};
+
 namespace LsDynaSintax {
 
 //define keyword for languange LsDyna to move different mode to interpret the data
@@ -55,7 +65,7 @@ private:
     NodeProperty _TempOutputNode;
 };
 
-//define class to interpret element shell
+//define class to interpreter element shell
 class ElementShell : public LsDynaInterpreter
 {
 public:
@@ -65,7 +75,8 @@ public:
 private:
     QRegularExpression _re;
     QRegularExpressionMatch _match;
-    int a =0;
+    ShellProperty _shell4node;
+    QVector<ShellProperty> _OutputElmentShell;
 };
 }
 
