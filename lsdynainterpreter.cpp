@@ -2,7 +2,7 @@
 
 LsDynaSintax::LsDynaInterpreter::~LsDynaInterpreter()
 {
-    qDebug() << "Pure virtual destructor is called for LsDynaInterpreter";
+    qDebug() << "Pure virtual destructor is called for LsDynaInterpreter()";
 }
 
 LsDynaSintax::Node::Node()
@@ -117,6 +117,8 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
     //store in output vector
     _OutputElmentShell.append(_shell4node);
 }
+
+QVector<ShellProperty> LsDynaSintax::ElementShell::getElementStructure() {return _OutputElmentShell;}
 
 LsDynaSintax::ElementShell::~ElementShell()
 {

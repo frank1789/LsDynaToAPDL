@@ -72,6 +72,7 @@ public:
     ElementShell();
     ~ElementShell();
     void setReader(QString pInputFile);
+    QVector<ShellProperty> getElementStructure();
 private:
     QRegularExpression _re;
     QRegularExpressionMatch _match;
