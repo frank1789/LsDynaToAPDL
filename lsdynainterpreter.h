@@ -49,36 +49,56 @@ public:
 //define class to interpret node
 class Node : public LsDynaInterpreter
 {
+
 public:
     Node();
+
     ~Node();
+
     void setReader(QString pInputFile);
+
     QVector<NodeProperty> getNodeStructure();
+
 private:
     QRegularExpression _re;
+
     QRegularExpressionMatch _match;
+
     QString _IDnode;
+
     QString _CoordinateNodeX;
+
     QString _CoordinateNodeY;
+
     QString _CoordinateNodeZ;
+
     QVector<NodeProperty> _OutputNode;
+
     NodeProperty _TempOutputNode;
 };
 
 //define class to interpreter element shell
 class ElementShell : public LsDynaInterpreter
 {
+
 public:
     ElementShell();
+
     ~ElementShell();
+
     void setReader(QString pInputFile);
+
     QVector<ShellProperty> getElementStructure();
+
 private:
     QRegularExpression _re;
+
     QRegularExpressionMatch _match;
+
     ShellProperty _shell4node;
+
     QVector<ShellProperty> _OutputElmentShell;
 };
-}
+};
 
 #endif // LSDYNAINTERPRETER_H
