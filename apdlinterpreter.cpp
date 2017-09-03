@@ -91,7 +91,7 @@ void APDLsintax::Writer(QString pfilename, QVector<NodeProperty> pVectorNode, QV
     qDebug()<<"Called Writer()";
 
     QFile file( pfilename );
-    if ( file.open(QIODevice::ReadWrite) )
+    if ( file.open(QIODevice::WriteOnly) )
     {
         QTextStream stream( &file );
 
