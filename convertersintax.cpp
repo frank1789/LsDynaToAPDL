@@ -10,7 +10,7 @@ ConverterSintaX::ConverterSintaX()
 
 }
 
-void ConverterSintaX::setInputLine(QString p_linefile, LsDynaSintax::Node *ptest , LsDynaSintax::ElementShell *testshell)
+void ConverterSintaX::setInputLine(QString p_linefile, LsDynaSintax::Node *pNode , LsDynaSintax::ElementShell *pShell)
 {
     qDebug()<< p_linefile;
     if(p_linefile.contains("$"))
@@ -62,7 +62,7 @@ void ConverterSintaX::setInputLine(QString p_linefile, LsDynaSintax::Node *ptest
         qDebug()<<"set mode"<<_mode;
     }
 
-    ConverterSintaX::test(p_linefile, ptest, testshell);
+    ConverterSintaX::test(p_linefile, pNode, pShell);
 
 }
 
@@ -72,7 +72,7 @@ ConverterSintaX::~ConverterSintaX()
     _InputLine.clear();
 }
 
-int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *ptest, LsDynaSintax::ElementShell *testshell)
+int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell)
 {
     switch (_mode) {
     case LsDynaSintax::$:{
@@ -85,13 +85,13 @@ int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *ptest, LsDynaS
 
     case LsDynaSintax::NODE:
     {
-        ptest->setReader(p_linefile);
+        pNode->setReader(p_linefile);
     }
         break;
 
     case LsDynaSintax::ELEMENTSHELL:
     {
-        testshell->setReader(p_linefile);
+        pShell->setReader(p_linefile);
     }
         break;
 
