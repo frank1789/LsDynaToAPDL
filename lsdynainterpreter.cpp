@@ -41,7 +41,7 @@ void LsDynaSintax::Node::setReader(QString pInputFile)
         qDebug()<< _IDnode << _CoordinateNodeX << _CoordinateNodeY << _CoordinateNodeZ;
     }
 
-    //convert string in number and store in field struct in vector
+    //copy string in field struct in vector
     _TempOutputNode.id         = _IDnode;
     _TempOutputNode.cordinatex = _CoordinateNodeX;
     _TempOutputNode.cordinatey = _CoordinateNodeY;
