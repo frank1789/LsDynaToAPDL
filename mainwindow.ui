@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>483</height>
+    <width>550</width>
+    <height>370</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>550</width>
+    <height>370</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>550</width>
+    <height>370</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>LsDyna to APDL converter</string>
@@ -17,24 +29,17 @@
    <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>320</y>
-      <width>481</width>
-      <height>91</height>
+      <x>400</x>
+      <y>290</y>
+      <width>141</width>
+      <height>51</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="1">
+     <item row="0" column="0">
       <widget class="QPushButton" name="Exit">
        <property name="text">
         <string>Exit</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QProgressBar" name="progressBar">
-       <property name="value">
-        <number>24</number>
        </property>
       </widget>
      </item>
@@ -45,7 +50,7 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>481</width>
+      <width>531</width>
       <height>111</height>
      </rect>
     </property>
@@ -57,7 +62,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>461</width>
+       <width>511</width>
        <height>68</height>
       </rect>
      </property>
@@ -142,7 +147,7 @@
      <rect>
       <x>310</x>
       <y>120</y>
-      <width>181</width>
+      <width>231</width>
       <height>151</height>
      </rect>
     </property>
@@ -154,7 +159,7 @@
       <rect>
        <x>0</x>
        <y>20</y>
-       <width>181</width>
+       <width>221</width>
        <height>131</height>
       </rect>
      </property>
@@ -189,7 +194,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>508</width>
+     <width>550</width>
      <height>22</height>
     </rect>
    </property>
