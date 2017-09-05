@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     convertersintax.cpp \
     lsdynainterpreter.cpp \
-    apdlinterpreter.cpp
+    apdlinterpreter.cpp \
+    reader.cpp
 
 HEADERS += \
         mainwindow.h \
     convertersintax.h \
     lsdynainterpreter.h \
-    apdlinterpreter.h
+    apdlinterpreter.h \
+    reader.h
 
 FORMS += \
         mainwindow.ui

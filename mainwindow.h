@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QProgressDialog>
+#include <QDebug>
+
 
 namespace Ui {
 class MainWindow;
