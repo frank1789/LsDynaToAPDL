@@ -57,9 +57,6 @@ void MainWindow::on_LoadFile_clicked()
     // Query the future to check if was canceled.
     qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
 
-   // QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
-    //connect(&futureWatcher, SIGNAL(StartProgressSignal()), this, SLOT(valueChanged(int)), Qt::QueuedConnection);
-    //connect(&futureWatcher, SIGNAL(StopProgressSignal()), ui->progressBar, SLOT(valueChanged(int)), Qt::QueuedConnection);
     //--------------------------------------------------------------------------------------<
 //    if(fileName != NULL)
 //    {
