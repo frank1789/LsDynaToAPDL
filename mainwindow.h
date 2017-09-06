@@ -6,7 +6,7 @@
 #include <QProgressDialog>
 #include <QDebug>
 #include <QMenuBar>
-#include "credit.h"
+#include "about.h"
 
 
 namespace Ui {
@@ -37,6 +37,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    About *about;
 };
 
 #endif // MAINWINDOW_H

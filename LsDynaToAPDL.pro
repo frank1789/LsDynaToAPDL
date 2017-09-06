@@ -30,14 +30,17 @@ SOURCES += \
     convertersintax.cpp \
     lsdynainterpreter.cpp \
     apdlinterpreter.cpp \
-    reader.cpp
+    reader.cpp \
+    about.cpp
 
 HEADERS += \
         mainwindow.h \
     convertersintax.h \
     lsdynainterpreter.h \
     apdlinterpreter.h \
-    reader.h
+    reader.h \
+    about.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    about.ui
