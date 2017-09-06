@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include <QProgressDialog>
 #include <QDebug>
+#include <QMenuBar>
+#include "credit.h"
 
 
 namespace Ui {
@@ -19,12 +21,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void open_about();
+
 private slots:
     void on_LoadFile_clicked();
 
     void on_Exit_released();
 
     void on_Convert_clicked();
+
+    void information();
+
+    void on_actionInformazioni_triggered();
 
 private:
     Ui::MainWindow *ui;

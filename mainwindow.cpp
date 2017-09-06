@@ -3,6 +3,7 @@
 #include "convertersintax.h"
 #include "reader.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -12,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label->setText("Dimension: 0 Mb");
     ui->Nodeinfo->setText("Total number node: 0");
     ui->ElemInfo->setText("Total number element shell: 0");
+
+    connect(ui->actionInformazioni, SIGNAL(triggered()), this, SLOT(open_about()));
 }
 
 MainWindow::~MainWindow()
@@ -145,4 +148,20 @@ void MainWindow::on_Exit_released()
 
     qDebug()<<"closing app...";
     QApplication::quit();
+}
+
+void MainWindow::information()
+{
+    qDebug() <<"success!";
+}
+
+void MainWindow::open_about()
+{
+    Credit *about = new Credit(this);
+    about->show();
+}
+
+void MainWindow::on_actionInformazioni_triggered()
+{
+    open_about();
 }
