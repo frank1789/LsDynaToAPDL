@@ -2,6 +2,9 @@
 #define ABOUT_H
 
 #include <QDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 
 namespace Ui {
 class About;
@@ -18,5 +21,7 @@ public:
 private:
     Ui::About *ui;
 };
+
+QString read(QString pfileName);
 
 #endif // ABOUT_H

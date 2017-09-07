@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>About</class>
- <widget name="About" class="QDialog">
+ <widget class="QDialog" name="About">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +13,16 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QPlainTextEdit" name="plainTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>361</width>
+     <height>221</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
