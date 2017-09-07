@@ -7,18 +7,20 @@ About::About(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::About)
 {
+    //define window property
     ui->setupUi(this);
-    //read(":/Resources/Resources/License/License.txt");
+    this->setWindowTitle("");
+
+    //define plain text object and content
     ui->plainTextEdit->setReadOnly(true);
     ui->plainTextEdit->appendPlainText(read(":/Resources/Resources/License/License.txt"));
 
-    //QImage green(":/Resources/Resources/Icon/generic.icns");
-
+    //set image property
     QPixmap imageObject(":/Resources/Resources/Icon/generic.png");
-    ui->label->setPixmap(imageObject);
-   // QLabel *imageLabel = new QLabel();
-   // imageLabel->setPixmap(green);
+    imageObject.scaled(120,120);
 
+    //define visualization
+    ui->label->setPixmap(imageObject);
 }
 
 About::~About()
