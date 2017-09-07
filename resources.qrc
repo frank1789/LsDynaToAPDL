@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/Resources">
         <file>Resources/License/License.txt</file>
+        <file>Resources/Icon/generic.png</file>
     </qresource>
 </RCC>

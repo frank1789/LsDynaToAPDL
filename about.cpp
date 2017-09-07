@@ -1,5 +1,7 @@
 #include "about.h"
 #include "ui_about.h"
+#include <QLabel>
+#include <QImage>
 
 About::About(QWidget *parent) :
     QDialog(parent),
@@ -9,6 +11,14 @@ About::About(QWidget *parent) :
     //read(":/Resources/Resources/License/License.txt");
     ui->plainTextEdit->setReadOnly(true);
     ui->plainTextEdit->appendPlainText(read(":/Resources/Resources/License/License.txt"));
+
+    //QImage green(":/Resources/Resources/Icon/generic.icns");
+
+    QPixmap imageObject(":/Resources/Resources/Icon/generic.png");
+    ui->label->setPixmap(imageObject);
+   // QLabel *imageLabel = new QLabel();
+   // imageLabel->setPixmap(green);
+
 }
 
 About::~About()
