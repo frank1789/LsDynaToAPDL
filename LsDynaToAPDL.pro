@@ -39,7 +39,8 @@ HEADERS += \
     lsdynainterpreter.h \
     apdlinterpreter.h \
     reader.h \
-    about.h
+    about.h \
+    version.h
 
 FORMS += \
         mainwindow.ui \

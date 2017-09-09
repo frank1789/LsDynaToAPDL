@@ -1,7 +1,5 @@
 #include "about.h"
 #include "ui_about.h"
-#include <QLabel>
-#include <QImage>
 
 About::About(QWidget *parent) :
     QDialog(parent),
@@ -21,6 +19,9 @@ About::About(QWidget *parent) :
 
     //define visualization
     ui->label->setPixmap(imageObject);
+
+
+    //ui->label_2->setText(QString("Version: %1").arg(Version::BUILD));
 }
 
 About::~About()

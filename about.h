@@ -2,9 +2,12 @@
 #define ABOUT_H
 
 #include <QDialog>
-#include <QFile>
 #include <QTextStream>
+#include <QFile>
 #include <QDebug>
+#include <QLabel>
+#include <QImage>
+
 
 namespace Ui {
 class About;
