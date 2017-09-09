@@ -21,7 +21,7 @@ About::About(QWidget *parent) :
     ui->label->setPixmap(imageObject);
 
 
-    //ui->label_2->setText(QString("Version: %1").arg(Version::BUILD));
+    ui->label_2->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
 }
 
 About::~About()
