@@ -65,6 +65,7 @@ void MainWindow::on_LoadFile_clicked()
     }
     else
     {
+        qDebug() <<"Missing input file, launch information message.";
         QMessageBox::information(this, tr("Info"), "The document has not been loaded.");
     }
 
@@ -103,17 +104,9 @@ void MainWindow::on_LoadFile_clicked()
     //            }
     //        }
 
-    //close file
-    //inputFile.close();
-
     //active conversion
     ui->Convert->setEnabled(true);
     ui->lineEdit_2->setText(fileName);
-    //}
-    //int *numnode = new int(test->getNodeStructure().size());
-    //ui->Nodeinfo->setText("Total number node: " + QString(*numnode) );
-    //ui->ElemInfo->setText("Total number element shell: " + QString(testshell->getElementStructure().size()));
-    //qDebug()<<fileName;
 }
 
 
