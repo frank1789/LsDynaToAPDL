@@ -8,12 +8,12 @@ LsDynaSintax::LsDynaInterpreter::~LsDynaInterpreter()
 LsDynaSintax::Node::Node()
 {
     //set pattern for search scheme of node definition
-    //extract coordinate z from string -----------------------------------------------------------+
-    //extract coordinate y from string ----------------------------------+                        |
-    //extract coordinate x from string --------+                         |                        |
-    //extract node id ---+                     |                         |                        |
-    //                   +                     +                         +                        +
-    _re.setPattern("(\\d+) ?\\s*   (-?\\d+\\.+\\d+)  ?\\s*   (-?\\d+\\.+\\d+)   ?\\s*   (-?\\d+\\.+\\d+)");
+    //extract coordinate z from string ------------------------------------------------+
+    //extract coordinate y from string -----------------------+                        |
+    //extract coordinate x from string ------+                |                        |
+    //extract node id ---+                   |                |                        |
+    //                   +                   +                +                        +
+    _re.setPattern("(\\d+) ?\\s*   (-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)");
 
     //clean the vector
     _OutputNode.clear();
