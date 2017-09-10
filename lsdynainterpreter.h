@@ -57,6 +57,8 @@ public:
 
     void setReader(QString pInputFile);
 
+    void Clear();
+
     QVector<NodeProperty> getNodeStructure();
 
 private:
@@ -89,6 +91,8 @@ public:
     void setReader(QString pInputFile);
 
     QVector<ShellProperty> getElementStructure();
+
+    void Clear();
 
 private:
     QRegularExpression _re;

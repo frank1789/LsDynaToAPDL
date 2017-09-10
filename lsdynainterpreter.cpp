@@ -54,6 +54,16 @@ QVector<NodeProperty> LsDynaSintax::Node::getNodeStructure()
     return _OutputNode;
 }
 
+void LsDynaSintax::Node::Clear()
+{
+    // verify the vector is not void then erase
+    qDebug() << _OutputNode.isEmpty();
+    if(!_OutputNode.isEmpty())
+    {
+        _OutputNode.clear();
+    }
+}
+
 LsDynaSintax::Node::~Node()
 {
     //clear vector of node
@@ -67,6 +77,8 @@ LsDynaSintax::ElementShell::ElementShell()
 
     //clear the vector
     _OutputElmentShell.clear();
+
+    //initialize flag
     _flagNode =false;
     _flagThickness = false;
 }
@@ -118,23 +130,31 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
         _flagThickness = true;
     }
 
-        //store in output vector
+    //store in output vector
     if(_flagNode == true && _flagThickness == true)
     {
         qDebug()<<"inside if id:" << _shell4node.id_element <<", E," <<_shell4node.node1 << ","<< _shell4node.node2 << "," << _shell4node.node3 << "," << _shell4node.node4 << "thickness element:" << _shell4node.thickness;
-
-
         _OutputElmentShell.append(_shell4node);
 
+        //reset the flag
         _flagNode =false;
         _flagThickness = false;
-
      }
 }
 
 QVector<ShellProperty> LsDynaSintax::ElementShell::getElementStructure()
 {
     return _OutputElmentShell;
+}
+
+void LsDynaSintax::ElementShell::Clear()
+{
+    // verify the vector is not void then erase
+    qDebug() << _OutputElmentShell.isEmpty();
+    if(!_OutputElmentShell.isEmpty())
+    {
+        _OutputElmentShell.clear();
+    }
 }
 
 LsDynaSintax::ElementShell::~ElementShell()

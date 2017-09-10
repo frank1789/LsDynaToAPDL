@@ -38,6 +38,10 @@ void MainWindow::on_LoadFile_clicked()
     {
         ui->lineEdit->setText(fileName);
 
+        //clear if  already run
+        node->Clear();
+        shell->Clear();
+
         // Create a progress dialog.
         QProgressDialog dialog;
         dialog.setLabelText(QString("Reading file..."));
