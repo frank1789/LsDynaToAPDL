@@ -98,6 +98,8 @@ private:
     ShellProperty _shell4node;
 
     QVector<ShellProperty> _OutputElmentShell;
+
+    bool _flagNode, _flagThickness;
 };
 };
 

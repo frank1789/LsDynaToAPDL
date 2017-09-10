@@ -49,7 +49,10 @@ void LsDynaSintax::Node::setReader(QString pInputFile)
     _OutputNode.append(_TempOutputNode);
 }
 
-QVector<NodeProperty> LsDynaSintax::Node::getNodeStructure() {return _OutputNode;}
+QVector<NodeProperty> LsDynaSintax::Node::getNodeStructure()
+{
+    return _OutputNode;
+}
 
 LsDynaSintax::Node::~Node()
 {
@@ -60,10 +63,12 @@ LsDynaSintax::Node::~Node()
 
 LsDynaSintax::ElementShell::ElementShell()
 {
-    qDebug()<<"Call ElementShell";
+    qDebug() << "Called ElementShell()";
 
     //clear the vector
     _OutputElmentShell.clear();
+    _flagNode =false;
+    _flagThickness = false;
 }
 
 void LsDynaSintax::ElementShell::setReader(QString pInputFile)
@@ -97,11 +102,8 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
 
         //capture node4
         _shell4node.node4 = _match.captured("node4");
-        qDebug()<<_shell4node.id_element;
-        qDebug()<<_shell4node.node1;
-        qDebug()<<_shell4node.node2;
-        qDebug()<<_shell4node.node3;
-        qDebug()<<_shell4node.node4;
+        qDebug()<<"form element id:" << _shell4node.id_element <<", E," <<_shell4node.node1 << ","<< _shell4node.node2 << "," << _shell4node.node3 << "," << _shell4node.node4;
+    _flagNode=true;
     }
 
     //verify second linestring
@@ -112,13 +114,28 @@ void LsDynaSintax::ElementShell::setReader(QString pInputFile)
     {
         qDebug()<<"has match: "<<_match.hasMatch() <<", fonud groups:" << _re.captureCount();
         _shell4node.thickness = _match.captured(1);
-        qDebug()<<_shell4node.thickness;
+        qDebug() << "thickness element:" << _shell4node.thickness;
+        _flagThickness = true;
     }
+
         //store in output vector
+    if(_flagNode == true && _flagThickness == true)
+    {
+        qDebug()<<"inside if id:" << _shell4node.id_element <<", E," <<_shell4node.node1 << ","<< _shell4node.node2 << "," << _shell4node.node3 << "," << _shell4node.node4 << "thickness element:" << _shell4node.thickness;
+
+
         _OutputElmentShell.append(_shell4node);
+
+        _flagNode =false;
+        _flagThickness = false;
+
+     }
 }
 
-QVector<ShellProperty> LsDynaSintax::ElementShell::getElementStructure() {return _OutputElmentShell;}
+QVector<ShellProperty> LsDynaSintax::ElementShell::getElementStructure()
+{
+    return _OutputElmentShell;
+}
 
 LsDynaSintax::ElementShell::~ElementShell()
 {
