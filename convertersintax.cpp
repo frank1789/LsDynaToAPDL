@@ -5,7 +5,7 @@ ConverterSintaX::ConverterSintaX()
 {
     //_LineNumber = pCountLine;
     _InputLine.clear();
-    qDebug()<<"Constructor start...";
+    qDebug()<<"Call ConvertSintax()";
     qDebug()<<"set line number: "<<_LineNumber;
 
 }
@@ -111,7 +111,5 @@ int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaS
         return -1;
         break;
     }
-
-
     return 0;
 }
