@@ -1,7 +1,6 @@
 #include "about.h"
 #include "ui_about.h"
 
-QString f;
 
 About::About(QWidget *parent) :
     QDialog(parent),
@@ -24,7 +23,7 @@ About::About(QWidget *parent) :
 
 
     ui->label_2->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
-    qDebug() << QString(GIT_VERSION);
+    qDebug() << VERSION;
 }
 
 About::~About()
