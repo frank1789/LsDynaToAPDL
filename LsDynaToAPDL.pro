@@ -7,16 +7,23 @@
 QT       += core gui\
             concurrent
 
+QMAKE_CXXFLAGS = -std=c++14 -O3
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LsDynaToAPDL
 TEMPLATE = app
 
-# Version
+
+# GET VERSION FROM GIT
 PWD = /Users/francescoargentieri/LsDynaToAPDL
 GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
-#DEFINES += GVERSION = \\"$$GIT_VERSION\\"# \\\"$$GIT_VERSION\\\"
+GIT_BUILD = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
 QMAKE_CXXFLAGS += -DVERSION=\\\"$$GIT_VERSION\\\"
+DEFINES +=  BUILD=\\\"$$GIT_BUILD\\\"
+message("VERSION:" $$GIT_VERSION ", BUILD:" $$GIT_BUILD)
+
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
