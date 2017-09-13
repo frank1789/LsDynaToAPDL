@@ -19,11 +19,16 @@ About::About(QWidget *parent) :
     imageObject.scaled(120,120);
 
     //define visualization
-    ui->label->setPixmap(imageObject);
+    ui->logo->setPixmap(imageObject);
 
+    // add author
+    ui->author->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
 
-    ui->label_2->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
+    //add information builder
+    ui->version->setText(QString("Version %1").arg(VERSION));
+    ui->build->setText(QString("Build %1").arg(BUILD));
     qDebug() << VERSION;
+    qDebug() << BUILD;
 }
 
 About::~About()
@@ -36,7 +41,7 @@ QString read(QString pfileName)
     QFile fileInput(pfileName);
     if(!fileInput.open(QFile::ReadOnly | QFile::Text))
     {
-        qDebug() << "failed to poen file";
+        qDebug() << "failed to open file";
         return NULL;
     }
 
