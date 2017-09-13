@@ -21,6 +21,7 @@ GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --alw
 GIT_BUILD = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
 QMAKE_CXXFLAGS += -DVERSION=\\\"$$GIT_VERSION\\\"
 DEFINES +=  BUILD=\\\"$$GIT_BUILD\\\"
+message("VERSION:" $$GIT_VERSION ", BUILD:" $$GIT_BUILD)
 
 
 # The following define makes your compiler emit warnings if you use
