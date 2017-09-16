@@ -3,7 +3,13 @@
 
 # LsDynaToAPDL
 
+##### Versione :it:
+
 Questo progetto nasce nel 2015, durante lo sviluppo del progetto di tesi per la laurea triennale in ingegneria meccanica, consiste nello sviluppo di un programma per convertire il file di output di LsDyna nel formato APDL per Ansys e Ansys Workbench.
+
+##### Version :uk:
+
+This project was born in 2015, during the development of the thesis for a bachelor degree in mechanical engineering. Consisting in developing a program to convert LsDyna output files to APDL files readable from Ansys and Ansys Workbench.
 
 ## Getting Started
 
@@ -75,13 +81,11 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Francesco Argentieri**
 
 ## License
 
-This project is licensed under the GPL v3 License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GPL v3 License - see the [LICENSE](https://github.com/frank1789/LsDynaToAPDL/blob/master/LICENSE) file for details
 
 ## Acknowledgments
 
