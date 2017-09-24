@@ -38,8 +38,7 @@ void MainWindow::on_LoadFile_clicked()
 
     //instaziate class to retrive information file
     managefile = new ManageFile(fileName);
-
-
+    ui->label->setText("Dimension: " + QString().setNum(managefile->getsize(),'d',2) + " Mb");
     if(fileName != "")
     {
         ui->lineEdit->setText(fileName);
@@ -91,9 +90,9 @@ void MainWindow::on_LoadFile_clicked()
     //        //read file
     //        QFile inputFile(fileName);
 
-    //        //update group information file
-    //        double sizeFile = inputFile.size()/(1048576);
-    //        ui->label->setText("Dimension: " + QString().setNum(sizeFile,'d',2) + " Mb");
+            //update group information file
+
+
 
     //        //open file
     //        if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -115,13 +114,14 @@ void MainWindow::on_LoadFile_clicked()
     //active conversion
     ui->Convert->setEnabled(true);
 
+    //update the output line edit
+    managefile->setnewname();
+    ui->lineEdit_2->setText(managefile->getnewname());
+
 }
 
 void MainWindow::on_Convert_clicked()
 {
-    managefile->setnewname();
-    ui->lineEdit_2->setText(managefile->getnewname());
-
     // Create a progress dialog.
     QProgressDialog dialog;
     dialog.setLabelText(QString("Writing file..."));
@@ -151,6 +151,7 @@ void MainWindow::on_Exit_released()
     delete converter;
     delete node;
     delete shell;
+    delete managefile;
 
     qDebug()<<"closing app...";
     QApplication::quit();
