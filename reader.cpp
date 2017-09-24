@@ -1,4 +1,5 @@
 #include "reader.h"
+#include <QFile>
 
 void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell)
 {
@@ -42,6 +43,13 @@ QString ManageFile::getnewname()
 
 void ManageFile::setinfo()
 {
+    QFile inputFile(fileName);
 
+    //update group information file
+    sizeFile = inputFile.size()/(1048576);
 }
 
+double ManageFile::getsize()
+{
+    return sizeFile;
+}

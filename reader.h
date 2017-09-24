@@ -20,8 +20,12 @@ public:
 
     void setinfo();
 
+    double getsize();
+
 private:
     QString fileName, replace;
+
+    double sizeFile;
 };
 
 
