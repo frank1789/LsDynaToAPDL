@@ -45,11 +45,14 @@ private:
     About *about;
 
     // declare class to work LsDyna - APDL
-    ConverterSintaX* converter;
+    ConverterSintaX *converter;
 
-    LsDynaSintax::Node* node;
+    LsDynaSintax::Node *node;
 
-    LsDynaSintax::ElementShell* shell;
+    LsDynaSintax::ElementShell *shell;
+
+    //instaziate class to retrive information file
+    ManageFile *managefile;
 };
 
 #endif // MAINWINDOW_H

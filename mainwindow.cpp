@@ -35,6 +35,11 @@ void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"Open file dialog...";
     fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+
+    //instaziate class to retrive information file
+    managefile = new ManageFile(fileName);
+
+
     if(fileName != "")
     {
         ui->lineEdit->setText(fileName);
@@ -109,15 +114,13 @@ void MainWindow::on_LoadFile_clicked()
 
     //active conversion
     ui->Convert->setEnabled(true);
-    ui->lineEdit_2->setText(fileName);
+
 }
 
 void MainWindow::on_Convert_clicked()
 {
-    QRegularExpression re("(\\w+.\\w+)$");
-    re.match(fileName);
-    QString replace = "ApdlConverted.txt";
-    qDebug() << fileName.replace(re, replace);
+    managefile->setnewname();
+    ui->lineEdit_2->setText(managefile->getnewname());
 
     // Create a progress dialog.
     QProgressDialog dialog;
@@ -131,7 +134,7 @@ void MainWindow::on_Convert_clicked()
     QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
 
     // Start the computation.
-    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer,fileName, node->getNodeStructure(), shell->getElementStructure()));
+    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer, managefile->getnewname(), node->getNodeStructure(), shell->getElementStructure()));
 
     // Display the dialog and start the event loop.
     dialog.exec();

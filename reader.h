@@ -9,4 +9,20 @@
 
 void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell);
 
+class ManageFile
+{
+public:
+    ManageFile(QString pFilename);
+
+    void setnewname();
+
+    QString getnewname();
+
+    void setinfo();
+
+private:
+    QString fileName, replace;
+};
+
+
 #endif // READER_H

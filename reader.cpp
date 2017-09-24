@@ -20,3 +20,28 @@ void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pN
 
     file.close();
 }
+
+ManageFile::ManageFile(QString pFilename)
+{
+    fileName = pFilename;
+}
+
+void ManageFile::setnewname()
+{
+    //extract name
+    QRegularExpression re("(\\w+.\\w+)$");
+    re.match(fileName);
+    replace = "ApdlConverted.txt";
+    qDebug() << fileName.replace(re, replace);
+}
+
+QString ManageFile::getnewname()
+{
+    return fileName;
+}
+
+void ManageFile::setinfo()
+{
+
+}
+
