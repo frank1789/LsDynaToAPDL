@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "convertersintax.h"
-#include "reader.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label->setText("Dimension: 0 Mb");
     ui->Nodeinfo->setText("Total number node: 0");
     ui->ElemInfo->setText("Total number element shell: 0");
+
+    // instanziate classes to work Lsdyna/APDL
+    converter = new ConverterSintaX();
+    node = new LsDynaSintax::Node();
+    shell = new LsDynaSintax::ElementShell();
 }
 
 MainWindow::~MainWindow()
@@ -20,20 +23,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-ConverterSintaX* converter = new ConverterSintaX();
-LsDynaSintax::Node* node = new LsDynaSintax::Node();
-LsDynaSintax::ElementShell* shell = new LsDynaSintax::ElementShell();
-
-
-
-
-QString fileName;
-
-
 void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"Open file dialog...";
-    fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+
+    //instaziate class to retrive information file
+    managefile = new ManageFile(fileName);
+    ui->label->setText("Dimension: " + QString().setNum(managefile->getsize(),'d',2) + " Mb");
     if(fileName != "")
     {
         ui->lineEdit->setText(fileName);
@@ -71,53 +68,17 @@ void MainWindow::on_LoadFile_clicked()
         QMessageBox::information(this, tr("Info"), "The document has not been loaded.");
     }
 
-    //--------------------------------------------------------------------------------------<
-    //    if(fileName != NULL)
-    //    {
-    //        //initilalize the counter line for progress bar
-    //        int CountNumberLine = 0;
-
-    //        //update progress bar
-    //        //ui->progressBar->setMaximum(countLineNumber(fileName));
-    //        //update text bar input file
-    //        ui->lineEdit->setText(fileName);
-
-    //        //read file
-    //        QFile inputFile(fileName);
-
-    //        //update group information file
-    //        double sizeFile = inputFile.size()/(1048576);
-    //        ui->label->setText("Dimension: " + QString().setNum(sizeFile,'d',2) + " Mb");
-
-    //        //open file
-    //        if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
-    //        {
-    //            QTextStream in(&inputFile);
-    //            while (!in.atEnd())
-    //            {
-    //                QString line = in.readLine();
-    //                CountNumberLine += 1;
-
-    //                //store data
-    //converter->setInputLine(futureWatcher.result(), test, testshell);
-
-    //                //refresh progress bar
-    //                ui->progressBar->setValue(CountNumberLine);
-    //            }
-    //        }
-
     //active conversion
     ui->Convert->setEnabled(true);
-    ui->lineEdit_2->setText(fileName);
+
+    //update the output line edit
+    managefile->setnewname();
+    ui->lineEdit_2->setText(managefile->getnewname());
+
 }
 
 void MainWindow::on_Convert_clicked()
 {
-    QRegularExpression re("(\\w+.\\w+)$");
-    re.match(fileName);
-    QString replace = "ApdlConverted.txt";
-    qDebug() << fileName.replace(re, replace);
-
     // Create a progress dialog.
     QProgressDialog dialog;
     dialog.setLabelText(QString("Writing file..."));
@@ -130,7 +91,7 @@ void MainWindow::on_Convert_clicked()
     QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
 
     // Start the computation.
-    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer,fileName, node->getNodeStructure(), shell->getElementStructure()));
+    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer, managefile->getnewname(), node->getNodeStructure(), shell->getElementStructure()));
 
     // Display the dialog and start the event loop.
     dialog.exec();
@@ -147,6 +108,7 @@ void MainWindow::on_Exit_released()
     delete converter;
     delete node;
     delete shell;
+    delete managefile;
 
     qDebug()<<"closing app...";
     QApplication::quit();

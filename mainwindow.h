@@ -6,7 +6,10 @@
 #include <QProgressDialog>
 #include <QDebug>
 #include <QMenuBar>
+
 #include "about.h"
+#include "convertersintax.h"
+#include "reader.h"
 
 
 namespace Ui {
@@ -37,7 +40,19 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    //declare inforamtion windows
     About *about;
+
+    // declare class to work LsDyna - APDL
+    ConverterSintaX *converter;
+
+    LsDynaSintax::Node *node;
+
+    LsDynaSintax::ElementShell *shell;
+
+    //instaziate class to retrive information file
+    ManageFile *managefile;
 };
 
 #endif // MAINWINDOW_H

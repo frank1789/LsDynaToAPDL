@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QString>
 #include <QVector>
-#include <QFile>
 #include <QRegularExpression>
 
 struct NodeProperty
