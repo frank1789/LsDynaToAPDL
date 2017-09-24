@@ -51,5 +51,6 @@ void ManageFile::setinfo()
 
 double ManageFile::getsize()
 {
+    ManageFile::setinfo();
     return sizeFile;
 }
