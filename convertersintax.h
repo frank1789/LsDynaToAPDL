@@ -11,8 +11,6 @@
 class ConverterSintaX
 {
 public:
-    //virtual void LsDynaSintax() = 0;
-    //virtual void APDLSintax() = 0;
    ConverterSintaX();
    ~ConverterSintaX();
    void setInputLine(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell);
@@ -24,26 +22,3 @@ private:
 };
 
 #endif // CONVERTERSINTAX_H
-
-
-/*
-void HeaderApdl()
-{
-    QString header = "FINISH\n";
-    header += "/CLEAR,START,NEW\n\n";
-    header += "/PREP7\n\n";
-}
-
-void MakeElemenType()
-{
-    QString elementtype = "ET,";
-    elementtype += QString(idelement);
-    elementtype += QString(typeelement) + ",";
-}
-
-void MakeElement()
-{
-
-
-}
-*/
