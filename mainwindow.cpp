@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "convertersintax.h"
-#include "reader.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,16 +11,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label->setText("Dimension: 0 Mb");
     ui->Nodeinfo->setText("Total number node: 0");
     ui->ElemInfo->setText("Total number element shell: 0");
+
+    // instanziate classes to work Lsdyna/APDL
+    converter = new ConverterSintaX();
+    node = new LsDynaSintax::Node();
+    shell = new LsDynaSintax::ElementShell();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    //clear the heap
+    delete converter;
+    delete node;
+    delete shell;
 }
 
-ConverterSintaX* converter = new ConverterSintaX();
-LsDynaSintax::Node* node = new LsDynaSintax::Node();
-LsDynaSintax::ElementShell* shell = new LsDynaSintax::ElementShell();
+
 
 
 
