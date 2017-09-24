@@ -26,7 +26,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"Open file dialog...";
-    fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
 
     //instaziate class to retrive information file
     managefile = new ManageFile(fileName);
