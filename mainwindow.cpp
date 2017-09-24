@@ -23,14 +23,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
-
-
-
-QString fileName;
-
-
 void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"Open file dialog...";
