@@ -21,11 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-
-    //clear the heap
-    delete converter;
-    delete node;
-    delete shell;
 }
 
 
