@@ -76,41 +76,6 @@ void MainWindow::on_LoadFile_clicked()
         QMessageBox::information(this, tr("Info"), "The document has not been loaded.");
     }
 
-    //--------------------------------------------------------------------------------------<
-    //    if(fileName != NULL)
-    //    {
-    //        //initilalize the counter line for progress bar
-    //        int CountNumberLine = 0;
-
-    //        //update progress bar
-    //        //ui->progressBar->setMaximum(countLineNumber(fileName));
-    //        //update text bar input file
-    //        ui->lineEdit->setText(fileName);
-
-    //        //read file
-    //        QFile inputFile(fileName);
-
-            //update group information file
-
-
-
-    //        //open file
-    //        if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
-    //        {
-    //            QTextStream in(&inputFile);
-    //            while (!in.atEnd())
-    //            {
-    //                QString line = in.readLine();
-    //                CountNumberLine += 1;
-
-    //                //store data
-    //converter->setInputLine(futureWatcher.result(), test, testshell);
-
-    //                //refresh progress bar
-    //                ui->progressBar->setValue(CountNumberLine);
-    //            }
-    //        }
-
     //active conversion
     ui->Convert->setEnabled(true);
 
