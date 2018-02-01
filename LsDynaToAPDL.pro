@@ -43,7 +43,9 @@ SOURCES += \
     lsdynainterpreter.cpp \
     apdlinterpreter.cpp \
     reader.cpp \
-    about.cpp
+    about.cpp \
+    dynashell.cpp \
+    dynanode.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -51,7 +53,8 @@ HEADERS += \
     lsdynainterpreter.h \
     apdlinterpreter.h \
     reader.h \
-    about.h
+    about.h \
+    finitelement.h
 
 FORMS += \
         mainwindow.ui \

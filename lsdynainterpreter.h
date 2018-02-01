@@ -1,33 +1,16 @@
 #ifndef LSDYNAINTERPRETER_H
 #define LSDYNAINTERPRETER_H
-#include <QDebug>
+#include "finitelement.h"
 #include <QString>
 #include <QVector>
 #include <QRegularExpression>
 
-struct NodeProperty
-{
-    QString id;
-    QString cordinatex;
-    QString cordinatey;
-    QString cordinatez;
-};
-
-struct ShellProperty
-{
-    QString id_element;
-    QString node1;
-    QString node2;
-    QString node3;
-    QString node4;
-    QString thickness;
-};
 
 namespace LsDynaSintax {
 
-//define keyword for languange LsDyna to move different mode to interpret the data
-enum KeywordDyna
-{
+  //define keyword for languange LsDyna to move different mode to interpret the data
+  enum KeywordDyna
+  {
     $,
     KEYWORD,
     NODE,
@@ -35,75 +18,60 @@ enum KeywordDyna
     ELEMENTSOLID,
     INITIALSTRAINSOLID,
     INITIALSTRESSSHELL
-};
+  };
 
-//define virtual class for interpreter
-class LsDynaInterpreter
-{
-    virtual void setReader(QString pInputFile) = 0;
-public:
+  //define virtual class for interpreter
+  class LsDynaInterpreter
+  {
+    virtual void readfromfile(QString pInputLine) = 0;
+    virtual void reset() = 0;
+  public:
     virtual ~LsDynaInterpreter() = 0;
-};
+  };
 
-//define class to interpret node
-class Node : public LsDynaInterpreter
-{
-
-public:
+  //define class to interpret node
+  class Node : public LsDynaInterpreter
+  {
+  public:
     Node();
-
     ~Node();
+    void readfromfile(QString pInputLine);
+    void reset();
+    QVector<NodeProperty>* getNode();
 
-    void setReader(QString pInputFile);
-
-    void Clear();
-
-    QVector<NodeProperty> getNodeStructure();
-
-private:
+  private:
     QRegularExpression _re;
-
     QRegularExpressionMatch _match;
+    QVector<NodeProperty>* _node;
+  };
 
-    QString _IDnode;
 
-    QString _CoordinateNodeX;
 
-    QString _CoordinateNodeY;
+  //define class to interpreter element shell
+  class Element : public LsDynaInterpreter
+  {
 
-    QString _CoordinateNodeZ;
+  public:
+    virtual ~Element();
+  };
 
-    QVector<NodeProperty> _OutputNode;
+  //define class to interpreter element shell
+  class Shell : public Element
+  {
+  public:
+    Shell();
+    ~Shell();
+    void readfromfile(QString pInputLine);
+    void reset();
+    QVector<ShellProperty4node>* getElement();
 
-    NodeProperty _TempOutputNode;
-};
-
-//define class to interpreter element shell
-class ElementShell : public LsDynaInterpreter
-{
-
-public:
-    ElementShell();
-
-    ~ElementShell();
-
-    void setReader(QString pInputFile);
-
-    QVector<ShellProperty> getElementStructure();
-
-    void Clear();
-
-private:
+  private:
     QRegularExpression _re;
-
     QRegularExpressionMatch _match;
-
-    ShellProperty _shell4node;
-
-    QVector<ShellProperty> _OutputElmentShell;
-
-    bool _flagNode, _flagThickness;
-};
+    QVector<ShellProperty4node>* _shell4node;
+    bool _flagNode;
+    bool _flagThickness;
+  };
 };
 
 #endif // LSDYNAINTERPRETER_H
