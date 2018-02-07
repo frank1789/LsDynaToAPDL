@@ -2,28 +2,47 @@
 #define FINITELEMENT_H
 #include <QString>
 
-/**
- * @brief The NodeStruct struct
- */
-struct NodeProperty
+template<typename N, typename P>
+struct propnode
 {
-  QString IdNode;/**< */
-  QString coordinateX;/**< */
-  QString coordinateY;/**< */
-  QString coordinateZ;/**< */
+  N idnode;
+  P coordinate_x;
+  P coordinate_y;
+  P coordinate_z;
 };
 
-/**
- * @brief The shell4node struct
- */
-struct ShellProperty4node
+template<typename N, typename EN, typename T, int size>
+struct propelem
 {
-  QString IdElement;/**< */
-  QString Node_1;/**< */
-  QString Node_2;/**< */
-  QString Node_3;/**< */
-  QString Node_4;/**< */
-  QString ElemThickness;/**< */
+  N idelem;           /**< */
+  EN nodeelem[size];  /**< */
+  T  elemthick;       /**< */
 };
+
+
+/**
+ * @brief The FiniteElement class
+ */
+class FiniteElement
+{
+  virtual void readfromfile(QString pInputLine) = 0;
+public:
+  virtual ~FiniteElement() = 0;
+};
+
+
+class Element : public FiniteElement
+{
+public:
+  ~Element() = 0;
+  void setMaterial();
+protected:
+  double _moduleYoung;  /**< */
+  double _poissonCoeff; /**< */
+  int _numofnode;
+};
+
+
+
 
 #endif // FINITELEMENT_H
