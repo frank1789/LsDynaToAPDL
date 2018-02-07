@@ -39,22 +39,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    convertersintax.cpp \
-    lsdynainterpreter.cpp \
-    apdlinterpreter.cpp \
     reader.cpp \
     about.cpp \
-    dynashell.cpp \
-    dynanode.cpp
+    finitelement.cpp \
+    node.cpp \
+    shell.cpp \
+    convertersintax.cpp
 
 HEADERS += \
         mainwindow.h \
-    convertersintax.h \
-    lsdynainterpreter.h \
-    apdlinterpreter.h \
     reader.h \
     about.h \
-    finitelement.h
+    finitelement.h \
+    node.h \
+    shell.h \
+    convertersintax.h
 
 FORMS += \
         mainwindow.ui \
