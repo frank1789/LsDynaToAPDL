@@ -1,10 +1,15 @@
 #include "reader.h"
-#include <QFile>
+#include "QDebug"
+#include "QFile"
+#include "QRegularExpression"
+#include "QThread"
+#include "QMessageBox"
 
-void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell)
+//template<typename N, typename E>
+void read(QString pFileName, ConverterSintaX* pConverter, Node *Node, Shell *Shell)
 {
-    qDebug()<<"Call function reader in thread" << QThread::currentThreadId() << "get inputfile" << pFileName;;
-
+    qDebug()<<"Call function reader in thread" << QThread::currentThreadId();
+    qDebug()<< "get inputfile" << pFileName;;
     //read file
     QFile file(pFileName);
     if(!file.open(QIODevice::ReadOnly))
@@ -16,7 +21,7 @@ void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pN
     while(!in.atEnd())
     {
         QString line = in.readLine();
-        pConverter->setInputLine(line, pNode, pShell);
+        pConverter->setInputLine(line, Node, Shell);
     }
 
     file.close();

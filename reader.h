@@ -1,13 +1,11 @@
 #ifndef READER_H
 #define READER_H
-#include <QFile>
-#include <QDebug>
-#include <QString>
-#include <QtConcurrent>
-#include <QMessageBox>
+#include "QString"
 #include "convertersintax.h"
+#include "node.h"
+#include "shell.h"
 
-void read(QString pFileName, ConverterSintaX* pConverter, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell);
+void read(QString pFileName, ConverterSintaX* pConverter, Node *Node, Shell *Shell);
 
 class ManageFile
 {
