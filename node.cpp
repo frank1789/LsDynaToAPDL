@@ -5,6 +5,7 @@
 
 Node::Node() {
   _nodeimport = new QVector<propnode<int, double>> {};
+  _nodeimport->clear();
 }
 
 
@@ -40,11 +41,12 @@ void Node::readfromfile(QString pInputLine)
 
 
 
-int Node::getIdNode() {return _datain.idnode;}
+int Node::getIdNode(int i) {return _nodeimport->at(i).idnode;}
 
-double Node::getCoordinateX() {return _datain.coordinate_x;}
+double Node::getCoordinateX(int i) {return _nodeimport->at(i).coordinate_x;}
 
-double Node::getCoordinateY() {return _datain.coordinate_y;}
+double Node::getCoordinateY(int i) {return _nodeimport->at(i).coordinate_y;}
 
-double Node::getCoordinateZ() {return _datain.coordinate_z;}
+double Node::getCoordinateZ(int i) {return _nodeimport->at(i).coordinate_z;}
 
+long Node::size() {return _nodeimport->size();}

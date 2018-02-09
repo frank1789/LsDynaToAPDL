@@ -8,10 +8,11 @@ public:
   Node();
   ~Node();
   void readfromfile(QString pInputLine);
-  int getIdNode();
-  double getCoordinateX();
-  double getCoordinateY();
-  double getCoordinateZ();
+  long size();
+  int getIdNode(int i);
+  double getCoordinateX(int i);
+  double getCoordinateY(int i);
+  double getCoordinateZ(int i);
 private:
   propnode<int, double> _datain;
   QVector<propnode<int, double>>* _nodeimport;
