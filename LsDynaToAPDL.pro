@@ -21,7 +21,7 @@ GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --alw
 GIT_BUILD = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
 QMAKE_CXXFLAGS += -DVERSION=\\\"$$GIT_VERSION\\\"
 DEFINES +=  BUILD=\\\"$$GIT_BUILD\\\"
-message("VERSION:" $$GIT_VERSION ", BUILD:" $$GIT_BUILD)
+message("VERSION:" $$GIT_VERSION", BUILD:" $$GIT_BUILD)
 
 
 # The following define makes your compiler emit warnings if you use
@@ -44,7 +44,8 @@ SOURCES += \
     finitelement.cpp \
     node.cpp \
     shell.cpp \
-    convertersintax.cpp
+    convertersintax.cpp \
+    writeapdl.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     finitelement.h \
     node.h \
     shell.h \
-    convertersintax.h
+    convertersintax.h \
+    writeapdl.h
 
 FORMS += \
         mainwindow.ui \
