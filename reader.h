@@ -10,20 +10,18 @@ void read(QString pFileName, ConverterSintaX* pConverter, Node *Node, Shell *She
 class ManageFile
 {
 public:
-    ManageFile(QString pFilename);
-
-    void setnewname();
-
-    QString getnewname();
-
-    void setinfo();
-
-    double getsize();
-
+  ManageFile();
+  ManageFile(QString pfileName);
+  void setFile(QString pfileName);
+  void setNewfileName();
+  QString getNewfileName();
+  QString getfileName();
+  double getSizeInfo();
 private:
-    QString fileName, replace;
-
-    double sizeFile;
+  QString _fileName;
+  QString _NewfileName;
+  QString _replace;
+  double sizeFile;
 };
 
 

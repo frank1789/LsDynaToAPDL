@@ -8,54 +8,61 @@
 //template<typename N, typename E>
 void read(QString pFileName, ConverterSintaX* pConverter, Node *Node, Shell *Shell)
 {
-    qDebug()<<"Call function reader in thread" << QThread::currentThreadId();
-    qDebug()<< "get inputfile" << pFileName;;
-    //read file
-    QFile file(pFileName);
-    if(!file.open(QIODevice::ReadOnly))
+  qDebug()<<"Call function reader in thread" << QThread::currentThreadId();
+  qDebug()<< "get inputfile" << pFileName;;
+  //read file
+  QFile file(pFileName);
+  if(!file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::information(0, "error", file.errorString());
+      QMessageBox::information(0, "error", file.errorString());
     }
 
-    QTextStream in(&file);
-    while(!in.atEnd())
+  QTextStream in(&file);
+  while(!in.atEnd())
     {
-        QString line = in.readLine();
-        pConverter->setInputLine(line, Node, Shell);
+      QString line = in.readLine();
+      pConverter->setInputLine(line, Node, Shell);
     }
 
-    file.close();
+  file.close();
 }
 
-ManageFile::ManageFile(QString pFilename)
+
+ManageFile::ManageFile()
 {
-    fileName = pFilename;
+  _fileName.clear();
+  _NewfileName.clear();
+  _replace.clear();
 }
 
-void ManageFile::setnewname()
+ManageFile::ManageFile(QString pfileName)
 {
-    //extract name
-    QRegularExpression re("(\\w+.\\w+)$");
-    re.match(fileName);
-    replace = "ApdlConverted.txt";
-    qDebug() << fileName.replace(re, replace);
+  _fileName = pfileName;
 }
 
-QString ManageFile::getnewname()
+void ManageFile::setFile(QString pfileName)
 {
-    return fileName;
+  _fileName = pfileName;
 }
 
-void ManageFile::setinfo()
+void ManageFile::setNewfileName()
 {
-    QFile inputFile(fileName);
-
-    //update group information file
-    sizeFile = inputFile.size()/(1048576);
+  _NewfileName = _fileName;
+  //extract name
+  QRegularExpression re("(\\w+.\\w+)$");
+  re.match(_NewfileName);
+  _replace = "ApdlConverted.txt";
+  qDebug() << _NewfileName.replace(re, _replace);
 }
 
-double ManageFile::getsize()
+QString ManageFile::getNewfileName() {return _NewfileName;}
+
+QString ManageFile::getfileName() {return _fileName;}
+
+
+double ManageFile::getSizeInfo()
 {
-    ManageFile::setinfo();
-    return sizeFile;
+  QFile inputFile(_fileName);
+  sizeFile = inputFile.size()/(1048576); //update group information file
+  return sizeFile;
 }
