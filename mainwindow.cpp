@@ -1,122 +1,133 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "QtConcurrent"
+#include "QThread"
+#include "QMessageBox"
+#include "writeapdl.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    ui->Convert->setDisabled(true);
-    ui->label->setText("Dimension: 0 Mb");
-    ui->Nodeinfo->setText("Total number node: 0");
-    ui->ElemInfo->setText("Total number element shell: 0");
+  ui->setupUi(this);
+  ui->Convert->setDisabled(true);
+  ui->Preview->setDisabled(true);
+  ui->label->setText("Dimension: 0 Mb");
+  ui->Nodeinfo->setText("Total number node: 0");
+  //  ui->ElemInfo->setText("Total number element shell: 0");
 
-    // instanziate classes to work Lsdyna/APDL
-    converter = new ConverterSintaX();
-    node = new LsDynaSintax::Node();
-    shell = new LsDynaSintax::ElementShell();
+  // instanziate classes to work Lsdyna/APDL
+
+  node = new Node();
+  shell = new Shell();
+  converter = new ConverterSintaX();
+  managefile = new ManageFile();
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+  delete ui;
 }
+
+//void read2() {};
 
 void MainWindow::on_LoadFile_clicked()
 {
-    qDebug()<<"Open file dialog...";
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
-
-    //instaziate class to retrive information file
-    managefile = new ManageFile(fileName);
-    ui->label->setText("Dimension: " + QString().setNum(managefile->getsize(),'d',2) + " Mb");
-    if(fileName != "")
+  qDebug()<<"Open file dialog...";
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"),"", tr("All files (*.k *.txt)"));
+  //instaziate class to retrive information file
+  managefile->setFile(fileName);
+  ui->label->setText("Dimension: " + QString().setNum(managefile->getSizeInfo(),'d',2) + " Mb");
+  if(fileName != "")
     {
-        ui->lineEdit->setText(fileName);
-
-        //clear if  already run
-        node->Clear();
-        shell->Clear();
-
-        // Create a progress dialog.
-        QProgressDialog dialog;
-        dialog.setLabelText(QString("Reading file..."));
-
-        // Create a QFutureWatcher and connect signals and slots.
-        QFutureWatcher<void> futureWatcher;
-        QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-        QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-        QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
-        QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
-
-        // Start the computation.
-        futureWatcher.setFuture(QtConcurrent::run(read, fileName, converter, node, shell));
-
-        // Display the dialog and start the event loop.
-        dialog.exec();
-
-        futureWatcher.waitForFinished();
-
-        // Query the future to check if was canceled.
-        qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+      ui->lineEdit->setText(fileName);
+      //active button
+      ui->Convert->setEnabled(true);
+      ui->Preview->setEnabled(true);
     }
-
-    else
+  else
     {
-        qDebug() <<"Missing input file, launch information message.";
-        QMessageBox::information(this, tr("Info"), "The document has not been loaded.");
+      qDebug() <<"No input file";
+      QMessageBox::warning(this, tr("Warning"), "The document has not been loaded.");
     }
-
-    //active conversion
-    ui->Convert->setEnabled(true);
-
-    //update the output line edit
-    managefile->setnewname();
-    ui->lineEdit_2->setText(managefile->getnewname());
-
+  managefile->setNewfileName(); //update the output line edit
+  ui->lineEdit_2->setText(managefile->getNewfileName());
 }
 
 void MainWindow::on_Convert_clicked()
 {
-    // Create a progress dialog.
-    QProgressDialog dialog;
-    dialog.setLabelText(QString("Writing file..."));
-
+  {
+    //read file
+    QProgressDialog dialog;  // Create a progress dialog.
+    dialog.setLabelText(QString("Reading file..."));
     // Create a QFutureWatcher and connect signals and slots.
     QFutureWatcher<void> futureWatcher;
     QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
     QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
     QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
     QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
-
-    // Start the computation.
-    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer, managefile->getnewname(), node->getNodeStructure(), shell->getElementStructure()));
-
+    // Start to read file
+    futureWatcher.setFuture(QtConcurrent::run(read, managefile->getfileName(), converter, node, shell));
     // Display the dialog and start the event loop.
     dialog.exec();
-
     futureWatcher.waitForFinished();
-
     // Query the future to check if was canceled.
     qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+  }
+  {
+    // write file
+    QProgressDialog dialog; // Create a progress dialog.
+    dialog.setLabelText(QString("Writing file..."));
+    // Create a QFutureWatcher and connect signals and slots.
+    QFutureWatcher<void> futureWatcher;
+    QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+    QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+    QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+    QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+    //Start to write file
+    futureWatcher.setFuture(QtConcurrent::run(writeAPDL, managefile->getNewfileName(), node, shell));
+    // Display the dialog and start the event loop.
+    dialog.exec();
+    futureWatcher.waitForFinished();
+    // Query the future to check if was canceled.
+    qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+  }
+}
+
+void MainWindow::on_Preview_clicked()
+{
+  QProgressDialog dialog; // Create a progress dialog.
+  dialog.setLabelText(QString("Reading file..."));
+  // Create a QFutureWatcher and connect signals and slots.
+  QFutureWatcher<void> futureWatcher;
+  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+  // Start to read file.
+  futureWatcher.setFuture(QtConcurrent::run(read, managefile->getfileName(), converter, node, shell));
+  // Display the dialog and start the event loop.
+  dialog.exec();
+  futureWatcher.waitForFinished();
+  // Query the future to check if was canceled.
+  qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
 }
 
 void MainWindow::on_Exit_released()
 {
-    //clear the heap
-    delete converter;
-    delete node;
-    delete shell;
-    delete managefile;
-
-    qDebug()<<"closing app...";
-    QApplication::quit();
+  //clear the heap
+  delete converter;
+  delete shell;
+  delete node;
+  delete managefile;
+  //    delete about;
+  qDebug()<<"closing app...";
+  QApplication::quit();
 }
 
 void MainWindow::information()
 {
-    qDebug() <<"success!";
+  qDebug() <<"success!";
 }
 
 void MainWindow::open_about()
@@ -126,6 +137,6 @@ void MainWindow::open_about()
 
 void MainWindow::on_actionInformazioni_triggered()
 {
-    about = new About(this);
-    about->show();
+  about = new About(this);
+  about->show();
 }
