@@ -5,10 +5,10 @@
 template<typename N, typename P>
 struct propnode
 {
-  N idnode;
-  P coordinate_x;
-  P coordinate_y;
-  P coordinate_z;
+  N idnode; /**< */
+  P coordinate_x; /**< */
+  P coordinate_y; /**< */
+  P coordinate_z; /**< */
 };
 
 template<typename N, typename EN, typename T, int size>
@@ -26,6 +26,7 @@ struct propelem
 class FiniteElement
 {
   virtual void readfromfile(QString pInputLine) = 0;
+  virtual long size() = 0;
 public:
   virtual ~FiniteElement() = 0;
 };
@@ -39,7 +40,7 @@ public:
 protected:
   double _moduleYoung;  /**< */
   double _poissonCoeff; /**< */
-  int _numofnode;
+  int _numofnode; /**< */
 };
 
 
