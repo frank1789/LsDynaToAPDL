@@ -68,3 +68,10 @@ void Shell::readfromfile(QString pInputLine)
       _flagThickness = false;
     }
 }
+
+long Shell::size() {return _shellimport->size();}
+
+int Shell::getElementID(int i){return _shellimport->at(i).idelem;}
+int Shell::getElementNode(int i, int j){return _shellimport->at(i).nodeelem[j];}
+int Shell::getElementNumNode(){return 4;}
+double Shell::getElementThickness(int i){return _shellimport->at(i).elemthick;}
