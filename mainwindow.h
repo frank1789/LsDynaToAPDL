@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QMenuBar>
 #include <QString>
+#include <QDropEvent>
 #include "about.h"
 #include "reader.h"
 
@@ -28,6 +29,8 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+  void dragEnterEvent(QDragEnterEvent *e);
+  void dropEvent(QDropEvent *e);
 public slots:
   void open_about();
 

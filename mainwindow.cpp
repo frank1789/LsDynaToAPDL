@@ -3,6 +3,7 @@
 #include "QtConcurrent"
 #include "QThread"
 #include "QMessageBox"
+#include "QEvent"
 #include "writeapdl.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->Preview->setDisabled(true);
   ui->label->setText("Dimension: 0 Mb");
   ui->Nodeinfo->setText("Total number node: 0");
+  setAcceptDrops(true);
   //  ui->ElemInfo->setText("Total number element shell: 0");
 
   // instanziate classes to work Lsdyna/APDL
@@ -139,4 +141,29 @@ void MainWindow::on_actionInformazioni_triggered()
 {
   about = new About(this);
   about->show();
+}
+
+
+
+
+
+
+
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    if (e->mimeData()->hasUrls()) {
+        e->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *e)
+{
+  QString fileName;
+    foreach (const QUrl &url, e->mimeData()->urls()) {
+         fileName = url.toLocalFile();
+        qDebug() << "Dropped file:" << fileName;
+    }
+
+    ui->lineEdit->setText(fileName);
 }
