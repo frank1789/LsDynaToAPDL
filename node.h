@@ -2,6 +2,10 @@
 #define NODE_H
 #include "finitelement.h"
 
+/**
+ * @brief The Node class extrapolates the nodes from the file and manage information.
+ * @details
+ */
 class Node : public FiniteElement
 {
 public:

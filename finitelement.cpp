@@ -3,7 +3,8 @@
 
 template<>
 /**
- * @brief The propnode<int, double> struct specializzation @see propnode
+ * @brief The propnode<int, double> struct specializzation.
+ * @see propnode
  */
 struct propnode<int, double>
 {
@@ -16,8 +17,8 @@ struct propnode<int, double>
 template<>
 /**
  * @brief The propelem<int, int, double, 4> struct specializzation
- * element 4-node shell @see propelem
- *
+ * element 4-node shell.
+ * @see propelem
  * @details This implementation uses 4-node shell elements with thickness, is used
  * to represent the SHELL181 element present in Ansys.
  */
@@ -30,12 +31,10 @@ struct propelem<int, int, double, 4>
 
 /**
  * @brief FiniteElement::~FiniteElement default distructor abstract class.
- *
  */
 FiniteElement::~FiniteElement() { qDebug() << "call ~FiniteElement()";}
 
 /**
  * @brief Element::~Element default distructor class.
- *
  */
 Element::~Element() {qDebug() << "call ~Element()";}

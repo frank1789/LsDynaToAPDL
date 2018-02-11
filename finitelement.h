@@ -5,14 +5,12 @@
 template<typename N, typename P>
 /**
  * @brief The propnode struct contains the information of a single node.
- *
  * @details The information is divided into: the ID of the node that
  * uniquely identifies it, the x coordinate, the y coordinate, the z coordinate.
  * We use a template definition to be able to create multiple definitions
  * depending on the nodes used.
  * It is suggested to use integer data types to define node IDs, while
  * for float data type  coordinates.
- *
  * @param N type for node IDs
  * @param P type for spatial coordinate
  */
@@ -26,9 +24,8 @@ struct propnode
 
 template<typename N, typename EN, typename T, int size>
 /**
- * @brief The propelem struct defines the general appearance of the parameters
+ * @brief The propelem struct defines the general appearance of the parameters.
  * of an element.
- *
  * @details The content of the structure represents the element defined by a
  * unique ID, by the number of nodes that constitute it. The thickness used for
  * shell-like elements.
@@ -40,7 +37,6 @@ template<typename N, typename EN, typename T, int size>
  * - number of nodes of the element;\n
  * Float Data type:
  * - thickness.
- *
  * @param N type for elments IDs
  * @param EN type for node IDs
  * @param T type for element's thickness
@@ -55,8 +51,7 @@ struct propelem
 
 
 /**
- * @brief The FiniteElement class to define the type of elements and their structure
- *
+ * @brief The FiniteElement class to define the type of elements and their structure.
  * @details provides virtual methods to be defined in the derived classes to
  * better interpret the type of existing finite elements.
  */
@@ -69,8 +64,7 @@ public:
 };
 
 /**
- * @brief The Element class defines the information common to the type of element
- *
+ * @brief The Element class defines the information common to the type of element.
  */
 class Element : public FiniteElement
 {
