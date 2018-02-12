@@ -2,14 +2,17 @@
 #include "QDebug"
 #include "QRegularExpression"
 
+#define INIT 35000
+
 /**
  * @brief Node::Node default constructor.
- * @details initializes the vector containing the node structure.
+ * @details initializes private variables.
  */
 Node::Node()
 {
   _nodeimport = new QVector<propnode<int, double>> {};
   _nodeimport->clear();
+  _nodeimport->reserve(INIT);
 }
 
 /**
@@ -48,7 +51,7 @@ void Node::readfromfile(QString pInputLine)
       qDebug() << _datain.idnode << _datain.coordinate_x << _datain.coordinate_y << _datain.coordinate_z;
     }
   //fill with node extracted
-    _nodeimport->append(_datain);
+  _nodeimport->push_back(_datain);
 }
 
 
