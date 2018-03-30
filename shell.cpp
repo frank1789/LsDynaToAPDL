@@ -3,7 +3,7 @@
 #include "QRegularExpression"
 
 
-
+#define INIT 35000
 
 
 Shell::Shell()
@@ -13,6 +13,8 @@ Shell::Shell()
   _flagThickness = false;
 //  _nodeelem = new double[N];
   _shellimport = new QVector<propelem<int, int, double, 4>>;
+  _shellimport->clear();
+  _shellimport->reserve(INIT);
 }
 
 Shell::~Shell()
@@ -62,7 +64,7 @@ void Shell::readfromfile(QString pInputLine)
       //      qDebug()<<"inside if id:" << shell.IdElement <<", E," << shell.Node_1 << ",";
       //      qDebug()<< shell.Node_2 << "," << shell.Node_3 << "," << shell.Node_4;
       //      qDebug()<< "thickness element:" << shell.ElemThickness;
-            _shellimport->append(_shelldata);
+            _shellimport->push_back(_shelldata);
       // reset the flag
       _flagNode =false;
       _flagThickness = false;
