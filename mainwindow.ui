@@ -38,7 +38,7 @@
     <property name="title">
      <string>I/O File</string>
     </property>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="lineEdit_original">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -73,7 +73,7 @@
       <string>Convert</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="lineEdit_converted">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -108,7 +108,7 @@
       <string>Load file...</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="label_original">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -121,7 +121,7 @@
       <string>Original file</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="label_converted">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -147,7 +147,7 @@
     <property name="title">
      <string>Information original file:</string>
     </property>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="information_file">
      <property name="geometry">
       <rect>
        <x>10</x>
