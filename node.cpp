@@ -13,6 +13,7 @@ Node::Node()
   _nodeimport = new QVector<propnode<int, double>> {};
   _nodeimport->clear();
   _nodeimport->reserve(INIT);
+  _countnode_ = 0;
 }
 
 /**
@@ -52,8 +53,15 @@ void Node::readfromfile(QString pInputLine)
     }
   //fill with node extracted
   _nodeimport->push_back(_datain);
+  _countnode_++;
 }
 
+//void
+
+//void Node::CountNode()
+//{
+//    emit _countnode_;
+//}
 
 /**
  * @brief Node::getIdNode return the IDs node.

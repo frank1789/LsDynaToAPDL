@@ -3,7 +3,6 @@
 #include "finitelement.h"
 #include "node.h"
 
-
 class Shell : public Element
 {
 public:

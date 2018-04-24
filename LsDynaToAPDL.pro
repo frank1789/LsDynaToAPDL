@@ -16,12 +16,12 @@ TEMPLATE = app
 
 
 # GET VERSION FROM GIT
-PWD = /Users/francescoargentieri/LsDynaToAPDL
-GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
-GIT_BUILD = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
-QMAKE_CXXFLAGS += -DVERSION=\\\"$$GIT_VERSION\\\"
-DEFINES +=  BUILD=\\\"$$GIT_BUILD\\\"
-message("VERSION:" $$GIT_VERSION", BUILD:" $$GIT_BUILD)
+#PWD = /Users/francescoargentieri/LsDynaToAPDL
+#GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --#tags)
+#GIT_BUILD = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
+##QMAKE_CXXFLAGS += -DVERSION=\\\"$$GIT_VERSION\\\"
+#DEFINES +=  BUILD=\\\"$$GIT_BUILD\\\"
+#message("VERSION:" $$GIT_VERSION", BUILD:" $$GIT_BUILD)
 
 
 # The following define makes your compiler emit warnings if you use
@@ -45,7 +45,9 @@ SOURCES += \
     node.cpp \
     shell.cpp \
     convertersintax.cpp \
-    writeapdl.cpp
+    writeapdl.cpp \
+    dialog.cpp \
+    managefile.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -55,11 +57,14 @@ HEADERS += \
     node.h \
     shell.h \
     convertersintax.h \
-    writeapdl.h
+    writeapdl.h \
+    dialog.h \
+    managefile.h
 
 FORMS += \
         mainwindow.ui \
-    about.ui
+    about.ui \
+    dialog.ui
 
 RESOURCES += \
     resources.qrc
