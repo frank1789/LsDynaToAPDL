@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QLabel>
 #include <QImage>
+#include <QCloseEvent>
 
 
 namespace Ui {
@@ -21,8 +22,14 @@ public:
     explicit About(QWidget *parent = 0);
     ~About();
 
+signals:
+    void dialogClosed();
+
 private:
-    Ui::About *ui;
+   void closeEvent(QCloseEvent *event);
+
+   Ui::About *ui;
+
 };
 
 QString read(QString pfileName);

@@ -1,20 +1,33 @@
 #ifndef CONVERTERSINTAX_H
 #define CONVERTERSINTAX_H
-#include <QDebug>
-#include <QString>
-#include <QVector>
-#include <QFile>
-#include <QRegularExpression>
-#include "lsdynainterpreter.h"
-#include "apdlinterpreter.h"
+#include "QVector"
+#include "QString"
+#include "node.h"
+#include "shell.h"
+
+
+namespace LsDynaSintax {
+
+  //define keyword for languange LsDyna to move different mode to interpret the data
+  enum KeywordDyna
+  {
+    $,
+    KEYWORD,
+    NODE,
+    ELEMENTSHELL,
+    ELEMENTSOLID,
+    INITIALSTRAINSOLID,
+    INITIALSTRESSSHELL
+  };
+}
 
 class ConverterSintaX
 {
 public:
    ConverterSintaX();
    ~ConverterSintaX();
-   void setInputLine(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell);
-   int test(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell);
+   void setInputLine(QString p_linefile, Node *Node, Shell *Shell);
+   int test(QString p_linefile, Node *Node, Shell *Shell);
 private:
    int _LineNumber;
    QVector<QString> _InputLine;
