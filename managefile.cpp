@@ -87,7 +87,6 @@ void ManageFile::convert(ConverterSintax *pConverter, Node* node, Shell* shell)
         futureWatcher.waitForFinished();
         // Query the future to check if was canceled.
         qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
-        emit done(true);
     }
     // write file
     {

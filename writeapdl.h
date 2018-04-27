@@ -1,6 +1,6 @@
 #ifndef WRITEAPDL_H
 #define WRITEAPDL_H
-#include "QString"
+#include <QString>
 #include "node.h"
 #include "shell.h"
 

@@ -12,7 +12,7 @@ ConverterSintax::ConverterSintax()
     qDebug() << "Call ConvertSintax()";
 }
 
-void ConverterSintax::setInputLine(QString linefile, Node *Node, Shell *Shell)
+void ConverterSintax::setInputLine(QString linefile, Node *node, Shell *shell)
 {
     qDebug() <<  linefile;
     if(linefile.contains("$"))
@@ -64,15 +64,10 @@ void ConverterSintax::setInputLine(QString linefile, Node *Node, Shell *Shell)
         qDebug() << "set mode" << _mode;
     }
 
-    ConverterSintax::test(linefile, Node, Shell);
+    ConverterSintax::test(linefile, node, shell);
 }
 
-
-
-
-
-
-int ConverterSintax::test(QString linefile, Node *Node, Shell *Shell)
+int ConverterSintax::test(QString linefile,  Node *node, Shell *shell)
 {
     switch (_mode) {
     case LsDynaSintax::$:
@@ -84,11 +79,11 @@ int ConverterSintax::test(QString linefile, Node *Node, Shell *Shell)
         break;
 
     case LsDynaSintax::NODE:
-        Node->readfromfile(linefile);
+        node->readfromfile(linefile);
         break;
 
     case LsDynaSintax::ELEMENTSHELL:
-        Shell->readfromfile(linefile);
+        shell->readfromfile(linefile);
         break;
 
     case LsDynaSintax::ELEMENTSOLID:

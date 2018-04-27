@@ -18,7 +18,7 @@ public:
 
     int getSizelistFile();
 
-    void convert(ConverterSintax *pConverter, Node *node, Shell *shell);
+    void convert(ConverterSintax *pConverter, Node* node, Shell* shell);
 
 public slots:
     void setSizelist(int size);
@@ -31,8 +31,6 @@ signals:
     void setfileName(const QString &fileName);
 
     void outputfileName(const QString &fileName);
-
-    void done(bool);
 
 private:
     void getfileName();

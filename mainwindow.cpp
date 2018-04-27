@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QString>
 #include <QFileDialog>
+#include  <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -18,12 +17,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //  ui->ElemInfo->setText("Total number element shell: 0");
 
     // instanziate classes to work Lsdyna/APDL
-    node = new Node();
-    shell = new Shell();
-    converter = new ConverterSintax();
     listOfFile = new QList<QString>;
+    converter = new ConverterSintax();
+
     manager = new ManageFile();
     indexlist = 0;
+
     // connect slot
     QObject::connect(this, &MainWindow::sizeList, manager, &ManageFile::setSizelist);
     QObject::connect(this, &MainWindow::setFileText, manager, &ManageFile::setFile);
@@ -34,8 +33,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete converter;
-    delete shell;
-    delete node;
     delete listOfFile;
     delete manager;
 }
@@ -84,11 +81,15 @@ void MainWindow::on_Convert_clicked()
 {
     foreach(auto file, *listOfFile)
     {
+        Node  *node = new Node;
+        Shell *shell = new Shell;
         qDebug() << file;
         ui->lineEdit_original->setText(file);
         //    ui->lineEdit_converted->setText("new");
         emit setFileText(file);
-        manager->convert(converter,node, shell);
+        manager->convert(converter, node, shell);
+        delete node;
+        delete shell;
     }
 }
 
@@ -142,4 +143,5 @@ void MainWindow::dropEvent(QDropEvent *e)
         emit sizeList(listOfFile->size());
     }
     ui->Convert->setDisabled(false);
+    ui->lineEdit_original->setText(fileName);
 }
