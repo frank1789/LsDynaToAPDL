@@ -1,13 +1,11 @@
 #ifndef CONVERTERSINTAX_H
 #define CONVERTERSINTAX_H
-#include "QVector"
-#include "QString"
+#include <QString>
 #include "node.h"
 #include "shell.h"
 
 
 namespace LsDynaSintax {
-
   //define keyword for languange LsDyna to move different mode to interpret the data
   enum KeywordDyna
   {
@@ -21,16 +19,14 @@ namespace LsDynaSintax {
   };
 }
 
-class ConverterSintaX
+class ConverterSintax
 {
 public:
-   ConverterSintaX();
-   ~ConverterSintaX();
-   void setInputLine(QString p_linefile, Node *Node, Shell *Shell);
+   explicit ConverterSintax();
+   ~ConverterSintax();
+   void setInputLine(QString linefile, Node *Node, Shell *Shell);
    int test(QString p_linefile, Node *Node, Shell *Shell);
 private:
-   int _LineNumber;
-   QVector<QString> _InputLine;
    LsDynaSintax::KeywordDyna _mode;
 };
 

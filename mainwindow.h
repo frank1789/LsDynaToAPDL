@@ -61,7 +61,7 @@ private:
 
   QList<QString>* listOfFile;
 
-  ConverterSintaX *converter;
+  ConverterSintax *converter;
   Node* node;
   Shell* shell;
   ManageFile *manager;

@@ -2,9 +2,9 @@
 #include "reader.h"
 #include "writeapdl.h"
 #include <QDebug>
+#include <QThread>
 #include <QRegularExpression>
 #include <QtConcurrent>
-#include <QThread>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressDialog>
@@ -68,7 +68,7 @@ int ManageFile::getSizelistFile()
     return _numofFile;
 }
 
-void ManageFile::convert(ConverterSintaX* pConverter, Node* node, Shell* shell)
+void ManageFile::convert(ConverterSintax *pConverter, Node* node, Shell* shell)
 {
     //read file
     {

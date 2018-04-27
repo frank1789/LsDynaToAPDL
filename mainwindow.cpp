@@ -20,21 +20,19 @@ MainWindow::MainWindow(QWidget *parent) :
     // instanziate classes to work Lsdyna/APDL
     node = new Node();
     shell = new Shell();
-    converter = new ConverterSintaX();
+    converter = new ConverterSintax();
     listOfFile = new QList<QString>;
     manager = new ManageFile();
     indexlist = 0;
-
+    // connect slot
     QObject::connect(this, &MainWindow::sizeList, manager, &ManageFile::setSizelist);
     QObject::connect(this, &MainWindow::setFileText, manager, &ManageFile::setFile);
     QObject::connect(manager, &ManageFile::outputfileName, this, &MainWindow::setnameFileText);
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-
     delete converter;
     delete shell;
     delete node;

@@ -1,7 +1,7 @@
 #include "writeapdl.h"
-#include "QDebug"
-#include "QFile"
-#include "QTextStream"
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
 
 
 void writeAPDL(QString FileName, Node *node, Shell *shell)

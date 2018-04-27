@@ -7,118 +7,110 @@
 
 
 
-ConverterSintaX::ConverterSintaX()
+ConverterSintax::ConverterSintax()
 {
-  //_LineNumber = pCountLine;
-  _InputLine.clear();
-  qDebug()<<"Call ConvertSintax()";
-  qDebug()<<"set line number: "<<_LineNumber;
-
+    qDebug() << "Call ConvertSintax()";
 }
 
-void ConverterSintaX::setInputLine(QString p_linefile, Node *Node, Shell *Shell)
+void ConverterSintax::setInputLine(QString linefile, Node *Node, Shell *Shell)
 {
-  qDebug()<< p_linefile;
-  if(p_linefile.contains("$"))
+    qDebug() <<  linefile;
+    if(linefile.contains("$"))
     {
-      qDebug()<<"start reading Header";
-      _mode = LsDynaSintax::$;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading Header";
+        _mode = LsDynaSintax::$;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*KEYWORD"))
+    if(linefile.contains("*KEYWORD"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::KEYWORD;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading other keyword";
+        _mode = LsDynaSintax::KEYWORD;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*NODE"))
+    if(linefile.contains("*NODE"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::NODE;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading node declaration";
+        _mode = LsDynaSintax::NODE;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*ELEMENT_SHELL_THICKNESS"))
+    if(linefile.contains("*ELEMENT_SHELL_THICKNESS"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::ELEMENTSHELL;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading element shell declaration";
+        _mode = LsDynaSintax::ELEMENTSHELL;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*ELEMENT_SOLID"))
+    if(linefile.contains("*ELEMENT_SOLID"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::ELEMENTSOLID;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading solid element declaration";
+        _mode = LsDynaSintax::ELEMENTSOLID;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*INITIAL_STRAIN_SOLID"))
+    if(linefile.contains("*INITIAL_STRAIN_SOLID"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::INITIALSTRAINSOLID;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading intial strain solid declaration";
+        _mode = LsDynaSintax::INITIALSTRAINSOLID;
+        qDebug() << "set mode" << _mode;
     }
 
-  if(p_linefile.contains("*INITIAL_STRESS_SHELL"))
+    if(linefile.contains("*INITIAL_STRESS_SHELL"))
     {
-      qDebug()<<"start reading node declaration";
-      _mode = LsDynaSintax::INITIALSTRESSSHELL;
-      qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading initial stress shell declaration";
+        _mode = LsDynaSintax::INITIALSTRESSSHELL;
+        qDebug() << "set mode" << _mode;
     }
 
-  ConverterSintaX::test(p_linefile, Node, Shell);
-
-}
-
-
-ConverterSintaX::~ConverterSintaX()
-{
-  qDebug()<<"clear the vector of line, and call distructor";
-  _InputLine.clear();
+    ConverterSintax::test(linefile, Node, Shell);
 }
 
 
 
-int ConverterSintaX::test(QString p_linefile, Node *Node, Shell *Shell)
+
+
+
+int ConverterSintax::test(QString linefile, Node *Node, Shell *Shell)
 {
-  switch (_mode) {
-    case LsDynaSintax::$:{
+    switch (_mode) {
+    case LsDynaSintax::$:
         return -1;
-      }break;
+        break;
 
-    case LsDynaSintax::KEYWORD:{
+    case LsDynaSintax::KEYWORD:
         return -1;
-      }break;
+        break;
 
     case LsDynaSintax::NODE:
-      {
-        Node->readfromfile(p_linefile);
-      }
-      break;
+        Node->readfromfile(linefile);
+        break;
 
     case LsDynaSintax::ELEMENTSHELL:
-      {
-        Shell->readfromfile(p_linefile);
-      }
-      break;
+        Shell->readfromfile(linefile);
+        break;
 
     case LsDynaSintax::ELEMENTSOLID:
-      return -1;
-      break;
+        return -1;
+        break;
 
     case LsDynaSintax::INITIALSTRAINSOLID:
-      return -1;
-      break;
+        return -1;
+        break;
 
     case LsDynaSintax::INITIALSTRESSSHELL:
-      return -1;
-      break;
+        return -1;
+        break;
 
     default:
-      return -1;
-      break;
+        return -1;
+        break;
     }
-  return 0;
+    return 0;
+}
+
+ConverterSintax::~ConverterSintax()
+{
+    qDebug() << "clear the vector of line, and call distructor";
 }

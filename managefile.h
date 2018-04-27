@@ -8,6 +8,7 @@
 class ManageFile : public QObject
 {
     Q_OBJECT
+
 public:
     ManageFile();
 
@@ -17,7 +18,7 @@ public:
 
     int getSizelistFile();
 
-    void convert(ConverterSintaX *pConverter, Node *node, Shell *shell);
+    void convert(ConverterSintax *pConverter, Node *node, Shell *shell);
 
 public slots:
     void setSizelist(int size);
@@ -47,8 +48,6 @@ private:
     QString _NewfileName;
 
     QString _replace;
-
-
 };
 
 #endif // MANAGEFILE_H

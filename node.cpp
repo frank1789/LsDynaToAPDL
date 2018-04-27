@@ -1,6 +1,6 @@
 #include "node.h"
-#include "QDebug"
-#include "QRegularExpression"
+#include <QDebug>
+#include <QRegularExpression>
 
 #define INIT 35000
 
