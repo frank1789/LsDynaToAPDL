@@ -1,5 +1,5 @@
 #include "finitelement.h"
-#include "QDebug"
+#include <QDebug>
 
 template<>
 /**
