@@ -5,12 +5,20 @@
 template<typename N, typename P>
 /**
  * @brief The propnode struct contains the information of a single node.
- * @details The information is divided into: the ID of the node that
- * uniquely identifies it, the x coordinate, the y coordinate, the z coordinate.
- * We use a template definition to be able to create multiple definitions
+ * @details The information is divided into:
+ *  - ID of the node that uniquely identifies it;
+ *  - x coordinate;
+ *  - y coordinate;
+ *  - z coordinate.
+ *
+ * Use a template definition to be able to create multiple definitions
  * depending on the nodes used.
- * It is suggested to use integer data types to define node IDs, while
- * for float data type  coordinates.
+ * It is suggested to use:
+ *  - integer data types to define:
+ *      - node IDs
+ *  - float data type to define
+ *      - coordinates.
+ *
  * @tparam N: type for node IDs
  * @tparam P: type for spatial coordinate
  */

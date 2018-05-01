@@ -1,6 +1,5 @@
 #ifndef MANAGEFILE_H
 #define MANAGEFILE_H
-
 #include <QObject>
 #include <QString>
 #include "reader.h"
@@ -8,7 +7,6 @@
 
 /**
  * @brief The ManageFile class manages incoming files.
- *
  * @details It allows to extract the information of the incoming files as:
  * name, extension, size, etc.
  * Defines the name of the output file and checks if it already exists

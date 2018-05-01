@@ -4,7 +4,6 @@
 
 /**
  * @brief The Node class extrapolates the nodes from the file and manage information.
- *
  * @details
  */
 class Node : public FiniteElement
@@ -30,8 +29,6 @@ private:
     propnode<int, double> _datain;
 
     QVector<propnode<int, double>>* _nodeimport;
-
-    int _countnode_;
 };
 
 

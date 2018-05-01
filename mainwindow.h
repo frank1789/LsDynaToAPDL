@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QDebug>
 #include <QMenuBar>
 #include <QString>
 #include <QDropEvent>
@@ -10,8 +9,6 @@
 #include <QMimeData>
 #include <QVector>
 #include <QList>
-#include "node.h"
-#include "shell.h"
 #include "convertersintax.h"
 #include "about.h"
 #include "managefile.h"
@@ -47,8 +44,10 @@ private slots:
 
     void setnameFileText(const QString &nameFile);
 
+    void setPropertyFile(const qint64 &dimension, const QString &label);
+
 signals:
-    void sizeList(const int & size);
+    void sizeList(const int &size);
 
     void filetoprocess(int index);
 

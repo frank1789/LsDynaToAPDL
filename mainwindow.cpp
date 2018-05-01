@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "node.h"
+#include "shell.h"
+#include <QDebug>
 #include <QFileDialog>
-#include  <QMessageBox>
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -11,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->Convert->setDisabled(true);
     ui->Preview->setDisabled(true);
+    ui->information_file->setText("Process file: ");
+    ui->dimensionfile->setText("Dimension: ");
     ui->FileInfo->setText("Dimension: 1 Mb");
     ui->Nodeinfo->setText("Total number node: 0");
     setAcceptDrops(true);
@@ -27,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(this, &MainWindow::sizeList, manager, &ManageFile::setSizelist);
     QObject::connect(this, &MainWindow::setFileText, manager, &ManageFile::setFile);
     QObject::connect(manager, &ManageFile::outputfileName, this, &MainWindow::setnameFileText);
+    QObject::connect(manager, &ManageFile::getPropertyFile, this, &MainWindow::setPropertyFile);
 }
 
 MainWindow::~MainWindow()
@@ -48,17 +54,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QApplication::quit();
 }
 
+void MainWindow::setPropertyFile(const qint64 &dimension, const QString &label)
+{
+    ui->information_file->setText("Process file: " + label);
+    ui->dimensionfile->setText("Dimension: " + QString::number(dimension));
+}
+
 
 void MainWindow::on_LoadFile_clicked()
 {
-    //    Dialog* selection = new Dialog(this);
-    //    validateLineEdit* validator = new validateLineEdit(this);
-    //    selection->exec();
     qDebug()<<"Open file dialog...";
     QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"),"", tr("All files (*.k *.txt)"));
-    //  ui->label->setText("Dimension: " + QString().setNum(managefile->getSizeInfo(),'d',2) + " Mb");
-    if(!fileNames.isEmpty())
-    {
+    if(!fileNames.isEmpty()) {
         QString fileName;
         foreach (auto file, fileNames) {
             fileName += file + " ";
@@ -68,8 +75,7 @@ void MainWindow::on_LoadFile_clicked()
         //active button
         ui->Convert->setEnabled(true);
     }
-    else
-    {
+    else {
         qDebug() <<"No input file";
         QMessageBox::warning(this, tr("Warning"), "The document not load.");
     }
@@ -79,6 +85,9 @@ void MainWindow::on_LoadFile_clicked()
 
 void MainWindow::on_Convert_clicked()
 {
+    //    Dialog* selection = new Dialog(this);
+    //    validateLineEdit* validator = new validateLineEdit(this);
+    //    selection->exec();
     foreach(auto file, *listOfFile)
     {
         Node  *node = new Node;
