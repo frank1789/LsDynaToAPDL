@@ -1,5 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "node.h"
+#include "shell.h"
+#include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -8,124 +13,144 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->Convert->setDisabled(true);
-    ui->label->setText("Dimension: 0 Mb");
+    ui->Preview->setDisabled(true);
+    ui->information_file->setText("Process file: ");
+    ui->dimensionfile->setText("Dimension: ");
+    ui->FileInfo->setText("Dimension: 1 Mb");
     ui->Nodeinfo->setText("Total number node: 0");
-    ui->ElemInfo->setText("Total number element shell: 0");
+    setAcceptDrops(true);
+    //  ui->ElemInfo->setText("Total number element shell: 0");
 
     // instanziate classes to work Lsdyna/APDL
-    converter = new ConverterSintaX();
-    node = new LsDynaSintax::Node();
-    shell = new LsDynaSintax::ElementShell();
+    listOfFile = new QList<QString>;
+    converter = new ConverterSintax();
+
+    manager = new ManageFile();
+    indexlist = 0;
+
+    // connect slot
+    QObject::connect(this, &MainWindow::sizeList, manager, &ManageFile::setSizelist);
+    QObject::connect(this, &MainWindow::setFileText, manager, &ManageFile::setFile);
+    QObject::connect(manager, &ManageFile::outputfileName, this, &MainWindow::setnameFileText);
+    QObject::connect(manager, &ManageFile::getPropertyFile, this, &MainWindow::setPropertyFile);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete converter;
+    delete listOfFile;
+    delete manager;
 }
+
+void MainWindow::setnameFileText(const QString &nameFile)
+{
+    ui->lineEdit_converted->setText(nameFile);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
+    QApplication::quit();
+}
+
+void MainWindow::setPropertyFile(const qint64 &dimension, const QString &label)
+{
+    ui->information_file->setText("Process file: " + label);
+    ui->dimensionfile->setText("Dimension: " + QString::number(dimension));
+}
+
 
 void MainWindow::on_LoadFile_clicked()
 {
     qDebug()<<"Open file dialog...";
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"), "", tr("All Files (*.*)"));
-
-    //instaziate class to retrive information file
-    managefile = new ManageFile(fileName);
-    ui->label->setText("Dimension: " + QString().setNum(managefile->getsize(),'d',2) + " Mb");
-    if(fileName != "")
-    {
-        ui->lineEdit->setText(fileName);
-
-        //clear if  already run
-        node->Clear();
-        shell->Clear();
-
-        // Create a progress dialog.
-        QProgressDialog dialog;
-        dialog.setLabelText(QString("Reading file..."));
-
-        // Create a QFutureWatcher and connect signals and slots.
-        QFutureWatcher<void> futureWatcher;
-        QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-        QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-        QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
-        QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
-
-        // Start the computation.
-        futureWatcher.setFuture(QtConcurrent::run(read, fileName, converter, node, shell));
-
-        // Display the dialog and start the event loop.
-        dialog.exec();
-
-        futureWatcher.waitForFinished();
-
-        // Query the future to check if was canceled.
-        qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"),"", tr("All files (*.k *.txt)"));
+    if(!fileNames.isEmpty()) {
+        QString fileName;
+        foreach (auto file, fileNames) {
+            fileName += file + " ";
+            listOfFile->push_back(file);
+            ui->lineEdit_original->setText(fileName);
+        }
+        //active button
+        ui->Convert->setEnabled(true);
     }
-
-    else
-    {
-        qDebug() <<"Missing input file, launch information message.";
-        QMessageBox::information(this, tr("Info"), "The document has not been loaded.");
+    else {
+        qDebug() <<"No input file";
+        QMessageBox::warning(this, tr("Warning"), "The document not load.");
     }
-
-    //active conversion
-    ui->Convert->setEnabled(true);
-
-    //update the output line edit
-    managefile->setnewname();
-    ui->lineEdit_2->setText(managefile->getnewname());
-
+    //  delete(validator);
+    //  delete(selection);
 }
 
 void MainWindow::on_Convert_clicked()
 {
-    // Create a progress dialog.
-    QProgressDialog dialog;
-    dialog.setLabelText(QString("Writing file..."));
-
-    // Create a QFutureWatcher and connect signals and slots.
-    QFutureWatcher<void> futureWatcher;
-    QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-    QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-    QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
-    QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
-
-    // Start the computation.
-    futureWatcher.setFuture(QtConcurrent::run(APDLsintax::Writer, managefile->getnewname(), node->getNodeStructure(), shell->getElementStructure()));
-
-    // Display the dialog and start the event loop.
-    dialog.exec();
-
-    futureWatcher.waitForFinished();
-
-    // Query the future to check if was canceled.
-    qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+    //    Dialog* selection = new Dialog(this);
+    //    validateLineEdit* validator = new validateLineEdit(this);
+    //    selection->exec();
+    foreach(auto file, *listOfFile)
+    {
+        Node  *node = new Node;
+        Shell *shell = new Shell;
+        qDebug() << file;
+        ui->lineEdit_original->setText(file);
+        //    ui->lineEdit_converted->setText("new");
+        emit setFileText(file);
+        manager->convert(converter, node, shell);
+        delete node;
+        delete shell;
+    }
 }
+
+void MainWindow::on_Preview_clicked()
+{
+    //  QProgressDialog dialog; // Create a progress dialog.
+    //  dialog.setLabelText(QString("Reading file..."));
+    //  // Create a QFutureWatcher and connect signals and slots.
+    //  QFutureWatcher<void> futureWatcher;
+    //  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+    //  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+    //  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+    //  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+    //  // Start to read file.
+    ////  futureWatcher.setFuture(QtConcurrent::run(read, managefile->getfileName(), converter, node, shell));
+    //  // Display the dialog and start the event loop.
+    //  dialog.exec();
+    //  futureWatcher.waitForFinished();
+    //  // Query the future to check if was canceled.
+    //  qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+}
+
+
 
 void MainWindow::on_Exit_released()
 {
-    //clear the heap
-    delete converter;
-    delete node;
-    delete shell;
-    delete managefile;
-
     qDebug()<<"closing app...";
     QApplication::quit();
 }
 
-void MainWindow::information()
-{
-    qDebug() <<"success!";
-}
-
-void MainWindow::open_about()
-{
-
-}
-
 void MainWindow::on_actionInformazioni_triggered()
 {
-    about = new About(this);
-    about->show();
+    About about;
+    about.exec();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    if (e->mimeData()->hasUrls()) {
+        e->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *e)
+{
+    QString fileName;
+    foreach (const QUrl &url, e->mimeData()->urls()) {
+        fileName = url.toLocalFile();
+        qDebug() << "Dropped file:" << fileName << "(" << listOfFile->size() << ")";
+        listOfFile->push_back(fileName);
+        emit sizeList(listOfFile->size());
+    }
+    ui->Convert->setDisabled(false);
+    ui->lineEdit_original->setText(fileName);
 }

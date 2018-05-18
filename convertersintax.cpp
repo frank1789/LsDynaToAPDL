@@ -1,115 +1,132 @@
 #include "convertersintax.h"
+#include <QDebug>
 
 
-ConverterSintaX::ConverterSintaX()
+using namespace lsdynasintax;
+
+/**
+ * @brief ConverterSintax::ConverterSintax default constructor.
+ */
+ConverterSintax::ConverterSintax()
 {
-    //_LineNumber = pCountLine;
-    _InputLine.clear();
-    qDebug()<<"Call ConvertSintax()";
-    qDebug()<<"set line number: "<<_LineNumber;
-
+    qDebug() << "Call ConvertSintax()";
 }
 
-void ConverterSintaX::setInputLine(QString p_linefile, LsDynaSintax::Node *pNode , LsDynaSintax::ElementShell *pShell)
+/**
+ * @brief ConverterSintax::setInputLine
+ * @param[in] linefile: line of the document to be analyzed.
+ * @param[in] node: pointer to the Node class.
+ * @param[in] shell: pointer to the Shell class.
+ * @details The function scrolls the document reading the
+ * line in input and checking if it contains one of the
+ * specified keywords, if the matching is positive the
+ * appropriate mode is saved. Otherwise the lines are
+ * transparent to the function and the set mode is not changed.
+ */
+void ConverterSintax::setInputLine(QString linefile, Node *node, Shell *shell)
 {
-    qDebug()<< p_linefile;
-    if(p_linefile.contains("$"))
+    qDebug() <<  linefile;
+    if(linefile.contains("$"))
     {
-        qDebug()<<"start reading Header";
-        _mode = LsDynaSintax::$;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading Header";
+        _mode = $;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*KEYWORD"))
+    if(linefile.contains("*KEYWORD"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::KEYWORD;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading other keyword";
+        _mode = KEYWORD;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*NODE"))
+    if(linefile.contains("*NODE"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::NODE;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading node declaration";
+        _mode = NODE;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*ELEMENT_SHELL_THICKNESS"))
+    if(linefile.contains("*ELEMENT_SHELL_THICKNESS"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::ELEMENTSHELL;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading element shell declaration";
+        _mode = ELEMENTSHELL;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*ELEMENT_SOLID"))
+    if(linefile.contains("*ELEMENT_SOLID"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::ELEMENTSOLID;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading solid element declaration";
+        _mode = ELEMENTSOLID;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*INITIAL_STRAIN_SOLID"))
+    if(linefile.contains("*INITIAL_STRAIN_SOLID"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::INITIALSTRAINSOLID;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading intial strain solid declaration";
+        _mode = INITIALSTRAINSOLID;
+        qDebug() << "set mode" << _mode;
     }
 
-    if(p_linefile.contains("*INITIAL_STRESS_SHELL"))
+    if(linefile.contains("*INITIAL_STRESS_SHELL"))
     {
-        qDebug()<<"start reading node declaration";
-        _mode = LsDynaSintax::INITIALSTRESSSHELL;
-        qDebug()<<"set mode"<<_mode;
+        qDebug() << "start reading initial stress shell declaration";
+        _mode = INITIALSTRESSSHELL;
+        qDebug() << "set mode" << _mode;
     }
 
-    ConverterSintaX::test(p_linefile, pNode, pShell);
-
+    ConverterSintax::test(linefile, node, shell);
 }
 
-ConverterSintaX::~ConverterSintaX()
-{
-    qDebug()<<"clear the vector of line, and call distructor";
-    _InputLine.clear();
-}
-
-int ConverterSintaX::test(QString p_linefile, LsDynaSintax::Node *pNode, LsDynaSintax::ElementShell *pShell)
+/**
+ * @brief ConverterSintax::test select the read mode by invoking the input Node
+ * and Shell classes to interpret the data.
+ * @param[in] linefile: line of the document to be analyzed.
+ * @param[in] node: pointer to the Node class.
+ * @param[in] shell: pointer to the Shell class.
+ * @return
+ */
+void ConverterSintax::test(QString linefile,  Node *node, Shell *shell)
 {
     switch (_mode) {
-    case LsDynaSintax::$:{
-        return -1;
-    }break;
-
-    case LsDynaSintax::KEYWORD:{
-        return -1;
-    }break;
-
-    case LsDynaSintax::NODE:
-    {
-        pNode->setReader(p_linefile);
-    }
+    case $:
+        return;
         break;
 
-    case LsDynaSintax::ELEMENTSHELL:
-    {
-        pShell->setReader(p_linefile);
-    }
+    case KEYWORD:
+        return;
         break;
 
-    case LsDynaSintax::ELEMENTSOLID:
-        return -1;
+    case NODE:
+        node->readfromfile(linefile);
         break;
 
-    case LsDynaSintax::INITIALSTRAINSOLID:
-        return -1;
+    case ELEMENTSHELL:
+        shell->readfromfile(linefile);
         break;
 
-    case LsDynaSintax::INITIALSTRESSSHELL:
-        return -1;
+    case ELEMENTSOLID:
+        return;
+        break;
+
+    case INITIALSTRAINSOLID:
+        return;
+        break;
+
+    case INITIALSTRESSSHELL:
+        return;
         break;
 
     default:
-        return -1;
+        return;
         break;
     }
-    return 0;
+}
+
+/**
+ * @brief ConverterSintax::~ConverterSintax destructor.
+ */
+ConverterSintax::~ConverterSintax()
+{
+    qDebug() << "clear the vector of line, and call destructor";
 }

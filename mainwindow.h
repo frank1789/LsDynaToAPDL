@@ -2,14 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QFileDialog>
-#include <QProgressDialog>
-#include <QDebug>
 #include <QMenuBar>
-
-#include "about.h"
+#include <QString>
+#include <QDropEvent>
+#include <QEvent>
+#include <QMimeData>
+#include <QVector>
+#include <QList>
 #include "convertersintax.h"
-#include "reader.h"
+#include "about.h"
+#include "managefile.h"
 
 
 namespace Ui {
@@ -22,10 +24,12 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
 
-public slots:
-    void open_about();
+    void dragEnterEvent(QDragEnterEvent *e);
+
+    void dropEvent(QDropEvent *e);
 
 private slots:
     void on_LoadFile_clicked();
@@ -34,25 +38,33 @@ private slots:
 
     void on_Convert_clicked();
 
-    void information();
-
     void on_actionInformazioni_triggered();
+
+    void on_Preview_clicked();
+
+    void setnameFileText(const QString &nameFile);
+
+    void setPropertyFile(const qint64 &dimension, const QString &label);
+
+signals:
+    void sizeList(const int &size);
+
+    void filetoprocess(int index);
+
+    void setFileText(QString nameFile);
 
 private:
     Ui::MainWindow *ui;
 
-    //declare inforamtion windows
-    About *about;
+    void closeEvent(QCloseEvent *event);
 
-    // declare class to work LsDyna - APDL
-    ConverterSintaX *converter;
+    ConverterSintax *converter;
 
-    LsDynaSintax::Node *node;
+    ManageFile *manager;
 
-    LsDynaSintax::ElementShell *shell;
+    QList<QString>* listOfFile;
 
-    //instaziate class to retrive information file
-    ManageFile *managefile;
+    int indexlist;
 };
 
 #endif // MAINWINDOW_H
