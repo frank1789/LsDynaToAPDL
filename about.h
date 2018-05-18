@@ -14,6 +14,10 @@ namespace Ui {
 class About;
 }
 
+/**
+ * @brief The About class show the current author and version as well as the
+ *  license with which it is distributed.
+ */
 class About : public QDialog
 {
     Q_OBJECT
@@ -29,7 +33,6 @@ private:
    void closeEvent(QCloseEvent *event);
 
    Ui::About *ui;
-
 };
 
 QString read(QString pfileName);

@@ -2,14 +2,16 @@
 #include "reader.h"
 #include "writeapdl.h"
 #include <QDebug>
+#include <QThread>
 #include <QRegularExpression>
 #include <QtConcurrent>
-#include <QThread>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressDialog>
 
-
+/**
+ * @brief ManageFile::ManageFile default constructor.
+ */
 ManageFile::ManageFile()
 {
     _counter = 0;
@@ -17,11 +19,18 @@ ManageFile::ManageFile()
     _fileName.clear();
 }
 
+/**
+ * @brief ManageFile::~ManageFile destructor
+ */
 ManageFile::~ManageFile()
 {
     qDebug() << "call ~ManageFile()";
 }
 
+/**
+ * @brief ManageFile::setSizelist
+ * @param size
+ */
 void ManageFile::setSizelist(int size)
 {
     qDebug() << "recive list of file:";
@@ -34,8 +43,26 @@ void ManageFile::print()
     qDebug() << "recived size list" << _numofFile;
 }
 
+/**
+ * @brief ManageFile::setPropertyFile
+ */
+void ManageFile::setPropertyFile()
+{
+    QString name;
+    QFile *file = new QFile(_fileName);
+    QRegularExpression re("(\\w+?-\\w+\\.\\w+)$");//extract name
+    QRegularExpressionMatch match = re.match(_fileName);
+    if (match.hasMatch()) {
+        name = match.captured(0);
+    }
+    emit getPropertyFile(file->size(), name);
+    delete file;
+}
 
-
+/**
+ * @brief ManageFile::setFile
+ * @param fileName
+ */
 void ManageFile::setFile(const QString &fileName)
 {
     _fileName = fileName;
@@ -43,6 +70,9 @@ void ManageFile::setFile(const QString &fileName)
     getfileName();
 }
 
+/**
+ * @brief ManageFile::getfileName
+ */
 void ManageFile::getfileName()
 {
     QRegularExpression re("(\\w+?-\\w+\\.\\w+)$");//extract name
@@ -52,8 +82,12 @@ void ManageFile::getfileName()
         setNewfileName();
         emit outputfileName(_NewfileName);
     }
+    setPropertyFile();
 }
 
+/**
+ * @brief ManageFile::setNewfileName
+ */
 void ManageFile::setNewfileName()
 {
     _NewfileName = _fileName;
@@ -68,7 +102,20 @@ int ManageFile::getSizelistFile()
     return _numofFile;
 }
 
-void ManageFile::convert(ConverterSintaX* pConverter, Node* node, Shell* shell)
+/**
+ * @brief ManageFile::convert start the conversion process by reading and
+ * decrypting the input file and then returning the output file to APDL.
+ * @param[in] pConverter: pointer type Covertersintax.
+ * @param[in] node: pointer type class Node.
+ * @param[in] shell: pointer type class Shell.
+ * @details In the convert method a read thread is launched for the source
+ *  file by starting a wait mask during the process that closes at the end.
+ *  It is possible to interrupt the process via button "cancel" you exit
+ *  the function.
+ *  In a similar way, another thread is launched for the sciage, also with
+ *  the relative mashera of advancement it is possible to cancel.
+ */
+void ManageFile::convert(ConverterSintax *pConverter, Node* node, Shell* shell)
 {
     //read file
     {
@@ -87,7 +134,6 @@ void ManageFile::convert(ConverterSintaX* pConverter, Node* node, Shell* shell)
         futureWatcher.waitForFinished();
         // Query the future to check if was canceled.
         qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
-        emit done(true);
     }
     // write file
     {

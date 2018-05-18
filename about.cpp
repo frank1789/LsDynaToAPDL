@@ -4,7 +4,10 @@
 #define VERSION 1
 #define BUILD 12523
 
-
+/**
+ * @brief About::About default constructor ui to show information and license.
+ * @param parent: pointer type Qwidget
+ */
 About::About(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::About)
@@ -29,11 +32,20 @@ About::About(QWidget *parent) :
     qDebug() << BUILD;
 }
 
+/**
+ * @brief About::~About destructor
+ */
 About::~About()
 {
     delete ui;
 }
 
+/**
+ * @brief About::closeEvent captures the closing event of the window when it is
+ *  running.
+ * Emit dialogClosed().
+ * @param[in] event: pointer closing event
+ */
 void About::closeEvent(QCloseEvent *event)
 {
     if(event)

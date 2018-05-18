@@ -6,7 +6,7 @@
 #include "shell.h"
 
 
-void read(QString pFileName, ConverterSintaX* pConverter, Node *node, Shell *Shell);
+void read(QString pFileName, ConverterSintax* pConverter, Node *node, Shell *Shell);
 
 
 

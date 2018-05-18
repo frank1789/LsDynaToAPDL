@@ -6,7 +6,7 @@
 #include <QMessageBox>
 
 
-void read(QString pFileName, ConverterSintaX* pConverter, Node* node, Shell* shell)
+void read(QString pFileName, ConverterSintax *pConverter, Node *node, Shell *shell)
 {
   qDebug()<<"Call function reader in thread" << QThread::currentThreadId();
   qDebug()<< "get inputfile" << pFileName;;
