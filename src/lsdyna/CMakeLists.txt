@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.16)
+set(LIB_NAME "lsdyna")
+
+set(LIBRARY_TARGET_NAME ${LIB_NAME})
+
+set(SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc
+
+
+
+    )
+
+    set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/converter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h
+
+
+
+    )
+
+add_library(${LIB_NAME})
+
+target_link_libraries(${LIB_NAME} 
+    Qt5::Core 
+    logger
+    )
+
+target_sources( ${LIB_NAME}
+    PRIVATE
+		${SOURCES}
+    PUBLIC
+        ${HEADERS}
+)
+
+target_include_directories(
+    ${LIB_NAME}
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}
+)
+
+target_compile_options(${LIB_NAME} PRIVATE 
+    -fstack-protector-strong
+    -Wunused
+    -Wshadow
+)
+
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
+	if(COVERAGE)
+		target_link_libraries(coverage)
+	endif()
+	else()
+	target_compile_options(${LIB_NAME} PUBLIC -fpic -O2)
+endif()
