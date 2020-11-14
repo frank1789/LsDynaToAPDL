@@ -2,6 +2,7 @@
 #define LSDYNA_COVERTER_SINTAX_H
 
 #include <QString>
+#include <QObject>
 
 #include "keywords.h"
 
@@ -14,13 +15,14 @@ namespace lsdyna {
  * interest, leaves the specific operation when the header in the document
  * changes.
  */
-class ConverterSintax {
+class ConverterSintax : QObject{
+  Q_OBJECT
  public:
  /**
   * @brief Construct a new Converter Sintax object
   * 
   */
-  explicit ConverterSintax() = default;
+  explicit ConverterSintax(QObject *parent=nullptr);
 
   /**
    * @brief Destroy the Converter Sintax object
@@ -28,10 +30,20 @@ class ConverterSintax {
    */
   ~ConverterSintax() = default;
 
-  // void testInputLine(const QString &linefile, Node *node, Shell *shell);
-  // void parseLine(const QString &line);
+  /**
+   * @brief 
+   * 
+   * @param linefile 
+   */
+  void testInputLine(const QString &line);
 
-  // void test(const QString &p_linefile, Node *node, Shell *shell);
+  /**
+   * @brief 
+   * 
+   * @param line 
+   */
+  void parseLine(const QString &line);
+
 
  private:
   sintax::lsdyna::KeywordDyna doc_section_;
