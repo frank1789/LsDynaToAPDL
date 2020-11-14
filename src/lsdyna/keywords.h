@@ -25,12 +25,13 @@ enum class KeywordDyna {
 };
 // clang-on
 
-
-std::ostream& operator<<(std::ostream &os, const KeywordDyna &key);
-
-QDebug& operator<<(QDebug &os, const KeywordDyna &key);
-
 } // namespace lsdyna
 } // namespace sintax
+
+std::ostream& operator<<(std::ostream &os, const sintax::lsdyna::KeywordDyna &key);
+
+QDebug operator<<(QDebug os, const sintax::lsdyna::KeywordDyna &key);
+
+
 
 #endif // LSDYNA_SINTAX_KEYWORD_H

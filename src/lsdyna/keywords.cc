@@ -1,67 +1,61 @@
 #include "keywords.h"
 
-namespace sintax {
-namespace lsdyna {
-
-inline std::ostream &operator<<(std::ostream &os, const KeywordDyna &key) {
+std::ostream &operator<<(std::ostream &os, const sintax::lsdyna::KeywordDyna &key) {
   switch (key) {
-    case KeywordDyna::$:
+    case sintax::lsdyna::KeywordDyna::$:
       os << "$";
       break;
-    case KeywordDyna::KEYWORD:
+    case sintax::lsdyna::KeywordDyna::KEYWORD:
       os << "KEYWORD";
       break;
-    case KeywordDyna::NODE:
+    case sintax::lsdyna::KeywordDyna::NODE:
       os << "NODE";
       break;
-    case KeywordDyna::ELEMENTSHELL:
+    case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
       os << "ELEMENTSHELL";
       break;
-    case KeywordDyna::ELEMENTSOLID:
+    case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
       os << "ELEMENTSOLID";
       break;
-    case KeywordDyna::INITIALSTRAINSOLID:
+    case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
       os << "INITIALSTRAINSOLID";
       break;
-    case KeywordDyna::INITIALSTRESSSHELL:
+    case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
       os << "INITIALSTRESSSHELL";
       break;
-    case KeywordDyna::END:
+    case sintax::lsdyna::KeywordDyna::END:
       os << "END";
       break;
   }
   return os;
 }
 
-inline QDebug &operator<<(QDebug &os, const KeywordDyna &key) {
+QDebug operator<<(QDebug os, const sintax::lsdyna::KeywordDyna &key) {
   switch (key) {
-    case KeywordDyna::$:
+    case sintax::lsdyna::KeywordDyna::$:
       os << "$";
       break;
-    case KeywordDyna::KEYWORD:
+    case sintax::lsdyna::KeywordDyna::KEYWORD:
       os << "KEYWORD";
       break;
-    case KeywordDyna::NODE:
+    case sintax::lsdyna::KeywordDyna::NODE:
       os << "NODE";
       break;
-    case KeywordDyna::ELEMENTSHELL:
+    case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
       os << "ELEMENTSHELL";
       break;
-    case KeywordDyna::ELEMENTSOLID:
+    case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
       os << "ELEMENTSOLID";
       break;
-    case KeywordDyna::INITIALSTRAINSOLID:
+    case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
       os << "INITIALSTRAINSOLID";
       break;
-    case KeywordDyna::INITIALSTRESSSHELL:
+    case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
       os << "INITIALSTRESSSHELL";
       break;
-    case KeywordDyna::END:
+    case sintax::lsdyna::KeywordDyna::END:
       os << "END";
       break;
   }
   return os;
 }
-
-}  // namespace lsdyna
-}  // namespace sintax
