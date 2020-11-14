@@ -3,35 +3,42 @@ set(LIB_NAME "logger")
 
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
-
-#set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/logger.cpp)
+# set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/logger.cpp)
 
 add_library(${LIB_NAME})
 
-target_sources( ${LIB_NAME}
-    PRIVATE
-		#${SOURCES}
-    PUBLIC
-		${CMAKE_CURRENT_LIST_DIR}/logger_tools.h
-		#${CMAKE_CURRENT_LIST_DIR}/instrumentor.h
-)
+target_sources(
+  ${LIB_NAME}
+  PRIVATE 
+  PUBLIC ${CMAKE_CURRENT_LIST_DIR}/logger_tools.h
+         ${CMAKE_CURRENT_LIST_DIR}/finite_element_types.h
+         ${CMAKE_CURRENT_LIST_DIR}/node_type_impl.h)
 
-target_include_directories(
-    ${LIB_NAME}
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}
-)
+target_include_directories(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
-target_compile_options(${LIB_NAME} PRIVATE 
-    -fstack-protector-strong
-    -Wunused
-    -Wshadow
-)
+target_compile_options(
+  ${LIB_NAME}
+  PRIVATE -c
+          -Wall
+          -Wextra
+          -fPIC
+          -Wunused
+          -Wshadow
+          -Wredundant-decls
+          -Wcast-align
+          -Wmissing-declarations
+          -Wmissing-include-dirs
+          -Winvalid-pch
+          -Wredundant-decls
+          -Wmissing-format-attribute
+          -Wformat-nonliteral
+          -fstack-protector-strong
+          -fexceptions)
 
-if (CMAKE_BUILD_TYPE MATCHES "Debug")
-	if(COVERAGE)
-		target_link_libraries(coverage)
-	endif()
-	else()
-	target_compile_options(${LIB_NAME} PUBLIC -fpic -O2)
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+  if(COVERAGE)
+    target_link_libraries(coverage)
+  endif()
+else()
+  target_compile_options(${LIB_NAME} PUBLIC -O2)
 endif()
