@@ -4,7 +4,7 @@
 
 #include "logger_tools.h"
 
-sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QObject(parent) {}
+sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(parent) {}
 
 /**
  * @brief ConverterSintax::setInputLine

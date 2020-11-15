@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QObject>
+#include <QThread>
 
 #include "keywords.h"
 
@@ -15,7 +16,7 @@ namespace lsdyna {
  * interest, leaves the specific operation when the header in the document
  * changes.
  */
-class ConverterSintax : QObject{
+class ConverterSintax : public QThread {
   Q_OBJECT
  public:
  /**

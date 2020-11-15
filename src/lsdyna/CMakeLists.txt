@@ -3,15 +3,31 @@ set(LIB_NAME "lsdyna")
 
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
-set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
-            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc)
+set(SOURCES 
+
+
+${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc
+
+            ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.cc
+            
+            
+            
+            
+            
+            
+            )
 
 set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/converter.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h)
+            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h
+            
+            ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.h
+            
+            )
 
 add_library(${LIB_NAME})
 
-target_link_libraries(${LIB_NAME} Qt5::Core logger)
+target_link_libraries(${LIB_NAME} Qt5::Core Qt5::Widgets logger)
 
 target_sources(
   ${LIB_NAME}
