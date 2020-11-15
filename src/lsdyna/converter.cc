@@ -104,3 +104,7 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
       break;
   }
 }
+
+void sintax::lsdyna::ConverterSintax::run(){
+  qDebug() << INFOFILE;
+}

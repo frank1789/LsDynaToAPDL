@@ -45,6 +45,8 @@ class ConverterSintax : public QThread {
    */
   void parseLine(const QString &line);
 
+  void run() override;
+
 
  private:
   sintax::lsdyna::KeywordDyna doc_section_;

@@ -20,6 +20,8 @@ class ConverterDialog : public QDialog {
   ConverterDialog(QWidget *parent = nullptr);
   ~ConverterDialog() override;
 
+  int exec() override;
+
   void setInputFile(const QString &filename);
 
  public slots:

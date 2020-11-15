@@ -8,14 +8,22 @@
 ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
   this->setWindowTitle("Progress...");
   this->setupLayout();
-  connect(cancel_btn_.data(), &QPushButton::clicked, [=]() { emit stop(); });
+  // connect(cancel_btn_.data(), &QPushButton::clicked, [=]() { this->stop();
+  // });
 
   converter_ = QSharedPointer<sintax::lsdyna::ConverterSintax>(
       new sintax::lsdyna::ConverterSintax);
-  connect(this, &ConverterDialog::stop, [=]() { converter_->terminate(); });
+  connect(cancel_btn_.data(), &QPushButton::clicked, [=]() {
+    if (converter_->isRunning()) {
+      converter_->terminate();
+    }
+    
+  });
 }
 
 ConverterDialog::~ConverterDialog() {}
+
+int ConverterDialog::exec() { converter_->run(); }
 
 void ConverterDialog::setInputFile(const QString &filename) {}
 
@@ -30,4 +38,9 @@ void ConverterDialog::setupLayout() {
   // setup button
   cancel_btn_ = QSharedPointer<QPushButton>(new QPushButton);
   cancel_btn_->setText("cancel");
+
+  // setup grid
+  grid_layot_->addWidget(pbar_.data(), 0, 5);
+  //   grid_layot_->addWidget();
+  grid_layot_->addWidget(cancel_btn_.data(), 2, 5);
 }
