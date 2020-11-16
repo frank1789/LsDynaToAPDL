@@ -3,16 +3,19 @@ set(LIB_NAME "logger")
 
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
-# set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/logger.cpp)
+set(SOURCES ${CMAKE_CURRENT_LIST_DIR}/filemanager.cc)
 
 add_library(${LIB_NAME})
 
+target_link_libraries(${LIB_NAME} Qt5::Core)
+
 target_sources(
   ${LIB_NAME}
-  PRIVATE 
+  PRIVATE ${SOURCES}
   PUBLIC ${CMAKE_CURRENT_LIST_DIR}/logger_tools.h
          ${CMAKE_CURRENT_LIST_DIR}/finite_element_types.h
-         ${CMAKE_CURRENT_LIST_DIR}/node_type_impl.h)
+         ${CMAKE_CURRENT_LIST_DIR}/node_type_impl.h
+         ${CMAKE_CURRENT_LIST_DIR}/filemanager.h)
 
 target_include_directories(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
