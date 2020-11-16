@@ -35,18 +35,19 @@ MainWindow::MainWindow(QWidget *parent)
   // connect(this, &MainWindow::sizeList, manager_.data(), &ManageFile::setSizelist);
   connect(this, &MainWindow::updateProcessedFilename, [=](const QString &filename){ manager_->processedFilename(filename);});
   connect(this, &MainWindow::updateProcessedFilename, [=](const QString &filename){ converter_dialog_->changedProcessedFilename(filename);});
-
   connect(manager_.data(), &ManageFile::updatePropertyFile, this, &MainWindow::setPropertyFile);
-
-  connect(manager_.data(), &ManageFile::changeOutputFilename,
-          [=](const QString &filename) {
-            this->ui->lineEdit_converted->setText(filename);
-          });
+  connect(manager_.data(), &ManageFile::changeOutputFilename, this, &MainWindow::setnameFileText);
 }
 
 MainWindow::~MainWindow() {
   delete ui;
   delete listOfFile;
+}
+
+void MainWindow::setnameFileText(const QString &filename)
+{
+  qDebug() << "called";
+    ui->lineEdit_converted->setText(filename);
 }
 
 
@@ -71,14 +72,11 @@ void MainWindow::on_LoadFile_clicked() {
       listOfFile->push_back(file);
       ui->lineEdit_original->setText(fileName);
     }
-    // active button
+    // activate button convert
     ui->Convert->setEnabled(true);
   } else {
-    qDebug() << "No input file";
-    QMessageBox::warning(this, tr("Warning"), "The document not load.");
+    QMessageBox::warning(this, tr("Warning"), "The document is not load.");
   }
-  //  delete(validator);
-  //  delete(selection);
 }
 
 void MainWindow::on_Convert_clicked() {

@@ -1,5 +1,7 @@
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/Documetation /
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/src \
-						 @CMAKE_CURRENT_SOURCE_DIR@/lsdyna \
-						 @CMAKE_CURRENT_SOURCE_DIR@/docs
+INPUT                  = /Users/francesco/Documents/Project/LsDynaToAPDL/src/ \
+/Users/francesco/Documents/Project/LsDynaToAPDL/src/common \
+/Users/francesco/Documents/Project/LsDynaToAPDL/src/lsdyna \
+						
+						 
 EXTRACT_STATIC		   = YES

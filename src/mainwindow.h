@@ -43,6 +43,8 @@ private slots:
 
     void on_Preview_clicked();
 
+    void setnameFileText(const QString &filename);
+
 
     void setPropertyFile(const QString &filename, quint64 dimension);
 
