@@ -16,16 +16,16 @@ class ManageFile : public QObject {
   Q_OBJECT
 
  public:
- /**
-  * @brief Construct a new Manage File object
-  * 
-  * @param parent 
-  */
+  /**
+   * @brief Construct a new Manage File object
+   *
+   * @param parent
+   */
   explicit ManageFile(QObject *parent = nullptr);
 
   /**
    * @brief Destroy the Manage File object
-   * 
+   *
    */
   ~ManageFile() override;
 
@@ -37,50 +37,34 @@ class ManageFile : public QObject {
 
   /**
    * @brief Set the Filename object
-   * 
-   * @param filename 
+   *
+   * @param filename
    */
   void setFilename(const QString &filename);
 
   /**
    * @brief Get the Filename object
-   * 
-   * @return QString 
+   *
+   * @return QString
    */
   QString getFilename() const;
 
-  void setNewFilename();
-
-
-QString getOutputfile() const;
-
- public slots:
-  void processedFilename(const QString& filename);
-
-
-
-
-
-  // void setSizelist(int size);
-
-  // void setFile(const QString &fileName);
+  QString getOutputfile() const;
 
  signals:
-  void changeOutputFilename(const QString &);
-  
-
+  void changeOutputFilename(const QString &filename);
   void updatePropertyFile(const QString &label, const qint64 &size);
 
+ public slots:
+  void processedFilename(const QString &filename);
+
+ protected:
+  void setNewFilename(const QString &filename);
+  qint64 extractSizeFile(const QString &filename);
+
  private:
-  void getfileName();
-
-  void setNewfileName();
-
-  void setPropertyFile();
   QString filename_;
   QString new_filename_;
-  ull_t counter_;
-  unsigned int number_of_file_;
 };
 
 #endif  // FILEMANAGER_H
