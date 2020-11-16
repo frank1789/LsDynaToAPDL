@@ -47,9 +47,16 @@ class ConverterSintax : public QThread {
 
   void run() override;
 
+  void setInputFile(const QString &filename);
+  QString getFilename() const;
+
+public slots:
+  void changedProcessedFilename(const QString &filename);
+
 
  private:
   sintax::lsdyna::KeywordDyna doc_section_;
+  QString filename_;
 };
 
 } // namespace lsdyna

@@ -11,8 +11,8 @@
 #include <QList>
 #include <QScopedPointer>
 
-#include "about.h"
-#include "managefile.h"
+#include "filemanager.h"
+#include "converterdialog.h"
 
 
 namespace Ui {
@@ -43,24 +43,22 @@ private slots:
 
     void on_Preview_clicked();
 
-    void setnameFileText(const QString &nameFile);
 
-    void setPropertyFile(const qint64 &dimension, const QString &label);
+    void setPropertyFile(const QString &filename, quint64 dimension);
 
 signals:
     void sizeList(const int &size);
 
     void filetoprocess(int index);
 
-    void setFileText(QString nameFile);
+    void updateProcessedFilename(const QString &filename);
 
 private:
     Ui::MainWindow *ui;
 
     void closeEvent(QCloseEvent *event);
 
-    // ConverterSintax *converter;
-
+    QScopedPointer<ConverterDialog> converter_dialog_{nullptr};
     QScopedPointer<ManageFile> manager_{nullptr};
 
     QList<QString>* listOfFile;

@@ -3,27 +3,15 @@ set(LIB_NAME "lsdyna")
 
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
-set(SOURCES 
+set(SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.cc)
 
-
-${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
-            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc
-
-            ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.cc
-            
-            
-            
-            
-            
-            
-            )
-
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/converter.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h
-            
-            ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.h
-            
-            )
+set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/converter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.h)
 
 add_library(${LIB_NAME})
 

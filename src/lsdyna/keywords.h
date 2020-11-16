@@ -32,6 +32,4 @@ std::ostream& operator<<(std::ostream &os, const sintax::lsdyna::KeywordDyna &ke
 
 QDebug operator<<(QDebug os, const sintax::lsdyna::KeywordDyna &key);
 
-
-
 #endif // LSDYNA_SINTAX_KEYWORD_H

@@ -1,14 +1,21 @@
 #include "converter.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QMessageBox>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QScopedPointer>
+#include <QTextStream>
 
 #include "logger_tools.h"
 
-sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(parent) {}
+sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
+    : QThread(parent) {}
 
 /**
  * @brief ConverterSintax::setInputLine
- * 
+ *
  * @param[in] textline: line of the document to be analyzed.
  * @param[in] node: pointer to the Node class.
  * @param[in] shell: pointer to the Shell class.
@@ -19,7 +26,7 @@ sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(pare
  * transparent to the function and the set mode is not changed.
  */
 void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
-  qDebug() << INFOFILE  << textline;
+  qDebug() << INFOFILE << textline;
   if (textline.contains("$")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::$;
     qDebug() << INFOFILE << "set mode" << doc_section_;
@@ -32,7 +39,8 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
 
   if (textline.contains("*NODE")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::NODE;
-    qDebug() << INFOFILE << "set mode" << doc_section_ << "start reading node declaration";
+    qDebug() << INFOFILE << "set mode" << doc_section_
+             << "start reading node declaration";
   }
 
   if (textline.contains("*ELEMENT_SHELL_THICKNESS")) {
@@ -63,11 +71,11 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
 /**
  * @brief ConverterSintax::test select the read mode by invoking the input Node
  * and Shell classes to interpret the data.
- * 
+ *
  * @param[in] textline: line of the document to be analyzed.
  * @param[in] node: pointer to the Node class.
  * @param[in] shell: pointer to the Shell class.
- * 
+ *
  */
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   switch (doc_section_) {
@@ -80,11 +88,11 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
       break;
 
     case sintax::lsdyna::KeywordDyna::NODE:
-    //   node->readfromfile(textline);
+      //   node->readfromfile(textline);
       break;
 
     case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
-    //   shell->readfromfile(textline);
+      //   shell->readfromfile(textline);
       break;
 
     case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
@@ -105,6 +113,46 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   }
 }
 
-void sintax::lsdyna::ConverterSintax::run(){
-  qDebug() << INFOFILE;
+void sintax::lsdyna::ConverterSintax::run() {
+  QMutex mutex;
+  QMutexLocker lock(&mutex);
+  // clang-format off
+  qDebug() << INFOFILE 
+           << "acquires thread" 
+           << QThread::currentThreadId()
+           << "\n"
+           << "open file" << filename_;
+  // clang-format on
+  // read file
+  QScopedPointer<QFile> file(new QFile(filename_));
+  if (!file->open(QIODevice::ReadOnly)) {
+    QMessageBox::information(0, "error", file.data()->errorString());
+  }
+  QTextStream in(file.data());
+  quint64 counter = 0;
+  while (!in.atEnd()) {
+    QString textline = in.readLine();
+    testInputLine(textline);
+    parseLine(textline);
+  }
+
+  file->close();
+}
+
+void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) {
+  filename_ = filename;
+}
+QString sintax::lsdyna::ConverterSintax::getFilename() const {
+  return filename_;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Slot
+///////////////////////////////////////////////////////////////////////////////
+
+void sintax::lsdyna::ConverterSintax::changedProcessedFilename(
+    const QString &filename) {
+  if (filename != filename_) {
+    this->setInputFile(filename);
+  }
 }

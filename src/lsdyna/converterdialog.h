@@ -20,24 +20,25 @@ class ConverterDialog : public QDialog {
   ConverterDialog(QWidget *parent = nullptr);
   ~ConverterDialog() override;
 
-  int exec() override;
+  void process();
 
   void setInputFile(const QString &filename);
 
  public slots:
+  void changedProcessedFilename(const QString &filename);
 
  signals:
   void start();
   void stop();
+  void updateProcessedFilename(const QString &filename);
 
  private:
   void setupLayout();
-
+  QString filename_;
   QSharedPointer<QGridLayout> grid_layot_{nullptr};
   QSharedPointer<QProgressBar> pbar_{nullptr};
   QSharedPointer<QLabel> label_{nullptr};
   QSharedPointer<QPushButton> cancel_btn_{nullptr};
-
   QSharedPointer<sintax::lsdyna::ConverterSintax> converter_{nullptr};
 };
 
