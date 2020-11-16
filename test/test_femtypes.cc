@@ -3,7 +3,7 @@
 #include "finite_element_types.h"
 #include "gtest/gtest.h"
 
-TEST(NodeProperty, FiniteElementTypes) {
+TEST(FiniteElementTypes, NodeProperty) {
   auto node = PropertyNode<long long, double>(375, 33.17, 22.45, 0.0);
   EXPECT_EQ(node.id_node(), 375);
   EXPECT_EQ(node.coordinate_x(), 33.17);
@@ -11,7 +11,7 @@ TEST(NodeProperty, FiniteElementTypes) {
   EXPECT_EQ(node.coordinate_z(), 0.0);
 }
 
-TEST(NodePrint, FiniteElementTypes) {
+TEST(FiniteElementTypes, NodePrint) {
   auto node = PropertyNode<long long, double>(375, 33.17, 22.45, 0.0);
   std::ostringstream out;
   out << node;

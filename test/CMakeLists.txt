@@ -3,6 +3,7 @@ add_executable(
   test_logger.cc
   test_femtypes.cc
   test_converter.cc
+  test_managerfile.cc
 #   test_loadmodel.cpp
 #   test_cocolabels.cpp
 #   test_imagenetlabels.cpp
