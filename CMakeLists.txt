@@ -8,6 +8,11 @@ set(NAME_PROJECT "LsDynaToApdl")
 include(cmake/googletest.cmake)
 fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
 enable_testing()
+if(NOT TEST_NO_DEBUG_OUTPUT)
+  set(TEST_NO_DEBUG_OUTPUT "ON")
+  message(STATUS "Compile without debug output")
+  add_definitions(-D QT_NO_DEBUG_OUTPUT)
+endif()
 
 # -----------------------------------------------------------------------------
 # check build type
