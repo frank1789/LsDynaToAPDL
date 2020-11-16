@@ -1,0 +1,33 @@
+language: cpp
+os:
+  - osx
+osx_image: xcode11.3
+
+compiler:
+  - clang
+  - gcc
+
+
+cache:
+  directories:
+    - /home/travis
+
+git:
+  depth: 3
+
+install:
+  - brew install lcov 
+  - gem install  coveralls-lcov
+  - pip3 install cpp-coveralls
+
+script:
+  - ./script-travis.sh debug
+
+after_success:
+  - COVERAGE_FILES=$(find $PWD -name "coverage-filtered.info")
+  - coveralls-lcov ${COVERAGE_FILES}
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
