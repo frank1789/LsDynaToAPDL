@@ -4,11 +4,13 @@ set(LIB_NAME "lsdyna")
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
 set(SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/node.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/converter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/keywords.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.cc)
 
 set(HEADERS
+  ${CMAKE_CURRENT_SOURCE_DIR}/node.h
     ${CMAKE_CURRENT_SOURCE_DIR}/converter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/keywords.h
     ${CMAKE_CURRENT_SOURCE_DIR}/converterdialog.h)
@@ -41,7 +43,7 @@ target_compile_options(
           -Wmissing-format-attribute
           -Wformat-nonliteral
           -fstack-protector-strong
-          -fexceptions)
+)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
