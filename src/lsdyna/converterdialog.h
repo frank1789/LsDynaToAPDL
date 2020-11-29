@@ -18,7 +18,7 @@ class ConverterDialog : public QDialog {
   Q_OBJECT
  public:
   ConverterDialog(QWidget *parent = nullptr);
-  ~ConverterDialog() override;
+  ~ConverterDialog() override = default;
 
   void process();
 

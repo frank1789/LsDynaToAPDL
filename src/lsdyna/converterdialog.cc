@@ -23,8 +23,6 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
           });
 }
 
-ConverterDialog::~ConverterDialog() {}
-
 void ConverterDialog::setInputFile(const QString &filename) {
   filename_ = filename;
   emit updateProcessedFilename(filename_);
