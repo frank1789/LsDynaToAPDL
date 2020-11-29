@@ -49,12 +49,12 @@ About::~About() { delete ui; }
  * @param[in] event: pointer closing event
  */
 void About::closeEvent(QCloseEvent *event) {
-  if (event) {
+  if (event != nullptr) {
     emit dialogClosed();
     event->accept();
     close();
   } else
-    event->ignore();
+  {event->ignore();}
 }
 
 QString About::readLicense(const QString &filename) {
