@@ -28,7 +28,7 @@
 
 #define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__).c_str()
 
-inline std::string info_file(char const *function, char const *file,
+static inline std::string info_file(char const *function, char const *file,
                              long line) {
   std::string mess = std::string(function);
   mess += " ";

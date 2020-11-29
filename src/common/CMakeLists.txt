@@ -36,7 +36,7 @@ target_compile_options(
           -Wmissing-format-attribute
           -Wformat-nonliteral
           -fstack-protector-strong
-          -fexceptions)
+)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)

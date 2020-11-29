@@ -14,7 +14,7 @@ ${CMAKE_CURRENT_LIST_DIR}/element.h
 ${CMAKE_CURRENT_LIST_DIR}/finitelement.h     
 ${CMAKE_CURRENT_LIST_DIR}/mainwindow.h       
     
-${CMAKE_CURRENT_LIST_DIR}/node.h             
+           
 ${CMAKE_CURRENT_LIST_DIR}/reader.h           
 ${CMAKE_CURRENT_LIST_DIR}/shell.h            
 ${CMAKE_CURRENT_LIST_DIR}/writeapdl.h         
@@ -40,7 +40,7 @@ ${CMAKE_CURRENT_LIST_DIR}/lsdynainterpreter.cpp
 ${CMAKE_CURRENT_LIST_DIR}/main.cpp              
 ${CMAKE_CURRENT_LIST_DIR}/mainwindow.cpp        
       
-${CMAKE_CURRENT_LIST_DIR}/node.cpp              
+         
 ${CMAKE_CURRENT_LIST_DIR}/reader.cpp            
 ${CMAKE_CURRENT_LIST_DIR}/shell.cpp             
 ${CMAKE_CURRENT_LIST_DIR}/writeapdl.cpp         
