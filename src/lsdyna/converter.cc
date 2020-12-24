@@ -9,9 +9,14 @@
 #include <QTextStream>
 
 #include "logger_tools.h"
+#include "node.h"
+
+constexpr quint64 preset_element = 35000;
 
 sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
-    : QThread(parent) {}
+    : QThread(parent) {
+  nodes_.reserve(preset_element);
+}
 
 /**
  * @brief ConverterSintax::setInputLine
@@ -80,35 +85,30 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   switch (doc_section_) {
     case sintax::lsdyna::KeywordDyna::$:
-      return;
       break;
 
     case sintax::lsdyna::KeywordDyna::KEYWORD:
-      return;
       break;
 
-    case sintax::lsdyna::KeywordDyna::NODE:
-      //   node->readfromfile(textline);
-      break;
+    case sintax::lsdyna::KeywordDyna::NODE: {
+      auto node = function_parser_(line);
+      nodes_.push_back(node);
+    } break;
 
     case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
       //   shell->readfromfile(textline);
       break;
 
     case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
-      return;
       break;
 
     case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
-      return;
       break;
 
     case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
-      return;
       break;
 
     default:
-      return;
       break;
   }
 }
@@ -126,7 +126,7 @@ void sintax::lsdyna::ConverterSintax::run() {
   // read file
   QScopedPointer<QFile> file(new QFile(filename_));
   if (!file->open(QIODevice::ReadOnly)) {
-    QMessageBox::information(0, "error", file.data()->errorString());
+    QMessageBox::information(nullptr, "error", file.data()->errorString());
   }
   QTextStream in(file.data());
   quint64 counter = 0;
@@ -134,6 +134,7 @@ void sintax::lsdyna::ConverterSintax::run() {
     QString textline = in.readLine();
     testInputLine(textline);
     parseLine(textline);
+    counter++;
   }
 
   file->close();

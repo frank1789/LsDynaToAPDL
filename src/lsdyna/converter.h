@@ -1,10 +1,13 @@
 #ifndef LSDYNA_COVERTER_SINTAX_H
 #define LSDYNA_COVERTER_SINTAX_H
 
-#include <QString>
 #include <QObject>
+#include <QString>
 #include <QThread>
+#include <QVector>
+#include <functional>
 
+#include "finite_element_types.h"
 #include "keywords.h"
 
 namespace sintax {
@@ -19,29 +22,29 @@ namespace lsdyna {
 class ConverterSintax : public QThread {
   Q_OBJECT
  public:
- /**
-  * @brief Construct a new Converter Sintax object
-  * 
-  */
-  explicit ConverterSintax(QObject *parent=nullptr);
+  /**
+   * @brief Construct a new Converter Sintax object
+   *
+   */
+  explicit ConverterSintax(QObject *parent = nullptr);
 
   /**
    * @brief Destroy the Converter Sintax object
-   * 
+   *
    */
-  ~ConverterSintax() = default;
+  ~ConverterSintax() override = default;
 
   /**
-   * @brief 
-   * 
-   * @param linefile 
+   * @brief
+   *
+   * @param linefile
    */
   void testInputLine(const QString &line);
 
   /**
-   * @brief 
-   * 
-   * @param line 
+   * @brief
+   *
+   * @param line
    */
   void parseLine(const QString &line);
 
@@ -50,16 +53,18 @@ class ConverterSintax : public QThread {
   void setInputFile(const QString &filename);
   QString getFilename() const;
 
-public slots:
+ public slots:
   void changedProcessedFilename(const QString &filename);
 
-
  private:
-  sintax::lsdyna::KeywordDyna doc_section_;
-  QString filename_;
+  sintax::lsdyna::KeywordDyna doc_section_{};
+  QString filename_{};
+  QVector<PropertyNode<quint64, qreal>> nodes_{};
+  std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{
+      nullptr};
 };
 
-} // namespace lsdyna
-} // namespace sintax
+}  // namespace lsdyna
+}  // namespace sintax
 
-#endif // LSDYNA_COVERTER_SINTAX_H
+#endif  // LSDYNA_COVERTER_SINTAX_H
