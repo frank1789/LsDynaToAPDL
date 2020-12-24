@@ -19,8 +19,7 @@ add_library(${LIB_NAME})
 
 target_link_libraries(${LIB_NAME} Qt5::Core Qt5::Widgets logger)
 
-target_sources(
-  ${LIB_NAME}
+target_sources(${LIB_NAME}
   PRIVATE ${SOURCES}
   PUBLIC ${HEADERS})
 

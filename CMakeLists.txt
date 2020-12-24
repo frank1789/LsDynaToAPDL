@@ -10,7 +10,7 @@ fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
 enable_testing()
 if(NOT TEST_NO_DEBUG_OUTPUT)
   set(TEST_NO_DEBUG_OUTPUT "ON")
-  message(STATUS "Compile without debug output")
+  message(STATUS "Compile without Qt debug output")
   add_definitions(-D QT_NO_DEBUG_OUTPUT)
 endif()
 
@@ -126,6 +126,8 @@ endif(DOXYGEN_FOUND)
 # Local library and dependecies
 # -----------------------------------------------------------------------------
 add_subdirectory(src)
+add_subdirectory(src/common)
+add_subdirectory(src/lsdyna)
 add_subdirectory(test)
 
 # ----------------------------------------------------------------------------
