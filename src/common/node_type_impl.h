@@ -2,12 +2,14 @@
 #define NODE_TYPE_IMPL_H
 
 #include <QDebug>
+#include <QObject>
 #include <cassert>
 #include <ostream>
 #include <type_traits>
 #include <utility>
 
 #include "finite_element_types.h"
+#include "logger_tools.h"
 
 /**
  * @brief PropertyNode contains the information of a single node.
@@ -29,7 +31,7 @@
  * @tparam P: type for spatial coordinate
  */
 template <class N, class P>
-class PropertyNode {
+class PropertyNode : public QObject {
   static_assert(std::is_integral_v<N>,
                 "N must be instantiated with integral template argument.");
   static_assert(std::is_arithmetic_v<P>,
@@ -53,6 +55,57 @@ class PropertyNode {
    */
   explicit PropertyNode(N id, P x, P y, P z)
       : id_node_(id), coordinate_x_(x), coordinate_y_(y), coordinate_z_(z) {}
+
+  /**
+   * @brief Construct a new Property Node object
+   *
+   * @param o
+   */
+  PropertyNode(const PropertyNode &o)
+      : id_node_(o.id_node_),
+        coordinate_x_(o.coordinate_z_),
+        coordinate_y_(o.coordinate_z_),
+        coordinate_z_(o.coordinate_z_) {}
+
+  /**
+   * @brief Construct a new Property Node object
+   *
+   * @param o
+   */
+  PropertyNode(PropertyNode &&o) noexcept
+      : id_node_(std::move(o.id_node_)),
+        coordinate_x_(std::move(o.coordinate_z_)),
+        coordinate_y_(std::move(o.coordinate_z_)),
+        coordinate_z_(std::move(o.coordinate_z_)) {}
+
+  /**
+   * @brief
+   *
+   * @param o
+   * @return PropertyNode&
+   */
+  PropertyNode &operator=(const PropertyNode &o) {
+    id_node_ = o.id_node_;
+    coordinate_x_ = o.coordinate_z_;
+    coordinate_y_ = o.coordinate_z_;
+    coordinate_z_ = o.coordinate_z_;
+    return *this;
+  }
+
+  /**
+   * @brief
+   *
+   * @param o
+   * @return PropertyNode&
+   */
+  PropertyNode &operator=(PropertyNode &&o) {
+    id_node_ = std::move(o.id_node_);
+    coordinate_x_ = std::move(o.coordinate_z_);
+    coordinate_y_ = std::move(o.coordinate_z_);
+    coordinate_z_ = std::move(o.coordinate_z_);
+    qDebug() << INFOFILE << "move assigned\n";
+    return *this;
+  }
 
   /**
    * @brief
