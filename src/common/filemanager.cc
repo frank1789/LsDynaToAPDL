@@ -7,8 +7,7 @@
 
 #include "logger_tools.h"
 
-ManageFile::ManageFile(QObject *parent)
-    : QObject(parent) {}
+ManageFile::ManageFile(QObject *parent) : QObject(parent) {}
 
 ManageFile::~ManageFile() { qDebug() << INFOFILE << "dtor ManageFile"; }
 
