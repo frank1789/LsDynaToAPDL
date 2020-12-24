@@ -10,7 +10,9 @@
  */
 class Node {
  public:
-  static parseNode(const QString &inputline);
+  static PropertyNode<quint64, qreal> parseNode(const QString &inputline);
 };
+
+Q_DECLARE_METATYPE(Node)
 
 #endif  // NODE_H
