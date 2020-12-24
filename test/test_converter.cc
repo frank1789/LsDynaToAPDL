@@ -1,3 +1,4 @@
+#include <QStringList>
 #include "converter.h"
 #include "gtest/gtest.h"
 
@@ -21,9 +22,9 @@ TEST(ConverterSyntax, Filename) {
 TEST(ConverterSyntax, Node) {
 
   // clang-format off
-  const auto text_lines = {
-    {"*KEYWORD"}
-    {"*NODE"}
+  const QStringList text_lines = {
+    {"*KEYWORD"},
+    {"*NODE"},
     {"1230742     -240.277832      281.437195     -55.9616051     0.0     0.0"},
     {"1234655     -235.380905      275.594604     -55.9579811     0.0     0.0"},
     {"1234656     -230.403625      269.777252     -55.9557076     0.0     0.0"},
@@ -47,13 +48,13 @@ TEST(ConverterSyntax, Node) {
     {"1234674     -98.3009644      202.229294     -35.7500458     0.0     0.0"},
     {"1234675     -90.5665207      201.833069     -33.2940636     0.0     0.0"},
     {"1234676     -82.9492569      201.396851     -31.0835438     0.0     0.0"}
-  }
+  };
   // clang-format on
-auto converter = sintax::lsdyna::ConverterSintax();
-for(const auto &line: text_lines){
+  auto converter = sintax::lsdyna::ConverterSintax();
+  for (const auto &line : text_lines) {
   converter.testInputLine("$");
-}
-
+    converter.testInputLine(line);
+  }
 
 
 
