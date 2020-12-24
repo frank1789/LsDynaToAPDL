@@ -1,9 +1,7 @@
 #include <QStringList>
+
 #include "converter.h"
 #include "gtest/gtest.h"
-
-
-#include <QStringList>
 
 TEST(ConverterSyntax, Keyword) {
   auto converter = sintax::lsdyna::ConverterSintax();
@@ -20,7 +18,6 @@ TEST(ConverterSyntax, Filename) {
 }
 
 TEST(ConverterSyntax, Node) {
-
   // clang-format off
   const QStringList text_lines = {
     {"*KEYWORD"},
@@ -52,24 +49,7 @@ TEST(ConverterSyntax, Node) {
   // clang-format on
   auto converter = sintax::lsdyna::ConverterSintax();
   for (const auto &line : text_lines) {
-  converter.testInputLine("$");
+    converter.testInputLine("$");
     converter.testInputLine(line);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
