@@ -1,7 +1,7 @@
 #ifndef LOGGER_TOOLS_H
 #define LOGGER_TOOLS_H
 
-#include <string>
+#include <QString>
 
 #define PROFILING 1
 #if PROFILING
@@ -26,14 +26,14 @@
 #endif
 #endif
 
-#define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__).c_str()
+#define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__)
 
-static inline std::string info_file(char const *function, char const *file,
+static inline QString info_file(char const *function, char const *file,
                                     long line) {
-  std::string mess = std::string(function);
+  auto mess = QString(function);
   mess += " ";
-  mess += std::string(file);
-  mess += ":" + std::to_string(line) + "] ";
+  mess += QString(file);
+  mess += ":" + QString::number(line) + "] ";
   return mess;
 }
 

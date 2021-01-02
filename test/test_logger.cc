@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include "logger_tools.h"
 
-std::string dummyfunc() { return INFOFILE; };
+std::string dummyfunc() { return INFOFILE.toStdString(); };
 
 TEST(Logger, Logger) {
   auto message = dummyfunc();

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(LIB_NAME "logger")
+set(LIB_NAME "common")
 
 set(LIBRARY_TARGET_NAME ${LIB_NAME})
 
@@ -7,13 +7,12 @@ set(SOURCES ${CMAKE_CURRENT_LIST_DIR}/filemanager.cc)
 
 add_library(${LIB_NAME})
 
-target_link_libraries(${LIB_NAME} Qt5::Core)
+target_link_libraries(${LIB_NAME} Qt5::Core logger)
 
 target_sources(
   ${LIB_NAME}
   PRIVATE ${SOURCES}
-  PUBLIC ${CMAKE_CURRENT_LIST_DIR}/logger_tools.h
-         ${CMAKE_CURRENT_LIST_DIR}/finite_element_types.h
+  PUBLIC ${CMAKE_CURRENT_LIST_DIR}/finite_element_types.h
          ${CMAKE_CURRENT_LIST_DIR}/node_type_impl.h
          ${CMAKE_CURRENT_LIST_DIR}/filemanager.h)
 
