@@ -63,7 +63,6 @@ QString About::readLicense(const QString &filename) {
   }
   QTextStream text(&fileInput);
   QString all = text.readAll();
-  qDebug() << all;
   fileInput.close();
   return all;
 }
