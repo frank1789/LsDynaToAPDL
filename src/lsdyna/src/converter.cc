@@ -8,6 +8,7 @@
 #include <QScopedPointer>
 #include <QTextStream>
 
+#include "element_shell.h"
 #include "logger_tools.h"
 #include "node.h"
 
@@ -84,32 +85,34 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
  */
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   switch (doc_section_) {
-    case sintax::lsdyna::KeywordDyna::$:
-      break;
+  case sintax::lsdyna::KeywordDyna::$:
+    break;
 
-    case sintax::lsdyna::KeywordDyna::KEYWORD:
-      break;
+  case sintax::lsdyna::KeywordDyna::KEYWORD:
+    break;
 
-    case sintax::lsdyna::KeywordDyna::NODE: {
-      auto node = function_parser_(line);
-      nodes_.push_back(node);
-    } break;
+  case sintax::lsdyna::KeywordDyna::NODE: {
+    auto node = function_parser_(line);
+    nodes_.push_back(node);
+  } break;
 
-    case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
-      //   shell->readfromfile(textline);
-      break;
+  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
+    QScopedPointer<Shell> shell(new Shell);
+    auto element = shell->parseElement(line);
+    //   shell->readfromfile(textline);
+    break;
 
-    case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
-      break;
+  case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
+    break;
 
-    case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
-      break;
+  case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
+    break;
 
-    case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
-      break;
+  case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 }
 
@@ -136,7 +139,6 @@ void sintax::lsdyna::ConverterSintax::run() {
     parseLine(textline);
     counter++;
   }
-
   file->close();
 }
 

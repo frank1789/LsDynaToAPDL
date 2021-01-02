@@ -46,15 +46,16 @@ Shell::parseElement(const QString &inputline) {
             << ", fonud groups:" 
             << re.captureCount();
     // clang-format on
-    _shelldata.idelem = match.captured("id").toInt(); // capture id element
-    _shelldata.nodeelem[0] =
-        match.captured("node1").toDouble(); // capture node 1
-    _shelldata.nodeelem[1] =
-        match.captured("node2").toDouble(); // capture node 2
-    _shelldata.nodeelem[2] =
-        match.captured("node3").toDouble(); // capture node 3
-    _shelldata.nodeelem[3] =
-        match.captured("node4").toDouble(); // capture node 4
+    // capture id element
+    _shelldata.idelem = match.captured("id").toInt();
+    // capture node 1
+    _shelldata.nodeelem[0] = match.captured("node1").toDouble();
+    // capture node 2
+    _shelldata.nodeelem[1] = match.captured("node2").toDouble();
+    // capture node 3
+    _shelldata.nodeelem[2] = match.captured("node3").toDouble();
+    // capture node 4
+    _shelldata.nodeelem[3] = match.captured("node4").toDouble();
     //      qDebug()<<"form element id:" << shell.IdElement <<", E," <<
     //      shell.Node_1; qDebug()<< ","<< shell.Node_2 << "," << shell.Node_3
     //      << "," << shell.Node_4;
