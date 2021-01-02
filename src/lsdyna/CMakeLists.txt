@@ -30,7 +30,6 @@ set_property(TARGET ${LIBRARY_TARGET_NAME}
     INCLUDE_DIRECTORIES "${${LIBRARY_TARGET_NAME}_HDR}"
 )
 
-
 # Specify include directories for both compilation and installation process.
 # The $<INSTALL_PREFIX> generator expression is useful to ensure to create
 # relocatable configuration files, see https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#creating-relocatable-packages

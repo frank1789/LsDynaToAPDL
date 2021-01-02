@@ -3,11 +3,13 @@ include( CMakeParseArguments )
 
 execute_process(COMMAND git describe --tags --dirty
                 OUTPUT_VARIABLE VERSION
-                ERROR_QUIET)
+                ERROR_QUIET
+)
 
 execute_process(COMMAND git rev-parse --short HEAD
                 OUTPUT_VARIABLE VERSION_SHA1
-                ERROR_QUIET)
+                ERROR_QUIET
+)
 
 #parse the version information into pieces.
 string(REGEX REPLACE "v?([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
@@ -16,13 +18,6 @@ string(REGEX REPLACE "v?[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VER
 string(REGEX REPLACE "\n$" "" VERSION_SHA1 "${VERSION_SHA1}")
 set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
-
-
-message( STATUS
-  "Version:\t${VERSION}
-  Git tag:\t[${VERSION_SHORT}]
-  Git revision:\t[${VERSION_SHA1}]"
-)
-
-
-
+message(STATUS "Version:\t${VERSION}")
+message(STATUS "Git tag:\t[${VERSION_SHORT}]")
+message(STATUS "Git revision:\t[${VERSION_SHA1}]")
