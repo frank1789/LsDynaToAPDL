@@ -95,7 +95,7 @@ if [ "$#" -eq "0" ]; then
     compile_release
 else
     if [ "$1" = "Debug" ] || [ "$1" = "debug" ]; then
-        echo "build release version"
+        echo "build debug version"
         compile_debug
     fi
 fi
