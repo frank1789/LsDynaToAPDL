@@ -9,6 +9,7 @@ set(${LIBRARY_TARGET_NAME}_SRC
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_LIST_DIR}/include/finite_element_types.h
+  ${CMAKE_CURRENT_LIST_DIR}/include/element_type_impl.h
   ${CMAKE_CURRENT_LIST_DIR}/include/node_type_impl.h
   ${CMAKE_CURRENT_LIST_DIR}/include/filemanager.h
 )
