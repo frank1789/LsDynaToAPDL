@@ -8,35 +8,34 @@ add_subdirectory(common)
 add_subdirectory(lsdyna)
 
 set(HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/about.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/apdlinterpreter.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/element.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/finitelement.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/reader.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/shell.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/about.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/apdlinterpreter.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/element.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/finitelement.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/reader.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.h
 )
 
 set(SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/element.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/finitelement.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lsdynainterpreter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/reader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/shell.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/element.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/finitelement.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/lsdynainterpreter.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/main.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/reader.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.cpp
 )
 
 set(UIFORM
-    ${CMAKE_CURRENT_SOURCE_DIR}/about.ui 
-    ${CMAKE_CURRENT_SOURCE_DIR}/dialog.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/about.ui 
+  ${CMAKE_CURRENT_SOURCE_DIR}/dialog.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
+)
 
 qt5_add_resources(RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
 
