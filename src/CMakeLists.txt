@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
+include( GitVersion )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
+
+add_subdirectory(logtools)
+add_subdirectory(common)
+add_subdirectory(lsdyna)
+
 set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/about.h
     ${CMAKE_CURRENT_SOURCE_DIR}/apdlinterpreter.h
@@ -9,9 +16,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
     ${CMAKE_CURRENT_SOURCE_DIR}/reader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/shell.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.h)
-
-include_directories(${HEADERS})
+    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h
+)
 
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
@@ -23,7 +30,8 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/reader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/shell.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/writeapdl.cpp
+)
 
 set(UIFORM
     ${CMAKE_CURRENT_SOURCE_DIR}/about.ui 
@@ -33,7 +41,7 @@ set(UIFORM
 qt5_add_resources(RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
 
 add_executable(${NAME_PROJECT} ${SOURCES} ${UIFORM} ${RESOURCES})
-target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets lsdyna logger)
+target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets lsdyna common)
 target_compile_options(
   ${NAME_PROJECT}
   PRIVATE -c
