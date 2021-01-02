@@ -7,9 +7,7 @@
 #include <QTextStream>
 
 #include "ui_about.h"
-
-#define VERSION 1
-#define BUILD 12523
+#include "version.h"
 
 /**
  * @brief About::About default constructor ui to show information and license.
@@ -31,10 +29,9 @@ About::About(QWidget *parent) : QDialog(parent), ui(new Ui::About) {
   // add author
   ui->author->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
   // add information builder
-  ui->version->setText(QString("Version %1").arg(VERSION));
-  ui->build->setText(QString("Build %1").arg(BUILD));
-  qDebug() << VERSION;
-  qDebug() << BUILD;
+  auto version = QString::fromStdString(compact_version());
+  ui->version->setText(QString("Version %1").arg(version));
+  ui->build->setText(QString("Build %1").arg(kREVISION));
 }
 
 /**
@@ -53,8 +50,9 @@ void About::closeEvent(QCloseEvent *event) {
     emit dialogClosed();
     event->accept();
     close();
-  } else
-  {event->ignore();}
+  } else {
+    event->ignore();
+  }
 }
 
 QString About::readLicense(const QString &filename) {
