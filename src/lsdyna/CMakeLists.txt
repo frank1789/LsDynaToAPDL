@@ -4,6 +4,7 @@ set(LIBRARY_TARGET_NAME "lsdyna")
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/element.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converterdialog.cc
@@ -12,6 +13,7 @@ set(${LIBRARY_TARGET_NAME}_SRC
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/node.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/element.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converterdialog.h
