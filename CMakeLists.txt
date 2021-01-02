@@ -5,7 +5,12 @@ set(NAME_PROJECT "LsDynaToApdl")
 # -----------------------------------------------------------------------------
 # load cmake module
 # -----------------------------------------------------------------------------
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(cmake/googletest.cmake)
+
+# -----------------------------------------------------------------------------
+# Google test
+# -----------------------------------------------------------------------------
 fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
 enable_testing()
 if(NOT TEST_NO_DEBUG_OUTPUT)
