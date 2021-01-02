@@ -1,9 +1,9 @@
-#include "element.h"
-
-#include "logger_tools.h"
+#include "element_shell.h"
 
 #include <QDebug>
 #include <QRegularExpression>
+
+#include "logger_tools.h"
 
 Shell::Shell() : node_flag_(false), thickness_flag_(false) {}
 
@@ -23,8 +23,7 @@ Shell::Shell() : node_flag_(false), thickness_flag_(false) {}
  *
  */
 ShellElement<quint64, quint64, qreal, 4>
-Shell::parseElement(
-    const QString &inputline) {
+Shell::parseElement(const QString &inputline) {
   QRegularExpression re;
   // clang-format off
   //  set pattern for search scheme of element definition
@@ -47,30 +46,34 @@ Shell::parseElement(
             << ", fonud groups:" 
             << re.captureCount();
     // clang-format on
-    _shelldata.idelem = _match.captured("id").toInt(); // capture id element
+    _shelldata.idelem = match.captured("id").toInt(); // capture id element
     _shelldata.nodeelem[0] =
-        _match.captured("node1").toDouble(); // capture node 1
+        match.captured("node1").toDouble(); // capture node 1
     _shelldata.nodeelem[1] =
-        _match.captured("node2").toDouble(); // capture node 2
+        match.captured("node2").toDouble(); // capture node 2
     _shelldata.nodeelem[2] =
-        _match.captured("node3").toDouble(); // capture node 3
+        match.captured("node3").toDouble(); // capture node 3
     _shelldata.nodeelem[3] =
-        _match.captured("node4").toDouble(); // capture node 4
+        match.captured("node4").toDouble(); // capture node 4
     //      qDebug()<<"form element id:" << shell.IdElement <<", E," <<
     //      shell.Node_1; qDebug()<< ","<< shell.Node_2 << "," << shell.Node_3
     //      << "," << shell.Node_4;
     node_flag_ = true;
   }
-  // verify second line string element thickeness replicated four time costant
+  // verify second line string element thickeness replicated four times costant
   // for element
   // clang-format off
   re.setPattern("(\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)");
   // clang-format on
   match = re.match(inputline);
   if (match.hasMatch()) {
-    qDebug() << INFOFILE << "has match: " << match.hasMatch()
-             << ", fonud groups:" << re.captureCount();
-    _shelldata.elemthick = _match.captured(1).toDouble();
+    // clang-format off
+    qDebug() << INFOFILE 
+            << "has match: " << match.hasMatch()
+            << ", fonud groups:" 
+            << re.captureCount();
+    // clang-format on
+    _shelldata.elemthick = match.captured(1).toDouble();
     qDebug() << INFOFILE << "thickness element:" << _shelldata.elemthick;
     thickness_flag_ = true;
   }
