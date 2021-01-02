@@ -131,9 +131,6 @@ endif(DOXYGEN_FOUND)
 # Local library and dependecies
 # -----------------------------------------------------------------------------
 add_subdirectory(src)
-add_subdirectory(src/logtools)
-add_subdirectory(src/common)
-add_subdirectory(src/lsdyna)
 add_subdirectory(test)
 
 # ----------------------------------------------------------------------------
