@@ -2,12 +2,8 @@
 #define ABOUT_H
 
 #include <QCloseEvent>
-#include <QDebug>
 #include <QDialog>
-#include <QFile>
-#include <QImage>
-#include <QLabel>
-#include <QTextStream>
+#include <QString>
 
 namespace Ui {
 class About;
@@ -20,7 +16,7 @@ class About;
 class About : public QDialog {
   Q_OBJECT
  public:
-  explicit About(QWidget *parent = 0);
+  explicit About(QWidget *parent = nullptr);
   ~About();
 
  signals:
@@ -28,10 +24,9 @@ class About : public QDialog {
 
  private:
   void closeEvent(QCloseEvent *event);
+  QString readLicense(const QString &filename);
 
   Ui::About *ui;
 };
-
-QString read(QString pfileName);
 
 #endif  // ABOUT_H

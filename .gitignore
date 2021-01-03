@@ -1,5 +1,44 @@
-# macOS file
-\.DS_Store
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
 # C++ objects and libs
 *.slo
@@ -9,6 +48,7 @@
 *.la
 *.lai
 *.so
+*.so.*
 *.dll
 *.dylib
 
@@ -31,6 +71,8 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+*.qm
+*.prl
 
 # Qt unit tests
 target_wrapper.*
@@ -44,3 +86,25 @@ target_wrapper.*
 
 # QtCreator CMake
 CMakeLists.txt.user*
+
+# QtCreator 4.8< compilation database 
+compile_commands.json
+
+# QtCreator local machine specific files for imported projects
+*creator.user*
+
+*_qmlcache.qrc
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+*build*

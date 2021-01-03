@@ -4,10 +4,29 @@
 #
 #-------------------------------------------------
 
-QT       += core gui\
+QT       += core \
+            gui \
             concurrent
 
-QMAKE_CXXFLAGS = -std=gnu++14 -O2
+CONFIG += c++17
+
+QMAKE_CXXFLAGS += \
+    -O2 \
+-c \
+-Wall \
+-Wextra \
+-fPIC \
+-Wredundant-decls \
+-Wcast-align \
+-Wmissing-declarations \
+-Wmissing-include-dirs \
+-Winvalid-pch \
+-Wredundant-decls \
+-Wmissing-format-attribute \
+-Wformat-nonliteral \
+-fstack-protector-strong \
+-fexceptions
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -37,6 +56,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    element.cc \
         main.cpp \
         mainwindow.cpp \
     reader.cpp \
@@ -50,7 +70,10 @@ SOURCES += \
     managefile.cpp
 
 HEADERS += \
+    element.h \
+    finite_element_types.h \
         mainwindow.h \
+    node_type_impl.h \
     reader.h \
     about.h \
     finitelement.h \
@@ -66,5 +89,4 @@ FORMS += \
     about.ui \
     dialog.ui
 
-RESOURCES += \
-    resources.qrc
+RESOURCES += \ resources.qrc
