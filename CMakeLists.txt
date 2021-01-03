@@ -6,6 +6,7 @@ set(NAME_PROJECT "LsDynaToApdl")
 # load cmake module
 # -----------------------------------------------------------------------------
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include( GitVersion )
 include(cmake/googletest.cmake)
 
 # -----------------------------------------------------------------------------
@@ -105,27 +106,29 @@ find_package(Threads REQUIRED)
 # -----------------------------------------------------------------------------
 # Build Documentation
 # -----------------------------------------------------------------------------
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 # check if Doxygen is installed
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-  # set input and output files
-  set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
-  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-  # request to configure the file
-  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-  message("Doxygen build started")
-  # note the option ALL which allows to build the docs together with the
-  # application
-  add_custom_target(
-    doc_doxygen ALL
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-    VERBATIM)
-else(DOXYGEN_FOUND)
-  message("Doxygen need to be installed to generate the doxygen documentation")
-endif(DOXYGEN_FOUND)
+if(BUILD_DOC)
+  find_package(Doxygen)
+  if(DOXYGEN_FOUND)
+    # set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    # request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message(STATUS "Doxygen build started")
+    # note the option ALL which allows to build the docs together with the
+    # application
+    add_custom_target(
+      doc_doxygen ALL
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      COMMENT "Generating API documentation with Doxygen"
+      VERBATIM)
+  else(DOXYGEN_FOUND)
+    message(STATUS "Doxygen need to be installed to generate the doxygen documentation")
+  endif(DOXYGEN_FOUND)
+endif()
 
 # -----------------------------------------------------------------------------
 # Local library and dependecies
@@ -141,20 +144,20 @@ message(
   STATUS
     "-------------------------------------------------------------------------------"
 )
-message(STATUS "General configuration for ${PROJECT_NAME} ${PROJECT_VERSION}")
+message(STATUS "General configuration for ${PROJECT_NAME} ${VERSION_SHORT}")
 message(
   STATUS
     "-------------------------------------------------------------------------------"
 )
 message(STATUS)
-message(STATUS "Compiler:\t${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
+message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
 message(
   STATUS "C++ flags (Release):\t${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(
   STATUS "C++ flags (Debug):\t${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-message(STATUS "Coverage:\t${COVERAGE_CHECK}")
+message(STATUS "Coverage:\t\t${COVERAGE_CHECK}")
 message(STATUS "Documentation:\t${BUILD_DOC}")
-message(STATUS "CMAKE_BINARY_DIR:\t${CMAKE_BINARY_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)
 message(STATUS "Change a value with: cmake -D<Variable>=<Value> ..")
 message(STATUS)

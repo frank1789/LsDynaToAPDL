@@ -19,5 +19,6 @@ string(REGEX REPLACE "\n$" "" VERSION_SHA1 "${VERSION_SHA1}")
 set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 message(STATUS "Version:\t${VERSION}")
-message(STATUS "Git tag:\t[${VERSION_SHORT}]")
+message(STATUS "Git tag:\t\t[${VERSION_SHORT}]")
 message(STATUS "Git revision:\t[${VERSION_SHA1}]")
+message(STATUS)
