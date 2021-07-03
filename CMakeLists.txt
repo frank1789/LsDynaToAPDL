@@ -37,7 +37,7 @@ endif()
 # -----------------------------------------------------------------------------
 # C/C++ standard extensions
 # -----------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -47,8 +47,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if(COVERAGE)
   set(COVERAGE_CHECK "ON")
   add_library(coverage INTERFACE)
-  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES
-                                              "GNU|Clang")
+  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(
       coverage
       INTERFACE -O0 # no optimization

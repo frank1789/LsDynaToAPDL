@@ -58,7 +58,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     target_link_libraries(coverage)
   endif()
 else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
+  target_compile_options(${LIB_NAME} PUBLIC -O2 -fPIC -pipe)
 endif()
 
 # Specify installation targets, typology and destination folders.
