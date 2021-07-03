@@ -29,8 +29,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
     target_link_libraries(coverage)
   endif()
-else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
 endif()
 
 message(STATUS "Created target ${LIBRARY_TARGET_NAME} for export ${PROJECT_NAME}.")
