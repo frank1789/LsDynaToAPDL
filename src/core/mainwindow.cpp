@@ -6,7 +6,7 @@
 
 #include "logger_tools.h"
 #include "node.h"
-#include "shell.h"
+//#include "shell.h"
 #include "ui_mainwindow.h"
 
 #include "about.h"
