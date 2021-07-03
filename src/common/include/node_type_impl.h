@@ -167,13 +167,13 @@ class PropertyNode : public QObject {
  template <class T, class U>
   friend std::ostream &operator<< (std::ostream &os, const PropertyNode<T, U> &node);
  template <class T, class U>
-  friend QDebug operator<< (QDebug os, const PropertyNode<T, U> &node);
-  // clang-format on
- private:
-  N id_node_;      /**< uniquely identifies node IDs */
-  P coordinate_x_; /**< x coordinate in the space */
-  P coordinate_y_; /**< y coordinate in the space */
-  P coordinate_z_; /**< z coordinate in the space */
+  friend QDebug &operator<< (QDebug& os, const PropertyNode<T, U> &node);
+ // clang-format on
+private:
+ N id_node_;      /**< uniquely identifies node IDs */
+ P coordinate_x_; /**< x coordinate in the space */
+ P coordinate_y_; /**< y coordinate in the space */
+ P coordinate_z_; /**< z coordinate in the space */
 };
 
 template <class N, class P>
@@ -186,7 +186,7 @@ std::ostream &operator<<(std::ostream &os, const PropertyNode<N, P> &node) {
 }
 
 template <class N, class P>
-QDebug operator<<(QDebug os, const PropertyNode<N, P> &node) {
+QDebug &operator<<(QDebug &os, const PropertyNode<N, P> &node) {
   os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", "
      << node.coordinate_y_ << ", " << node.coordinate_z_ << "]";
   return os;

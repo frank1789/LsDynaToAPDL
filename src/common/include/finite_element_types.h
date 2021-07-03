@@ -6,7 +6,8 @@
 
 template <typename N, typename P> class PropertyNode;
 
-template <typename N, typename EN, int size> class PropertyElement;
+template <typename N, typename EN, typename T, int size>
+class PropertyElement;
 
 template <typename N, typename EN, typename T, int size>
 class ShellElement;
