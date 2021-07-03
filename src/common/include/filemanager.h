@@ -52,8 +52,8 @@ class ManageFile : public QObject {
   QString getOutputfile() const;
 
  signals:
-  void changeOutputFilename(const QString &filename);
-  void updatePropertyFile(const QString &label, const qint64 &size);
+  void outputFilenameChanged(const QString &filename);
+  void propertyFileChanged(const QString &label, const qint64 &size);
 
  public slots:
   void processedFilename(const QString &filename);

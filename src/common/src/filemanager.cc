@@ -30,7 +30,7 @@ void ManageFile::setNewFilename(const QString &filename) {
   const QString replace = "_converted.txt";
   new_filename_ = filename;
   new_filename_.replace(re, replace);
-  emit changeOutputFilename(new_filename_);
+  emit outputFilenameChanged(new_filename_);
   qDebug() << INFOFILE << new_filename_;
 }
 
@@ -40,12 +40,12 @@ void ManageFile::setNewFilename(const QString &filename) {
 
 void ManageFile::processedFilename(const QString &filename) {
   setNewFilename(filename);
-  const QRegularExpression re("(\\w+)(\\.\\w+)+(?!.*(\\w+)(\\.\\w+)+)");
+  const QRegularExpression re(R"((\w+)(\.\w+)+(?!.*(\w+)(\.\w+)+))");
   QRegularExpressionMatch match = re.match(filename);
   if (match.hasMatch()) {
     QString name = match.captured(0);
     setFilename(name);
-    emit updatePropertyFile(name, extractSizeFile(filename));
+    emit propertyFileChanged(name, extractSizeFile(filename));
   } else {
     setFilename(filename);
   }
