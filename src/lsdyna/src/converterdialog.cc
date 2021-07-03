@@ -19,7 +19,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
 
   connect(this, &ConverterDialog::updateProcessedFilename,
           [=](const QString &filename) {
-            converter_->changedProcessedFilename(filename);
+            converter_->filenameChanged(filename);
           });
 }
 

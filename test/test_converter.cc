@@ -13,7 +13,7 @@ TEST(ConverterSyntax, Keyword) {
 
 TEST(ConverterSyntax, Filename) {
   auto converter = sintax::lsdyna::ConverterSintax();
-  converter.changedProcessedFilename("testfile.k");
+  converter.filenameChanged("testfile.k");
   EXPECT_EQ(converter.getFilename(), QString("testfile.k"));
 }
 

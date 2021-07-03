@@ -54,7 +54,7 @@ class ConverterSintax : public QThread {
   QString getFilename() const;
 
  public slots:
-  void changedProcessedFilename(const QString &filename);
+  void filenameChanged(const QString &filename);
 
  private:
   sintax::lsdyna::KeywordDyna doc_section_{};

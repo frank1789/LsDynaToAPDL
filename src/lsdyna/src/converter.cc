@@ -153,7 +153,7 @@ QString sintax::lsdyna::ConverterSintax::getFilename() const {
 // Slot
 ///////////////////////////////////////////////////////////////////////////////
 
-void sintax::lsdyna::ConverterSintax::changedProcessedFilename(
+void sintax::lsdyna::ConverterSintax::filenameChanged(
     const QString &filename) {
   if (filename != filename_) {
     this->setInputFile(filename);
