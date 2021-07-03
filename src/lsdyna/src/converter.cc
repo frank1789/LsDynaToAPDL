@@ -12,11 +12,11 @@
 #include "logger_tools.h"
 #include "node.h"
 
-constexpr quint64 preset_element = 35000;
+constexpr quint64 kPresetElements{200000};
 
 sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
     : QThread(parent) {
-  nodes_.reserve(preset_element);
+  nodes_.reserve(kPresetElements);
 }
 
 /**
@@ -96,11 +96,11 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
     nodes_.push_back(node);
   } break;
 
-  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
+  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL: {
     QScopedPointer<Shell> shell(new Shell);
-    auto element = shell->parseElement(line);
-    //   shell->readfromfile(textline);
-    break;
+    shell->parseElement(line);
+    elements_ = shell->getElements();
+  } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
     break;
@@ -123,8 +123,7 @@ void sintax::lsdyna::ConverterSintax::run() {
   qDebug() << INFOFILE 
            << "acquires thread" 
            << QThread::currentThreadId()
-           << "\n"
-           << "open file" << filename_;
+           << "then open file" << filename_;
   // clang-format on
   // read file
   QScopedPointer<QFile> file(new QFile(filename_));
@@ -145,6 +144,7 @@ void sintax::lsdyna::ConverterSintax::run() {
 void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) {
   filename_ = filename;
 }
+
 QString sintax::lsdyna::ConverterSintax::getFilename() const {
   return filename_;
 }

@@ -60,8 +60,10 @@ class ConverterSintax : public QThread {
   sintax::lsdyna::KeywordDyna doc_section_{};
   QString filename_{};
   QVector<PropertyNode<quint64, qreal>> nodes_{};
-  std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{
-      nullptr};
+  QVector<ShellElement<quint64, quint64, qreal, 4>> elements_{};
+  std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{nullptr};
+  //  std::function<ShellElement<quint64, quint64, qreal, 4>(const QString &)>
+  //      function_parser_{nullptr};
 };
 
 }  // namespace lsdyna

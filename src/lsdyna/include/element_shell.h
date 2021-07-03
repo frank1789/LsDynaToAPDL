@@ -8,16 +8,20 @@
  * nodes.
  */
 class Shell : public Element {
-public:
+ public:
+  using shell_t = ShellElement<quint64, quint64, qreal, 4>;
   /**
    * @brief Construct a new Shell object
    *
    */
   explicit Shell();
-  ShellElement<quint64, quint64, qreal, 4>
-  parseElement(const QString &inputline);
+  void parseElement(const QString &inputline);
 
-private:
+  QVector<shell_t> getElements() const;
+  int size() const;
+
+ private:
+  QVector<shell_t> shell_;
   bool node_flag_;      /**< confirm extraction of node's connection. */
   bool thickness_flag_; /**< confirm extraction shell's thickness. */
 };
