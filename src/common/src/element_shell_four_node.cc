@@ -29,7 +29,7 @@ ShellFourNode::ShellFourNode()
  *
  */
 void ShellFourNode::parseElement(const QString &inputline) {
-  ShellFourNode shelldata;
+  ShellFourNode shelldata{};
   QRegularExpression re;
   // clang-format off
   //  set pattern for search scheme of element definition
@@ -97,9 +97,9 @@ void ShellFourNode::setNodes(const std::initializer_list<quint64> &li) {
 
 void ShellFourNode::setThickness(qreal thickness) { thickness_ = thickness; }
 
-quint64 ShellFourNode::getId() const { return this->id_; }
+quint64 ShellFourNode::getId() const { return id_; }
 
-qreal ShellFourNode::getThickness() const { return this->thickness_; }
+qreal ShellFourNode::getThickness() const { return thickness_; }
 
 QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
 
