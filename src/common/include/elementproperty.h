@@ -1,11 +1,13 @@
-#ifndef ELEMENT_TYPE_IMPL_H
-#define ELEMENT_TYPE_IMPL_H
+#ifndef PropertyElement_H
+#define PropertyElement_H
 
-#include <QDebug>
-#include <QVector>
 #include <initializer_list>
 #include <iomanip>
 #include <ostream>
+
+#include <QDebug>
+#include <QString>
+#include <QVector>
 
 class PropertyElement {
  public:
@@ -34,4 +36,4 @@ class PropertyElement {
 
 inline PropertyElement::~PropertyElement() {}
 
-#endif  // ELEMENT_TYPE_IMPL_H
+#endif  // PropertyElement_H

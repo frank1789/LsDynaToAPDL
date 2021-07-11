@@ -23,3 +23,7 @@ void ElementParser::makeParser(ShellType sn, const ElementFactory &factory) {
 }
 
 void ElementParser::parseElement(const QString &l) { elem_->parseElement(l); }
+
+QSharedPointer<PropertyElement> ElementParser::getGenericElement() const {
+  return elem_;
+}

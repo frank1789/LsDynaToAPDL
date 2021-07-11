@@ -1,7 +1,7 @@
 #ifndef ELEMENT_SHELL_FOUR_NODE_H
 #define ELEMENT_SHELL_FOUR_NODE_H
 
-#include "element_type_impl.h"
+#include "elementproperty.h"
 
 constexpr int kFourNode{4};
 
