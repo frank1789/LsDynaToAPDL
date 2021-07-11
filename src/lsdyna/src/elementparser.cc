@@ -1,5 +1,9 @@
 #include "elementparser.h"
 
+#include <QMutexLocker>
+
+#include "element_shellfournode.h"
+
 QSharedPointer<ElementParser> ElementParser::p_instance_{nullptr};
 QMutex ElementParser::mutex_;
 
