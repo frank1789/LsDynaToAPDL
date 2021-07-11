@@ -7,8 +7,10 @@
 
 /**
  * @brief Node::parseNode implementation to import the nodes from the string.
+ *
  * @details through regular expressions, it divides the input string from the
- * ralive data to the node and adds them to the vector.
+ * data to the node and adds them to the vector.
+ *
  * @param pInputLine: line input from origin file.
  */
 PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
