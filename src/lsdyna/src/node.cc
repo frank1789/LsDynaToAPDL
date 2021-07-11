@@ -23,7 +23,7 @@ PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
     // extract coordinate x from string ------+                |                        |
     // extract node id ---+                   |                |                        |
     //                    +                   +                +                        +
-    re.setPattern(R"(\\d+) ?\\s*   (-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)");
+    re.setPattern("(\\d+) ?\\s*   (-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)");
     QRegularExpressionMatch match = re.match(inputline);
     qDebug() << INFOFILE << "fonud groups:" << re.captureCount();
   // clang-format on
