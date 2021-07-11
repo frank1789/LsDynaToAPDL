@@ -3,15 +3,17 @@ set(LIBRARY_TARGET_NAME "common")
 
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
-  ${CMAKE_CURRENT_LIST_DIR}/src/filemanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/filemanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/element_shell_four_node.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
-  ${CMAKE_CURRENT_LIST_DIR}/include/finite_element_types.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/element_type_impl.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/node_type_impl.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/filemanager.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/finite_element_types.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_type_impl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/node_type_impl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/filemanager.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shell_four_node.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
