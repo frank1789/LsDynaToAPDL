@@ -10,7 +10,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
   this->setupLayout();
   converter_ = QSharedPointer<sintax::lsdyna::ConverterSintax>(
       new sintax::lsdyna::ConverterSintax(this));
-  connect(cancel_btn_.data(), &QPushButton::clicked, [=]() {
+  connect(cancel_btn_.data(), &QPushButton::clicked, [this]() {
     if (converter_->isRunning()) {
       converter_->terminate();
       this->close();
@@ -18,7 +18,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
   });
 
   connect(this, &ConverterDialog::updateProcessedFilename,
-          [=](const QString &filename) {
+          [this](const QString &filename) {
             converter_->filenameChanged(filename);
           });
 }
