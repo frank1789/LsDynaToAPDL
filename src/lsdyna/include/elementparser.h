@@ -2,6 +2,7 @@
 #define ELEMENT_PARSER_H
 
 #include <QMutex>
+#include <QSharedPointer>
 
 #include "elementfactory.h"
 
@@ -16,10 +17,7 @@ class ElementParser {
   void makeParser(ShellType sn, const ElementFactory &factory);
   void parseElement(const QString &l);
 
-  //  template <typename RT>
-  //  RT getElements() const {
-  //    return elem_->getElements<RT>();
-  //  }
+  QSharedPointer<PropertyElement> getGenericElement() const;
 
  private:
   ElementParser() = default;

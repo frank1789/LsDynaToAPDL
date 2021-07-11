@@ -85,6 +85,7 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
  *
  */
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
+  testInputLine(line);
   switch (doc_section_) {
   case sintax::lsdyna::KeywordDyna::$:
     break;
@@ -101,7 +102,9 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
     QScopedPointer<ShellFactory> shell_parser(new ShellFactory);
     parser_->makeParser(ShellType::FourNode, *shell_parser);
     parser_->parseElement(line);
-    //    elements_ = parser_->getElements<QVector<ShellFourNode>>();
+    auto generic_elems = parser_->getGenericElement();
+    auto spec_elem = qSharedPointerDynamicCast<ShellFourNode>(generic_elems);
+    elements_ = spec_elem->getElements<QVector<ShellFourNode>>();
   } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
@@ -149,6 +152,15 @@ void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) {
 
 QString sintax::lsdyna::ConverterSintax::getFilename() const {
   return filename_;
+}
+
+QVector<PropertyNode<quint64, qreal>>
+sintax::lsdyna::ConverterSintax::getNodes() const {
+  return nodes_;
+}
+
+QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const {
+  return elements_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

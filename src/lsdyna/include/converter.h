@@ -53,6 +53,9 @@ class ConverterSintax : public QThread {
   void setInputFile(const QString &filename);
   QString getFilename() const;
 
+  QVector<PropertyNode<quint64, qreal>> getNodes() const;
+  QVector<ShellFourNode> getElements() const;
+
  public slots:
   void filenameChanged(const QString &filename);
 
