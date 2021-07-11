@@ -1,8 +1,7 @@
 #ifndef FINITE_ELEMENT_TYPES_H
 #define FINITE_ELEMENT_TYPES_H
 
-#include "element_shell_four_node.h"
-#include "element_type_impl.h"
+#include "element_shellfournode.h"
 #include "node_type_impl.h"
 
 template <typename N, typename P> class PropertyNode;

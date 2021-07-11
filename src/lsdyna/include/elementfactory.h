@@ -3,7 +3,7 @@
 
 #include <QSharedPointer>
 
-#include "element_shell_four_node.h"
+
 #include "finite_element_types.h"
 
 /**
