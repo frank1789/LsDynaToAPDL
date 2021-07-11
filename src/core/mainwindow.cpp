@@ -84,7 +84,7 @@ void MainWindow::on_LoadFile_clicked() {
   }
 }
 
-void MainWindow::onConvertClicked() {
+void MainWindow::on_Convert_clicked() {
   foreach (auto file, process_files_) {
     qDebug() << INFOFILE << "process file:" << file;
     ui->lineEdit_original->setText(file);
