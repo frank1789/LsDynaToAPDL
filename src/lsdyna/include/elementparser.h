@@ -5,6 +5,7 @@
 #include <QSharedPointer>
 
 #include "elementfactory.h"
+#include "elementproperty.h"
 
 class ElementParser {
  public:

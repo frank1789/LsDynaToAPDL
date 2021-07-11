@@ -5,7 +5,6 @@
 #include <QString>
 #include <QThread>
 #include <QVector>
-#include <functional>
 
 #include "elementparser.h"
 #include "keywords.h"
@@ -64,8 +63,6 @@ class ConverterSintax : public QThread {
   QString filename_{};
   QVector<PropertyNode<quint64, qreal>> nodes_{};
   QVector<ShellFourNode> elements_{};
-  std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{nullptr};
-
   QSharedPointer<ElementParser> parser_{nullptr};
 
   //  std::function<ShellElement<quint64, quint64, qreal, 4>(const QString &)>

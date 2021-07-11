@@ -13,6 +13,4 @@ class Node {
   static PropertyNode<quint64, qreal> parseNode(const QString &inputline);
 };
 
-Q_DECLARE_METATYPE(Node)
-
 #endif  // NODE_H

@@ -4,7 +4,6 @@
 
 ElementFactory::~ElementFactory() {}
 
-auto ShellFactory::createShellFourNode() const
-    -> QSharedPointer<ShellFourNode> {
-  return QSharedPointer<ShellFourNode>(new ShellFourNode());
+QSharedPointer<ShellFourNode> ShellFactory::createShellFourNode() const {
+  return QSharedPointer<ShellFourNode>(new ShellFourNode);
 }

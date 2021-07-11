@@ -51,7 +51,7 @@ TEST(ConverterSyntax, Node) {
     converter.parseLine(line);
   }
   auto nodes = converter.getNodes();
-  auto list_size = text_lines.size() - 1;
+  auto list_size = text_lines.size();
   EXPECT_EQ(nodes.size(), list_size);
 }
 
@@ -111,10 +111,9 @@ TEST(ConverterSyntax, Shell) {
   // clang-format on
   auto converter = sintax::lsdyna::ConverterSintax();
   for (const auto &line : text_lines) {
-    converter.testInputLine(line);
     converter.parseLine(line);
   }
   auto elems = converter.getElements();
-  auto list_size = text_lines.size() - 1;
+  auto list_size = text_lines.size();
   EXPECT_EQ(elems.size(), list_size);
 }

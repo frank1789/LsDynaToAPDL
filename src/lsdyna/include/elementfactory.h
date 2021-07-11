@@ -3,7 +3,6 @@
 
 #include <QSharedPointer>
 
-
 #include "finite_element_types.h"
 
 /**

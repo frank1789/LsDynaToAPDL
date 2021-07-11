@@ -9,6 +9,7 @@
 #include <QTextStream>
 
 #include "elementfactory.h"
+#include "elementproperty.h"
 #include "logger_tools.h"
 #include "node.h"
 
@@ -17,6 +18,7 @@ constexpr quint64 kPresetElements{200000};
 sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
     : QThread(parent) {
   nodes_.reserve(kPresetElements);
+  elements_.reserve(kPresetElements);
   parser_ = ElementParser::getInstance();
 }
 
@@ -94,7 +96,7 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
     break;
 
   case sintax::lsdyna::KeywordDyna::NODE: {
-    auto node = function_parser_(line);
+    auto node = Node::parseNode(line);
     nodes_.push_back(node);
   } break;
 
@@ -139,7 +141,6 @@ void sintax::lsdyna::ConverterSintax::run() {
   quint64 counter = 0;
   while (!in.atEnd()) {
     QString textline = in.readLine();
-    testInputLine(textline);
     parseLine(textline);
     counter++;
   }
