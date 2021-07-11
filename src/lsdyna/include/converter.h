@@ -7,7 +7,7 @@
 #include <QVector>
 #include <functional>
 
-#include "finite_element_types.h"
+#include "elementparser.h"
 #include "keywords.h"
 
 namespace sintax {
@@ -60,8 +60,11 @@ class ConverterSintax : public QThread {
   sintax::lsdyna::KeywordDyna doc_section_{};
   QString filename_{};
   QVector<PropertyNode<quint64, qreal>> nodes_{};
-  QVector<ShellElement<quint64, quint64, qreal, 4>> elements_{};
+  QVector<ShellFourNode> elements_{};
   std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{nullptr};
+
+  QSharedPointer<ElementParser> parser_{nullptr};
+
   //  std::function<ShellElement<quint64, quint64, qreal, 4>(const QString &)>
   //      function_parser_{nullptr};
 };

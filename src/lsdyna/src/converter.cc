@@ -8,7 +8,7 @@
 #include <QScopedPointer>
 #include <QTextStream>
 
-#include "element_shell.h"
+#include "elementfactory.h"
 #include "logger_tools.h"
 #include "node.h"
 
@@ -17,6 +17,7 @@ constexpr quint64 kPresetElements{200000};
 sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
     : QThread(parent) {
   nodes_.reserve(kPresetElements);
+  parser_ = ElementParser::getInstance();
 }
 
 /**
@@ -97,9 +98,10 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSHELL: {
-    QScopedPointer<Shell> shell(new Shell);
-    shell->parseElement(line);
-    elements_ = shell->getElements();
+    QScopedPointer<ShellFactory> shell_parser(new ShellFactory);
+    parser_->makeParser(ShellType::FourNode, *shell_parser);
+    parser_->parseElement(line);
+    //    elements_ = parser_->getElements<QVector<ShellFourNode>>();
   } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
