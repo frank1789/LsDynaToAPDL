@@ -50,15 +50,5 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     target_link_libraries(coverage)
   endif()
 else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
-endif()
-
-
-
-if(APPLE)
-  set_target_properties(${NAME_PROJECT} PROPERTIES
-    MACOSX_BUNDLE ON
-    MACOSX_BUNDLE_BUNDLE_NAME "${NAME_PROJECT}"
-    #MACOSX_BUNDLE_BUNDLE_IDENTIFIER "cz.mosra.magnum.my-application"
-  )
+  target_compile_options(${NAME_PROJECT} PUBLIC -O2 -fPIC -pipe)
 endif()

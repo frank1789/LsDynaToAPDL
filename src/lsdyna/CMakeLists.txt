@@ -4,17 +4,18 @@ set(LIBRARY_TARGET_NAME "lsdyna")
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/element_shell.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converterdialog.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/node.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/element.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shell.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementfactory.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementparser.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converterdialog.h
@@ -63,7 +64,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     target_link_libraries(coverage)
   endif()
 else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
+  target_compile_options(${LIBRARY_TARGET_NAME} PUBLIC -O2 -fPIC -pipe)
 endif()
 
 # Specify installation targets, typology and destination folders.

@@ -62,8 +62,7 @@ private:
 
     QScopedPointer<ConverterDialog> converter_dialog_{nullptr};
     QScopedPointer<ManageFile> manager_{nullptr};
-
-    QList<QString>* listOfFile;
+    QList<QString> process_files_;
 
     int indexlist;
 };

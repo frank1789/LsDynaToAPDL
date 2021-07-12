@@ -8,7 +8,7 @@ set(LIBRARY_TARGET_NAME "logger")
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
-  ${CMAKE_CURRENT_LIST_DIR}/include/logger_tools.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/logger_tools.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} INTERFACE)
@@ -29,8 +29,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
     target_link_libraries(coverage)
   endif()
-else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
 endif()
 
 message(STATUS "Created target ${LIBRARY_TARGET_NAME} for export ${PROJECT_NAME}.")

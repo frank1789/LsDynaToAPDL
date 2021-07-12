@@ -37,10 +37,7 @@ endif()
 # -----------------------------------------------------------------------------
 # C/C++ standard extensions
 # -----------------------------------------------------------------------------
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -50,8 +47,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if(COVERAGE)
   set(COVERAGE_CHECK "ON")
   add_library(coverage INTERFACE)
-  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES
-                                              "GNU|Clang")
+  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(
       coverage
       INTERFACE -O0 # no optimization
@@ -103,6 +99,11 @@ endif(${Qt5_FOUND})
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
+set(CMAKE_C_FLAGS_DEBUG "-march=native -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "-march=native -pthread")
+set(CMAKE_C_FLAGS_RELEASE "-march=native -pthread")
+set(CMAKE_CXX_FLAGS_RELEASE "-march=native -pthread")
+
 # -----------------------------------------------------------------------------
 # Build Documentation
 # -----------------------------------------------------------------------------
@@ -140,22 +141,14 @@ add_subdirectory(test)
 # display status message for important variables
 # ----------------------------------------------------------------------------
 message(STATUS)
-message(
-  STATUS
-    "-------------------------------------------------------------------------------"
-)
+message(STATUS "-------------------------------------------------------------------------------")
 message(STATUS "General configuration for ${PROJECT_NAME} ${VERSION_SHORT}")
-message(
-  STATUS
-    "-------------------------------------------------------------------------------"
-)
+message(STATUS "-------------------------------------------------------------------------------")
 message(STATUS)
 message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
-message(
-  STATUS "C++ flags (Release):\t${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
-message(
-  STATUS "C++ flags (Debug):\t${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-message(STATUS "Coverage:\t\t${COVERAGE_CHECK}")
+message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+message(STATUS "C++ flags (Debug): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "Coverage:\t\t${COVERAGE}")
 message(STATUS "Documentation:\t${BUILD_DOC}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)

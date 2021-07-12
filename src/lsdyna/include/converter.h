@@ -5,9 +5,8 @@
 #include <QString>
 #include <QThread>
 #include <QVector>
-#include <functional>
 
-#include "finite_element_types.h"
+#include "elementparser.h"
 #include "keywords.h"
 
 namespace sintax {
@@ -53,15 +52,21 @@ class ConverterSintax : public QThread {
   void setInputFile(const QString &filename);
   QString getFilename() const;
 
+  QVector<PropertyNode<quint64, qreal>> getNodes() const;
+  QVector<ShellFourNode> getElements() const;
+
  public slots:
-  void changedProcessedFilename(const QString &filename);
+  void filenameChanged(const QString &filename);
 
  private:
   sintax::lsdyna::KeywordDyna doc_section_{};
   QString filename_{};
   QVector<PropertyNode<quint64, qreal>> nodes_{};
-  std::function<PropertyNode<quint64, qreal>(const QString &)> function_parser_{
-      nullptr};
+  QVector<ShellFourNode> elements_{};
+  QSharedPointer<ElementParser> parser_{nullptr};
+
+  //  std::function<ShellElement<quint64, quint64, qreal, 4>(const QString &)>
+  //      function_parser_{nullptr};
 };
 
 }  // namespace lsdyna

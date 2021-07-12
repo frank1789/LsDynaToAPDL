@@ -6,7 +6,7 @@
 
 #include "logger_tools.h"
 #include "node.h"
-#include "shell.h"
+//#include "shell.h"
 #include "ui_mainwindow.h"
 
 #include "about.h"
@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
   //  ui->ElemInfo->setText("Total number element shell: 0");
 
   // instanziate classes to work Lsdyna/APDL
-  listOfFile = new QList<QString>;
+  process_files_.reserve(16);
   // converter = new ConverterSintax();
 
   manager_.reset(new ManageFile());
@@ -33,15 +33,20 @@ MainWindow::MainWindow(QWidget *parent)
 
   // connect slot
   // connect(this, &MainWindow::sizeList, manager_.data(), &ManageFile::setSizelist);
-  connect(this, &MainWindow::updateProcessedFilename, [=](const QString &filename){ manager_->processedFilename(filename);});
-  connect(this, &MainWindow::updateProcessedFilename, [=](const QString &filename){ converter_dialog_->changedProcessedFilename(filename);});
-  connect(manager_.data(), &ManageFile::updatePropertyFile, this, &MainWindow::setPropertyFile);
-  connect(manager_.data(), &ManageFile::changeOutputFilename, this, &MainWindow::setnameFileText);
+  connect(this, &MainWindow::updateProcessedFilename,
+          [this](const QString &filename) {
+            manager_->processedFilename(filename);
+          });
+  connect(this, &MainWindow::updateProcessedFilename,
+          [this](const QString &filename) {
+            converter_dialog_->changedProcessedFilename(filename);
+          });
+  connect(manager_.data(), &ManageFile::propertyFileChanged, this, &MainWindow::setPropertyFile);
+  connect(manager_.data(), &ManageFile::outputFilenameChanged, this, &MainWindow::setnameFileText);
 }
 
 MainWindow::~MainWindow() {
   delete ui;
-  delete listOfFile;
 }
 
 void MainWindow::setnameFileText(const QString &filename)
@@ -62,14 +67,14 @@ void MainWindow::setPropertyFile(const QString &filename, quint64 dimension){
 }
 
 void MainWindow::on_LoadFile_clicked() {
-  qDebug() << "Open file dialog...";
+  qDebug() << "Open file dialog";
   QStringList fileNames = QFileDialog::getOpenFileNames(
       this, tr("Open file"), "", tr("All files (*.k *.txt)"));
   if (!fileNames.isEmpty()) {
     QString fileName;
     foreach (auto file, fileNames) {
       fileName += file + " ";
-      listOfFile->push_back(file);
+      process_files_.push_back(file);
       ui->lineEdit_original->setText(fileName);
     }
     // activate button convert
@@ -80,14 +85,12 @@ void MainWindow::on_LoadFile_clicked() {
 }
 
 void MainWindow::on_Convert_clicked() {
-  foreach (auto file, *listOfFile) {
+  foreach (auto file, process_files_) {
     qDebug() << INFOFILE << "process file:" << file;
     ui->lineEdit_original->setText(file);
     emit updateProcessedFilename(file);
     converter_dialog_->open();
     converter_dialog_->process();
-    // delete node;
-    // delete shell;
   }
 }
 
@@ -133,9 +136,9 @@ void MainWindow::dropEvent(QDropEvent *e) {
   foreach (const QUrl &url, e->mimeData()->urls()) {
     filename = url.toLocalFile();
     qDebug() << INFOFILE << "Dropped a file:" << filename << "("
-             << listOfFile->size() << ")";
-    listOfFile->push_back(filename);
-    emit sizeList(listOfFile->size());
+             << process_files_.size() << ")";
+    process_files_.push_back(filename);
+    emit sizeList(process_files_.size());
   }
   ui->Convert->setDisabled(false);
   ui->lineEdit_original->setText(filename);

@@ -3,15 +3,17 @@ set(LIBRARY_TARGET_NAME "common")
 
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
-  ${CMAKE_CURRENT_LIST_DIR}/src/filemanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/filemanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/element_shell_four_node.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
-  ${CMAKE_CURRENT_LIST_DIR}/include/finite_element_types.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/element_type_impl.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/node_type_impl.h
-  ${CMAKE_CURRENT_LIST_DIR}/include/filemanager.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/finite_element_types.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementproperty.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/node_type_impl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/filemanager.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shellfournode.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
@@ -58,7 +60,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     target_link_libraries(coverage)
   endif()
 else()
-  target_compile_options(${LIB_NAME} PUBLIC -O2)
+  target_compile_options(${LIBRARY_TARGET_NAME} PUBLIC -O2 -fPIC -pipe)
 endif()
 
 # Specify installation targets, typology and destination folders.

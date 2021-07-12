@@ -1,11 +1,13 @@
-#include "element_shell.h"
-
 #include <QDebug>
 #include <QRegularExpression>
 
+#include "element_shellfournode.h"
 #include "logger_tools.h"
 
-Shell::Shell() : node_flag_(false), thickness_flag_(false) {}
+ShellFourNode::ShellFourNode()
+    : Element(), node_flag_(false), thickness_flag_(false) {
+  element_id_.reserve(kFourNode);
+}
 
 /**
  * @brief Implementation to import the information of the
@@ -22,8 +24,7 @@ Shell::Shell() : node_flag_(false), thickness_flag_(false) {}
  * @param[in] inputline: line from origin file.
  *
  */
-ShellElement<quint64, quint64, qreal, 4>
-Shell::parseElement(const QString &inputline) {
+void ShellFourNode::parseElement(const QString &inputline) {
   QRegularExpression re;
   // clang-format off
   //  set pattern for search scheme of element definition
@@ -47,18 +48,13 @@ Shell::parseElement(const QString &inputline) {
             << re.captureCount();
     // clang-format on
     // capture id element
-    _shelldata.idelem = match.captured("id").toInt();
-    // capture node 1
-    _shelldata.nodeelem[0] = match.captured("node1").toDouble();
-    // capture node 2
-    _shelldata.nodeelem[1] = match.captured("node2").toDouble();
-    // capture node 3
-    _shelldata.nodeelem[2] = match.captured("node3").toDouble();
-    // capture node 4
-    _shelldata.nodeelem[3] = match.captured("node4").toDouble();
-    //      qDebug()<<"form element id:" << shell.IdElement <<", E," <<
-    //      shell.Node_1; qDebug()<< ","<< shell.Node_2 << "," << shell.Node_3
-    //      << "," << shell.Node_4;
+    setId(match.captured("id").toInt());
+    auto first_node = static_cast<quint64>(match.captured("node1").toInt());
+    auto second_node = static_cast<quint64>(match.captured("node2").toInt());
+    auto third_node = static_cast<quint64>(match.captured("node3").toInt());
+    auto fourth_node = static_cast<quint64>(match.captured("node4").toInt());
+    setNodes({first_node, second_node, third_node, fourth_node});
+    qDebug() << INFOFILE << *this;
     node_flag_ = true;
   }
   // verify second line string element thickeness replicated four times costant
@@ -74,71 +70,57 @@ Shell::parseElement(const QString &inputline) {
             << ", fonud groups:" 
             << re.captureCount();
     // clang-format on
-    _shelldata.elemthick = match.captured(1).toDouble();
-    qDebug() << INFOFILE << "thickness element:" << _shelldata.elemthick;
+    setThickness(match.captured(1).toDouble());
+    qDebug() << INFOFILE << "thickness element:" << getThickness();
     thickness_flag_ = true;
   }
-  //  fill vector element
+  //  fill vector element then reset the flags
   if (node_flag_ == true && thickness_flag_ == true) {
-    //      qDebug()<<"inside if id:" << shell.IdElement <<", E," <<
-    //      shell.Node_1 << ","; qDebug()<< shell.Node_2 << "," << shell.Node_3
-    //      << "," << shell.Node_4; qDebug()<< "thickness element:" <<
-    //      shell.ElemThickness;
-    // _shellimport->push_back(_shelldata);
-    // reset the flag
     node_flag_ = false;
     thickness_flag_ = false;
   }
 }
 
-// /**
-//  * @brief Shell::size get the size of vector contains list of elements.
-//  * @return dimension vector's elements.
-//  */
-// long Shell::size()
-// {
-//     return _shellimport->size();
-// }
+void ShellFourNode::setId(quint64 id) { id_ = id; }
 
-// /**
-//  * @brief Shell::getElementID get the ID's element at specified position
-//  * of vector.
-//  * @param[in] i: index of vector element.
-//  * @return element ID.
-//  */
-// int Shell::getElementID(int i)
-// {
-//     return _shellimport->at(i).idelem;
-// }
+void ShellFourNode::setNodes(const std::initializer_list<quint64> &li) {
+  if (element_id_.size() == kFourNode) {
+    element_id_.clear();
+  }
 
-// /**
-//  * @brief Shell::getElementNode get the i-th node connected at the n-th
-//  element
-//  * @param[in] i: index of the vector element.
-//  * @param[in] j: index of the array contenet the j-th.
-//  * @return ID j-th node.
-//  */
-// int Shell::getElementNode(int i, int j)
-// {
-//     return _shellimport->at(i).nodeelem[j];
-// }
+  for (auto e : li) {
+    element_id_.push_back(e);
+  }
+}
 
-// /**
-//  * @brief Shell::getElementNumNode get number of node (in this case constant
-//  value 4).
-//  * @return 4 node of shell element SHELL181.
-//  */
-// int Shell::getElementNumNode()
-// {
-//     return 4;
-// }
+void ShellFourNode::setThickness(qreal thickness) { thickness_ = thickness; }
 
-// /**
-//  * @brief Shell::getElementThickness
-//  * @param[i] i: index of the vector element.
-//  * @return thickness of n-th element.
-//  */
-// double Shell::getElementThickness(int i)
-// {
-//     return _shellimport->at(i).elemthick;
-// }
+quint64 ShellFourNode::getId() const { return id_; }
+
+qreal ShellFourNode::getThickness() const { return thickness_; }
+
+QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
+
+std::ostream &operator<<(std::ostream &os, const ShellFourNode &s) {
+  os << "element:\n\t";
+  os << "id: " << std::setw(15) << s.getId() << "\t";
+  auto nodes = s.getNodesId();
+  for (auto i = 0; i < nodes.size(); i++) {
+    os << "node " << i + 1 << ":" << std::setw(15) << nodes[i];
+  }
+  os << "\n";
+  os << "thickness: " << std::setprecision(7) << s.getThickness() << "\n";
+  return os;
+}
+
+QDebug &operator<<(QDebug &os, const ShellFourNode &s) {
+  os << "element:\n\t";
+  os << "id: " << s.getId() << "\t";
+  auto nodes = s.getNodesId();
+  for (auto i = 0; i < nodes.size(); i++) {
+    os << "node " << i + 1 << ":" << nodes[i];
+  }
+  os << "\n";
+  os << "thickness: " << s.getThickness() << "\n";
+  return os;
+}

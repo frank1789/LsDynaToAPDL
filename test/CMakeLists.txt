@@ -14,8 +14,8 @@ add_executable(
 
 target_link_libraries(
   unit_tests
-  gtest_main
   Qt5::Core
+  gtest_main
   logger
   lsdyna
 )

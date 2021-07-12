@@ -8,15 +8,18 @@
 #include <QScopedPointer>
 #include <QTextStream>
 
-#include "element_shell.h"
+#include "elementfactory.h"
+#include "elementproperty.h"
 #include "logger_tools.h"
 #include "node.h"
 
-constexpr quint64 preset_element = 35000;
+constexpr quint64 kPresetElements{200000};
 
 sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
     : QThread(parent) {
-  nodes_.reserve(preset_element);
+  nodes_.reserve(kPresetElements);
+  elements_.reserve(kPresetElements);
+  parser_ = ElementParser::getInstance();
 }
 
 /**
@@ -84,6 +87,7 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
  *
  */
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
+  testInputLine(line);
   switch (doc_section_) {
   case sintax::lsdyna::KeywordDyna::$:
     break;
@@ -92,15 +96,15 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
     break;
 
   case sintax::lsdyna::KeywordDyna::NODE: {
-    auto node = function_parser_(line);
+    auto node = Node::parseNode(line);
     nodes_.push_back(node);
   } break;
 
-  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL:
-    QScopedPointer<Shell> shell(new Shell);
-    auto element = shell->parseElement(line);
-    //   shell->readfromfile(textline);
-    break;
+  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL: {
+    parser_->createParser(ShellType::FourNode);
+    auto shell_four = parser_->parseElement<ShellFourNode>(line);
+    elements_.push_back(shell_four);
+  } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
     break;
@@ -123,8 +127,7 @@ void sintax::lsdyna::ConverterSintax::run() {
   qDebug() << INFOFILE 
            << "acquires thread" 
            << QThread::currentThreadId()
-           << "\n"
-           << "open file" << filename_;
+           << "then open file" << filename_;
   // clang-format on
   // read file
   QScopedPointer<QFile> file(new QFile(filename_));
@@ -135,7 +138,6 @@ void sintax::lsdyna::ConverterSintax::run() {
   quint64 counter = 0;
   while (!in.atEnd()) {
     QString textline = in.readLine();
-    testInputLine(textline);
     parseLine(textline);
     counter++;
   }
@@ -145,15 +147,25 @@ void sintax::lsdyna::ConverterSintax::run() {
 void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) {
   filename_ = filename;
 }
+
 QString sintax::lsdyna::ConverterSintax::getFilename() const {
   return filename_;
+}
+
+QVector<PropertyNode<quint64, qreal>>
+sintax::lsdyna::ConverterSintax::getNodes() const {
+  return nodes_;
+}
+
+QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const {
+  return elements_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Slot
 ///////////////////////////////////////////////////////////////////////////////
 
-void sintax::lsdyna::ConverterSintax::changedProcessedFilename(
+void sintax::lsdyna::ConverterSintax::filenameChanged(
     const QString &filename) {
   if (filename != filename_) {
     this->setInputFile(filename);
