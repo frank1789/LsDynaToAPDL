@@ -5,11 +5,15 @@
 
 constexpr int kFourNode{4};
 
-class ShellFourNode : public PropertyElement {
+class ShellFourNode : public Element {
  public:
   explicit ShellFourNode();
 
   ~ShellFourNode() override = default;
+
+  std::unique_ptr<Element> clone() override {
+    return std::make_unique<ShellFourNode>();
+  }
 
   void parseElement(const QString& inputline) override;
 
@@ -23,15 +27,7 @@ class ShellFourNode : public PropertyElement {
 
   QVector<quint64> getNodesId() const override;
 
-  template <typename TR>
-  TR getElements() const {
-    return shells_;
-  }
-
-  int size() const override;
-
  private:
-  QVector<ShellFourNode> shells_;
   bool node_flag_;      /**< confirm extraction of node's connection. */
   bool thickness_flag_; /**< confirm extraction shell's thickness. */
 };

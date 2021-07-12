@@ -10,7 +10,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
   this->setupLayout();
   converter_ = QSharedPointer<sintax::lsdyna::ConverterSintax>(
       new sintax::lsdyna::ConverterSintax(this));
-  connect(cancel_btn_.data(), &QPushButton::clicked, [this]() {
+  QObject::connect(cancel_btn_.data(), &QPushButton::clicked, [this]() {
     if (converter_->isRunning()) {
       converter_->terminate();
       this->close();
@@ -30,9 +30,8 @@ void ConverterDialog::setInputFile(const QString &filename) {
 
 void ConverterDialog::process() {
   this->show();
-  QScopedPointer<QThread> thread = QScopedPointer<QThread>(new QThread(this));
-  pbar_->moveToThread(thread.data());
-  thread->start();
+  //  QScopedPointer<QThread> thread = QScopedPointer<QThread>(new
+  //  QThread(this)); pbar_->moveToThread(thread.data()); thread->start();
   converter_->run();
 }
 

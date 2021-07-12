@@ -1,15 +1,11 @@
-#include "element_shellfournode.h"
-
 #include <QDebug>
 #include <QRegularExpression>
 
+#include "element_shellfournode.h"
 #include "logger_tools.h"
 
-constexpr quint64 kMinimumElements{200000};
-
 ShellFourNode::ShellFourNode()
-    : PropertyElement(), node_flag_(false), thickness_flag_(false) {
-  shells_.reserve(kMinimumElements);
+    : Element(), node_flag_(false), thickness_flag_(false) {
   element_id_.reserve(kFourNode);
 }
 
@@ -29,7 +25,6 @@ ShellFourNode::ShellFourNode()
  *
  */
 void ShellFourNode::parseElement(const QString &inputline) {
-  ShellFourNode shelldata{};
   QRegularExpression re;
   // clang-format off
   //  set pattern for search scheme of element definition
@@ -53,13 +48,13 @@ void ShellFourNode::parseElement(const QString &inputline) {
             << re.captureCount();
     // clang-format on
     // capture id element
-    shelldata.setId(match.captured("id").toInt());
+    setId(match.captured("id").toInt());
     auto first_node = static_cast<quint64>(match.captured("node1").toInt());
     auto second_node = static_cast<quint64>(match.captured("node2").toInt());
     auto third_node = static_cast<quint64>(match.captured("node3").toInt());
     auto fourth_node = static_cast<quint64>(match.captured("node4").toInt());
-    shelldata.setNodes({first_node, second_node, third_node, fourth_node});
-    qDebug() << INFOFILE << shelldata;
+    setNodes({first_node, second_node, third_node, fourth_node});
+    qDebug() << INFOFILE << *this;
     node_flag_ = true;
   }
   // verify second line string element thickeness replicated four times costant
@@ -75,13 +70,12 @@ void ShellFourNode::parseElement(const QString &inputline) {
             << ", fonud groups:" 
             << re.captureCount();
     // clang-format on
-    shelldata.setThickness(match.captured(1).toDouble());
-    qDebug() << INFOFILE << "thickness element:" << shelldata.getThickness();
+    setThickness(match.captured(1).toDouble());
+    qDebug() << INFOFILE << "thickness element:" << getThickness();
     thickness_flag_ = true;
   }
   //  fill vector element then reset the flags
   if (node_flag_ == true && thickness_flag_ == true) {
-    shells_.push_back(shelldata);
     node_flag_ = false;
     thickness_flag_ = false;
   }
@@ -90,6 +84,10 @@ void ShellFourNode::parseElement(const QString &inputline) {
 void ShellFourNode::setId(quint64 id) { id_ = id; }
 
 void ShellFourNode::setNodes(const std::initializer_list<quint64> &li) {
+  if (element_id_.size() == kFourNode) {
+    element_id_.clear();
+  }
+
   for (auto e : li) {
     element_id_.push_back(e);
   }
@@ -102,8 +100,6 @@ quint64 ShellFourNode::getId() const { return id_; }
 qreal ShellFourNode::getThickness() const { return thickness_; }
 
 QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
-
-int ShellFourNode::size() const { return shells_.size(); }
 
 std::ostream &operator<<(std::ostream &os, const ShellFourNode &s) {
   os << "element:\n\t";

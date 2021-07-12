@@ -24,7 +24,7 @@
  * @tparam size: sets the number of nodes of the element
  */
 template <typename N, typename EN, typename T, int size>
-class ShellElement : public PropertyElement<typename N, typename EN> {
+class ShellElement : public Element<typename N, typename EN> {
 public:
 private:
   //clang-format off

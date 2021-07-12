@@ -17,17 +17,11 @@ QSharedPointer<ElementParser> ElementParser::getInstance() {
   }
 }
 
-void ElementParser::makeParser(ShellType sn, const ElementFactory &factory) {
+void ElementParser::createParser(ShellType sn) {
   switch (sn) {
     case ShellType::FourNode: {
-      elem_ = factory.createShellFourNode();
-
+      shell_type_ = sn;
+      generic_elem_ = element_factory_.createElement(shell_type_);
     } break;
   }
-}
-
-void ElementParser::parseElement(const QString &l) { elem_->parseElement(l); }
-
-QSharedPointer<PropertyElement> ElementParser::getGenericElement() const {
-  return elem_;
 }

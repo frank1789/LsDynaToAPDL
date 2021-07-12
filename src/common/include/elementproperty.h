@@ -1,17 +1,19 @@
-#ifndef PropertyElement_H
-#define PropertyElement_H
-
-#include <initializer_list>
-#include <iomanip>
-#include <ostream>
+#ifndef GENERIC_ELEMENT_H
+#define GENERIC_ELEMENT_H
 
 #include <QDebug>
 #include <QString>
 #include <QVector>
+#include <initializer_list>
+#include <iomanip>
+#include <memory>
+#include <ostream>
 
-class PropertyElement {
+class Element {
  public:
-  virtual ~PropertyElement() = 0;
+  virtual ~Element() = 0;
+
+  virtual std::unique_ptr<Element> clone() = 0;
 
   virtual void setId(quint64 id) = 0;
   virtual void setNodes(std::initializer_list<quint64> const& li) = 0;
@@ -23,17 +25,12 @@ class PropertyElement {
 
   virtual void parseElement(const QString& inputline) = 0;
 
-  template <typename TR>
-  TR getElements() const;
-
-  virtual int size() const = 0;
-
  protected:
   quint64 id_;
   QVector<quint64> element_id_;
   qreal thickness_;
 };
 
-inline PropertyElement::~PropertyElement() {}
+inline Element::~Element() {}
 
-#endif  // PropertyElement_H
+#endif  // GENERIC_ELEMENT_H

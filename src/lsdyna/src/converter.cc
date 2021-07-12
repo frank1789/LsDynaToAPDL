@@ -101,12 +101,9 @@ void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSHELL: {
-    QScopedPointer<ShellFactory> shell_parser(new ShellFactory);
-    parser_->makeParser(ShellType::FourNode, *shell_parser);
-    parser_->parseElement(line);
-    auto generic_elems = parser_->getGenericElement();
-    auto spec_elem = qSharedPointerDynamicCast<ShellFourNode>(generic_elems);
-    elements_ = spec_elem->getElements<QVector<ShellFourNode>>();
+    parser_->createParser(ShellType::FourNode);
+    auto shell_four = parser_->parseElement<ShellFourNode>(line);
+    elements_.push_back(shell_four);
   } break;
 
   case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:

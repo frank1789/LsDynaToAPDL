@@ -6,6 +6,7 @@
 
 #include "elementfactory.h"
 #include "elementproperty.h"
+#include "unique_cast.h"
 
 class ElementParser {
  public:
@@ -15,16 +16,23 @@ class ElementParser {
   ElementParser(const ElementParser &) = delete;
   ElementParser &operator=(const ElementParser &) = delete;
 
-  void makeParser(ShellType sn, const ElementFactory &factory);
-  void parseElement(const QString &l);
+  template <class T>
+  T parseElement(const QString &l) {
+    auto elem = dynamic_unique_cast<T>(std::move(generic_elem_));
+    elem->parseElement(l);
+    return *elem;
+  }
 
-  QSharedPointer<PropertyElement> getGenericElement() const;
+  void createParser(ShellType sn);
 
  private:
   ElementParser() = default;
   static QSharedPointer<ElementParser> p_instance_;
   static QMutex mutex_;
-  QSharedPointer<PropertyElement> elem_{nullptr};
+  ElementFactory element_factory_{};
+
+  std::unique_ptr<Element> generic_elem_{nullptr};
+  ShellType shell_type_;
 };
 
 #endif  // ELEMENT_PARSER_H

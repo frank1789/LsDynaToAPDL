@@ -8,7 +8,7 @@ set(LIBRARY_TARGET_NAME "logger")
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
-  ${CMAKE_CURRENT_LIST_DIR}/include/logger_tools.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/logger_tools.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} INTERFACE)
