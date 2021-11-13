@@ -31,7 +31,7 @@ About::About(QWidget *parent) : QDialog(parent), ui(new Ui::About) {
   // add information builder
   auto version = QString::fromStdString(compact_version());
   ui->version->setText(QString("Version %1").arg(version));
-  ui->build->setText(QString("Build %1").arg(kREVISION));
+  ui->build->setText(QString("Build %1").arg(kBuild));
 }
 
 /**
