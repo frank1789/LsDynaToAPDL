@@ -91,9 +91,7 @@ endif(${Qt5_FOUND})
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
-set(CMAKE_C_FLAGS_DEBUG "-march=native -pthread")
 set(CMAKE_CXX_FLAGS_DEBUG "-march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
-set(CMAKE_C_FLAGS_RELEASE "-march=native -pthread")
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -march=native -pthread -Os -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
 
 # -----------------------------------------------------------------------------
