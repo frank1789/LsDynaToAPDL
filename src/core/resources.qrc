@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/Resources">
+        <file>LICENSE</file>
+        <file>generic.png</file>
+    </qresource>
+</RCC>
