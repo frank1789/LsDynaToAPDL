@@ -1,9 +1,20 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Qt:5.9](https://img.shields.io/badge/Qt-5.9-brightgreen.svg)](https://www.qt.io)
-[![Build Status](https://travis-ci.com/frank1789/LsDynaToAPDL.svg?branch=master)](https://travis-ci.com/frank1789/LsDynaToAPDL)
-[![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=master)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=master)
-
 # LsDynaToAPDL
+
+- [LsDynaToAPDL](#lsdynatoapdl)
+  - [Configure and Build](#configure-and-build)
+  - [Motivation](#motivation)
+  - [Getting Started](#getting-started)
+  - [Conttibuting](#conttibuting)
+  - [Authors](#authors)
+  - [License](#license)
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Qt:5.9](https://img.shields.io/badge/Qt-5-brightgreen.svg)](https://www.qt.io)
+
+|       | Build  | Coverage |
+|:------|:------:|:--------:|
+| Release | [![Build Status](https://travis-ci.com/frank1789/LsDynaToAPDL.svg?branch=master)](https://travis-ci.com/frank1789/LsDynaToAPDL) | [![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=master)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=master) |
+| Develop |     | [![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=develop)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=develop)|
 
 ## Configure and Build
 
@@ -21,7 +32,7 @@ Workbench.
 
 At present, the software only recognizes and manages nodes and shell-type
 elements both in read from Lsdyna format and in write in APDL format. It is
-also noted that the * shell * writing elements are of the type: ** SHELL181 **
+also noted that the *shell* writing elements are of the type: **SHELL181**
 is hardcoded. The other sections are currently ignored.
 
 ## Conttibuting
@@ -30,7 +41,7 @@ Knowledge of LsDyna syntax and APDL syntax
 
 ## Authors
 
-* **Francesco Argentieri**
+- **Francesco Argentieri**
 
 ## License
 
