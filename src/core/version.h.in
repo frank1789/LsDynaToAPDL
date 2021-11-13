@@ -1,17 +1,28 @@
-#ifndef VERSION_H
-#define VERSION_H
+/**
+ * @file version.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief Application version
+ * @version @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@
+ * @date 2021-11-13
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+#ifndef LSDYNA_TO_APDL_CONVERTER_VERSION_H
+#define LSDYNA_TO_APDL_CONVERTER_VERSION_H
 
 #include <sstream>
 
-constexpr char kVERSMAJOR[] = "@VERSION_MAJOR@";
-constexpr char kVERSMINOR[] = "@VERSION_MINOR@";
-constexpr char kVERSPATCH[] = "@VERSION_PATCH@";
-constexpr char kREVISION[] = "@VERSION_SHA1@";
+constexpr char kVersionMajor[] = "@VERSION_MAJOR@";
+constexpr char kVersionMinor[] = "@VERSION_MINOR@";
+constexpr char kVersionPatch[] = "@VERSION_PATCH@";
+constexpr char kBuild[] = "@VERSION_SHA1@";
 
 std::string compact_version() {
   std::stringstream v;
-  v << kVERSMAJOR << "." << kVERSMINOR << "." << kVERSPATCH;
+  v << kVersionMajor << "." << kkVersionMinor << "." << kVersionPatch << "\t"
+    << "build: " << kBuild;
   return v.str();
 }
 
-#endif // VERSION_H
+#endif  // LSDYNA_TO_APDL_CONVERTER_VERSION_H
