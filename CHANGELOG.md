@@ -1,68 +1,230 @@
 
-# CHANGELOG
+<a name="v0.4.0"></a>
+## [v0.4.0](https://github.com/frank1789/LsDynaToAPDL/compare/v0.3.0...v0.4.0)
+
+> 2018-05-18
+
+### Add
+
+* add docstring
+* add doc
+* add docstring
+* add documentation
+
+### Better
+
+* better perfomance
+
+### Change
+
+* change dimension
+
+### Class
+
+* class shell
+
+### Create
+
+* Create index.md
+
+### Input
+
+* input data from user
+
+### Manager
+
+* manager file separated
+
+### Merge
+
+* Merge branch 'release/v0.40'
+* Merge remote-tracking branch 'origin/master' into release/v0.40
+* Merge branch 'feature/UpgradeCorrection' into develop
+* Merge branch 'feature/UpgradeCorrection' into develop
+* Merge branch 'develop'
+
+### Minor
+
+* minor correction
+* minor correctio
+
+### Refactor
+
+* refactor converter class
+* refactor function to write file
+
+### Reserve
+
+* reserve space vector
+
+### Shell
+
+* shell work
+
+### Solved
+
+* solved reader for concurrent
+
+### Update
+
+* update & revision
+* update gitignore
+* update  .gitignore & documentations
+
+### Update
+
+* Update qmake
 
 
-## v0.1.0 / 2017-09-10
+<a name="v0.3.0"></a>
+## [v0.3.0](https://github.com/frank1789/LsDynaToAPDL/compare/v0.2.0...v0.3.0)
 
-* [b1be8ce] - :sparkles: solved versioning
-* [a11199b] - Try again add versioning
-* [f13c160] - add method to reset the output vector
-* [478ecf9] - Merge branch 'feature/WriterApdlCommand' into develop
-* [c422f22] - :sparkles: solved regex on node
-* [f4bca6c] - minor correction
-* [cbfd47e] - :pencil: rewrite as function write to file
-* [3d6e026] - Merge branch 'feature/CorrectionLsDynaInterp' into develop
-* [6d28810] - minor fix
-* [68897d2] - :sparkles: fix duplicade shell element in output file
-* [a0a7cda] - fix minor bug
-* [eb9c71e] - :sparkles: fix missed input file
-* [87444ec] - :sparkles: fix all
-* [ce6bfeb] - :bug: fix alignement license
-* [16e9d24] - version
-* [dcdd442] - version
-* [6ab20f2] - :sparkles: fix gemoetry
-* [91afb9a] - work image
-* [bfd6047] - add image for about section
-* [51745cb] - add resources
-* [d4565b5] - :sparkles: fix read file from qrc
-* [9000393] - :pencil: add license file
-* [1f90e63] - add .gitignore
-* [ee8c872] - delete old file
-* [c0f7838] - :sparkles: add function
-* [1e5de06] - :sparkles: solved call new ui for "about"
-* [c242da1] - :bug: can't load external ui about
-* [3e0c2b8] - :pencil: add credit widget
-* [e25066e] - Revert "Merge branch 'feature/CorrectionLsDynaInterp' into develop"
-* [ae2edad] - Revert "add .gitignore"
-* [52b21a1] - add .gitignore
-* [8992d33] - :sparkles: removed chunck code commented
-* [b039b15] - :bug:
-* [34da0f6] - removed widget
-* [6a5a15f] - :sparkles: removed name test
-* [3f4f3c3] - :sparkles: add multithreading for read and write files
-* [0e9c71f] - :pencil: write reader function
-* [ad28132] - :bug: not solved reduced to 1 duplicated
-* [01d95d4] - :bug: error in gouin element shell
-* [93ebf5d] - :sparkles: fix error on regex node capture group
-* [27f4102] - :bug: write replicated element or not complete
-* [47b3a69] - :sparkles: fixed adding distructor derivate class element shell
-* [5d3af86] - :pencil: start to develop writer APDL command
-* [e856158] - :bug: fix sminor bug
-* [cf3f68c] - :sparkles: fix regex
-* [0a7849d] - :bug: regex element shell
-* [a900d45] - :bug: fix virtual distructor
-* [58e6d07] - :pencil: add function and object element shell
-* [134cc8e] - :pencil: add element derivate class
-* [113a35d] - correct license date
-* [1e15cc3] - fix correction
-* [d16ae3a] - update ui
-* [912fea1] - update GUI
-* [dba3aab] - fix
-* [34a5d19] - rename and correction
-* [167edde] - fix namespace and other add comment
-* [df82c06] - moved #include
-* [3e942e8] - fix namespace and comment
-* [68c60ba] - Add reader node class for LsDyna
-* [ac72aa3] - add gui
-* [d879ea6] - Open project LsDynatoApdl
-* [7f38da5] - Initial commit
+> 2017-09-24
+
+### Add
+
+* add size of file input
+* add link qt
+* add flag and english version
+
+### Better
+
+* better optimization
+
+### Create
+
+* Create LICENSE
+
+### Delete
+
+* Delete LICENSE.md
+* Delete LICENSE.md
+
+### Fix
+
+* fix problem on closing app
+
+### Merge
+
+* Merge branch 'develop'
+* Merge branch 'feature/Readme' into develop
+* Merge branch 'feature/ManageFile' into develop
+
+### Minor
+
+* minor changes
+* minor fix
+
+### Removed
+
+* removed old code
+
+### Update
+
+* update qt
+* update readme
+
+
+<a name="v0.2.0"></a>
+## [v0.2.0](https://github.com/frank1789/LsDynaToAPDL/compare/v0.1.0...v0.2.0)
+
+> 2017-09-13
+
+### Merge
+
+* Merge branch 'develop'
+* Merge branch 'feature/AboutPage' into develop
+
+### Message
+
+* message in qmake
+
+### Minor
+
+* minor fix
+
+### Update
+
+* update ui
+
+### Update
+
+* Update versioning and gui
+
+
+<a name="v0.1.0"></a>
+## v0.1.0
+
+> 2017-09-10
+
+### Add
+
+* add method to reset the output vector
+* add image for about section
+* add resources
+* add .gitignore
+* add .gitignore
+* add gui
+
+### Add
+
+* Add reader node class for LsDyna
+
+### Correct
+
+* correct license date
+
+### Delete
+
+* delete old file
+
+### Fix
+
+* fix minor bug
+* fix correction
+* fix namespace and other add comment
+* fix namespace and comment
+
+### Initial
+
+* Initial commit
+
+### Merge
+
+* Merge branch 'feature/WriterApdlCommand' into develop
+* Merge branch 'feature/CorrectionLsDynaInterp' into develop
+
+### Minor
+
+* minor correction
+* minor fix
+
+### Moved
+
+* moved #include
+
+### Open
+
+* Open project LsDynatoApdl
+
+### Removed
+
+* removed widget
+
+### Rename
+
+* rename and correction
+
+### Try
+
+* Try again add versioning
+
+### Update
+
+* update ui
+* update GUI
+
+### Work
+
+* work image
+
