@@ -35,9 +35,8 @@ compile_debug() {
     lcov --directory . --zerocounters
     # setup cmake
     cmake -D CMAKE_BUILD_TYPE=Debug -D COVERAGE=ON ..
-    make -j$(nproc)
-    UNIT_TEST=$(find $PWD -name "unit_tests")
-    ${UNIT_TEST}
+    make clean && make -j$(nproc)
+    ctest
     # Create lcov report capturing coverage info
     # filter out system and extra files.
     lcov -d $PWD --capture --output-file coverage.info
