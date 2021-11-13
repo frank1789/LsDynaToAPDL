@@ -24,14 +24,16 @@ endif()
 # check build type
 # -----------------------------------------------------------------------------
 if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "Compile in debug mode")
-  set(CMAKE_BUILD_TYPE Debug)
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
   set(CMAKE_BUILD_TYPE Debug)
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "Release")
   message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
   set(CMAKE_BUILD_TYPE Release)
+  add_definitions(-D QT_NO_DEBUG_OUTPUT)
 endif()
 
 # -----------------------------------------------------------------------------
