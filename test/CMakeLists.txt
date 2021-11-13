@@ -3,18 +3,6 @@ add_executable(femtypes test_femtypes.cc)
 add_executable(converter test_converter.cc)
 add_executable(managerfile test_managerfile.cc)
 
-
-#  test_femtypes.cc
-#  test_converter.cc
-#  test_managerfile.cc
-#   test_loadmodel.cpp
-#   test_cocolabels.cpp
-#   test_imagenetlabels.cpp
-#   test_genericlabels.cpp
-#   test_inference.cpp
-#   test_color.cpp
-#)
-
 target_link_libraries(
   log Qt5::Core gtest_main logger lsdyna
 )
