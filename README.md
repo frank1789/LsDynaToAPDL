@@ -14,7 +14,7 @@
 |       | Build  | Coverage |
 |:------|:------:|:--------:|
 | Release | [![Build Status](https://travis-ci.com/frank1789/LsDynaToAPDL.svg?branch=master)](https://travis-ci.com/frank1789/LsDynaToAPDL) | [![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=master)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=master) |
-| Develop |     | [![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=develop)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=develop)|
+| Develop | [![Build Status](https://app.travis-ci.com/frank1789/LsDynaToAPDL.svg?branch=develop)](https://app.travis-ci.com/frank1789/LsDynaToAPDL) | [![Coverage Status](https://coveralls.io/repos/github/frank1789/LsDynaToAPDL/badge.svg?branch=develop)](https://coveralls.io/github/frank1789/LsDynaToAPDL?branch=develop)|
 
 ## Configure and Build
 
