@@ -20,7 +20,7 @@ constexpr char kBuild[] = "@VERSION_SHA1@";
 
 std::string compact_version() {
   std::stringstream v;
-  v << kVersionMajor << "." << kkVersionMinor << "." << kVersionPatch << "\t"
+  v << kVersionMajor << "." << kVersionMinor << "." << kVersionPatch << "\t"
     << "build: " << kBuild;
   return v.str();
 }
