@@ -77,18 +77,10 @@ set(CMAKE_AUTORCC ON)
 if(APPLE AND EXISTS /usr/local/opt/qt5)
   list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 endif()
-find_package(
-  Qt5
-  COMPONENTS Core
-  REQUIRED)
-find_package(
-  Qt5
-  COMPONENTS Widgets
-  REQUIRED)
-find_package(
-  Qt5
-  COMPONENTS Network
-  REQUIRED)
+find_package(Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Network REQUIRED)
+
 if(${Qt5_FOUND})
   message(STATUS "Found Qt 5")
 else(${Qt5_FOUND})
@@ -100,9 +92,9 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
 set(CMAKE_C_FLAGS_DEBUG "-march=native -pthread")
-set(CMAKE_CXX_FLAGS_DEBUG "-march=native -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "-march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
 set(CMAKE_C_FLAGS_RELEASE "-march=native -pthread")
-set(CMAKE_CXX_FLAGS_RELEASE "-march=native -pthread")
+set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -march=native -pthread -Os -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
 
 # -----------------------------------------------------------------------------
 # Build Documentation
@@ -146,8 +138,8 @@ message(STATUS "General configuration for ${PROJECT_NAME} ${VERSION_SHORT}")
 message(STATUS "-------------------------------------------------------------------------------")
 message(STATUS)
 message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
-message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "C++ flags (Debug): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "Coverage:\t\t${COVERAGE}")
 message(STATUS "Documentation:\t${BUILD_DOC}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")

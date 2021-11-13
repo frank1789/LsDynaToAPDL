@@ -36,31 +36,12 @@ set_property(TARGET ${LIBRARY_TARGET_NAME}
 target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                                                          "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_compile_options(
-  ${LIBRARY_TARGET_NAME}
-  PRIVATE -c
-          -Wall
-          -Wextra
-          -fPIC
-          -Wunused
-          -Wshadow
-          -Wredundant-decls
-          -Wcast-align
-          -Wmissing-declarations
-          -Wmissing-include-dirs
-          -Winvalid-pch
-          -Wredundant-decls
-          -Wmissing-format-attribute
-          -Wformat-nonliteral
-          -fstack-protector-strong
-)
+target_compile_options(${LIBRARY_TARGET_NAME} PRIVATE -c -fPIC -fstack-protector-strong)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
-    target_link_libraries(coverage)
+    target_link_libraries(${LIBRARY_TARGET_NAME} coverage)
   endif()
-else()
-  target_compile_options(${LIBRARY_TARGET_NAME} PUBLIC -O2 -fPIC -pipe)
 endif()
 
 # Specify installation targets, typology and destination folders.
