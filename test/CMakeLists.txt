@@ -1,3 +1,7 @@
+
+# Disable qDebug output
+add_definitions(-D QT_NO_DEBUG_OUTPUT)
+
 add_executable(log test_logger.cc)
 add_executable(femtypes test_femtypes.cc)
 add_executable(converter test_converter.cc)
@@ -6,12 +10,15 @@ add_executable(managerfile test_managerfile.cc)
 target_link_libraries(
   log Qt5::Core gtest_main logger lsdyna
 )
+
 target_link_libraries(
   femtypes Qt5::Core gtest_main logger lsdyna
 )
+
 target_link_libraries(
   converter Qt5::Core gtest_main logger lsdyna
 )
+
 target_link_libraries(
   managerfile Qt5::Core gtest_main logger lsdyna
 )
