@@ -10,14 +10,14 @@ ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
   this->setupLayout();
   converter_ = QSharedPointer<sintax::lsdyna::ConverterSintax>(
       new sintax::lsdyna::ConverterSintax(this));
-  QObject::connect(cancel_btn_.data(), &QPushButton::clicked, [this]() {
+  QObject::connect(cancel_btn_.data(), &QPushButton::clicked, this, [this]() {
     if (converter_->isRunning()) {
       converter_->terminate();
       this->close();
     }
   });
 
-  connect(this, &ConverterDialog::updateProcessedFilename,
+  connect(this, &ConverterDialog::updateProcessedFilename, this,
           [this](const QString &filename) {
             converter_->filenameChanged(filename);
           });

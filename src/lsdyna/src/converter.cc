@@ -25,53 +25,54 @@ sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
 /**
  * @brief ConverterSintax::setInputLine
  *
- * @param[in] textline: line of the document to be analyzed.
- * @param[in] node: pointer to the Node class.
- * @param[in] shell: pointer to the Shell class.
  * @details The function scrolls the document reading the
  * line in input and checking if it contains one of the
  * specified keywords, if the matching is positive the
  * appropriate mode is saved. Otherwise the lines are
  * transparent to the function and the set mode is not changed.
+ *
+ * @param[in] textline: line of the document to be analyzed.
+ * @param[in] node: pointer to the Node class.
+ * @param[in] shell: pointer to the Shell class.
  */
 void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
   qDebug() << INFOFILE << textline;
   if (textline.contains("$")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::$;
+    doc_section_ = sintax::lsdyna::KeywordDyna::Header;
     qDebug() << INFOFILE << "set mode" << doc_section_;
   }
 
   if (textline.contains("*KEYWORD")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::KEYWORD;
+    doc_section_ = sintax::lsdyna::KeywordDyna::KeyWord;
     qDebug() << INFOFILE << "set mode" << doc_section_;
   }
 
   if (textline.contains("*NODE")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::NODE;
+    doc_section_ = sintax::lsdyna::KeywordDyna::Node;
     qDebug() << INFOFILE << "set mode" << doc_section_
              << "start reading node declaration";
   }
 
   if (textline.contains("*ELEMENT_SHELL_THICKNESS")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::ELEMENTSHELL;
+    doc_section_ = sintax::lsdyna::KeywordDyna::ElementShell;
     qDebug() << INFOFILE << "set mode" << doc_section_
              << "start reading element shell declaration";
   }
 
   if (textline.contains("*ELEMENT_SOLID")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::ELEMENTSOLID;
+    doc_section_ = sintax::lsdyna::KeywordDyna::ElementSolid;
     qDebug() << INFOFILE << "set mode" << doc_section_
              << "start reading solid element declaration";
   }
 
   if (textline.contains("*INITIAL_STRAIN_SOLID")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID;
+    doc_section_ = sintax::lsdyna::KeywordDyna::InitialStrainSolid;
     qDebug() << INFOFILE << "set mode" << doc_section_
              << "start reading intial strain solid declaration";
   }
 
   if (textline.contains("*INITIAL_STRESS_SHELL")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL;
+    doc_section_ = sintax::lsdyna::KeywordDyna::InitialStressShell;
     qDebug() << INFOFILE << "set mode" << doc_section_
              << "start reading initial stress shell declaration";
   }
@@ -89,34 +90,34 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
 void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
   testInputLine(line);
   switch (doc_section_) {
-  case sintax::lsdyna::KeywordDyna::$:
-    break;
+    case sintax::lsdyna::KeywordDyna::Header:
+      break;
 
-  case sintax::lsdyna::KeywordDyna::KEYWORD:
-    break;
+    case sintax::lsdyna::KeywordDyna::KeyWord:
+      break;
 
-  case sintax::lsdyna::KeywordDyna::NODE: {
-    auto node = Node::parseNode(line);
-    nodes_.push_back(node);
-  } break;
+    case sintax::lsdyna::KeywordDyna::Node: {
+      auto node = Node::parseNode(line);
+      nodes_.push_back(node);
+    } break;
 
-  case sintax::lsdyna::KeywordDyna::ELEMENTSHELL: {
-    parser_->createParser(ShellType::FourNode);
-    auto shell_four = parser_->parseElement<ShellFourNode>(line);
-    elements_.push_back(shell_four);
-  } break;
+    case sintax::lsdyna::KeywordDyna::ElementShell: {
+      parser_->createParser(ShellType::FourNode);
+      auto shell_four = parser_->parseElement<ShellFourNode>(line);
+      elements_.push_back(shell_four);
+    } break;
 
-  case sintax::lsdyna::KeywordDyna::ELEMENTSOLID:
-    break;
+    case sintax::lsdyna::KeywordDyna::ElementSolid:
+      break;
 
-  case sintax::lsdyna::KeywordDyna::INITIALSTRAINSOLID:
-    break;
+    case sintax::lsdyna::KeywordDyna::InitialStrainSolid:
+      break;
 
-  case sintax::lsdyna::KeywordDyna::INITIALSTRESSSHELL:
-    break;
+    case sintax::lsdyna::KeywordDyna::InitialStressShell:
+      break;
 
-  default:
-    break;
+    case sintax::lsdyna::KeywordDyna::End:
+      break;
   }
 }
 

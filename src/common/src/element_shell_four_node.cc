@@ -35,7 +35,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
   //  extract element card ignored -----+               |                |                |               |
   //  extract id -------+               |               |                |                |               |
   //                    +               +               +                +                +               +
-  re.setPattern("(?<id>\\d+)\\s+(?<card>\\d+)\\s(?<node1>\\d+)\\s(?<node2>\\d+)\\s(?<node3>\\d+)\\s(?<node4>\\d+)");
+  re.setPattern(R"((?<id>\d+)\s+(?<card>\d+)\s(?<node1>\d+)\s(?<node2>\d+)\s(?<node3>\d+)\s(?<node4>\d+))");
   // clang-format on
   // verify captured groups
   QRegularExpressionMatch match = re.match(inputline);
@@ -48,7 +48,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
             << re.captureCount();
     // clang-format on
     // capture id element
-    setId(match.captured("id").toInt());
+    setId(static_cast<quint64>(match.captured("id").toInt()));
     auto first_node = static_cast<quint64>(match.captured("node1").toInt());
     auto second_node = static_cast<quint64>(match.captured("node2").toInt());
     auto third_node = static_cast<quint64>(match.captured("node3").toInt());
@@ -60,7 +60,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
   // verify second line string element thickeness replicated four times costant
   // for element
   // clang-format off
-  re.setPattern("(\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)");
+  re.setPattern(R"((\d+?.\d+)       (\d+?.\d+)       (\d+?.\d+)       (\d+?.\d+))");
   // clang-format on
   match = re.match(inputline);
   if (match.hasMatch()) {

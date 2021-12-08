@@ -5,7 +5,6 @@ set(LIBRARY_TARGET_NAME "lsdyna")
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converterdialog.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc

@@ -1,9 +1,6 @@
 #ifndef LSDYNA_SINTAX_KEYWORD_H
 #define LSDYNA_SINTAX_KEYWORD_H
 
-#include <QDebug>
-#include <ostream>
-
 namespace sintax {
 namespace lsdyna {
 /**
@@ -13,23 +10,48 @@ namespace lsdyna {
  *
  */
 enum class KeywordDyna {
-  // clang-format off
-  $,       /**< Identifies the part of the document it contains header. */
-  KEYWORD, /**< Identifies the part of the document it contains other keyword not specified. */
-  NODE,    /**< Identifies the part of the document it contains list node declaration. */
-  ELEMENTSHELL,       /**< Identifies the part of the document it contains list element shell. */
-  ELEMENTSOLID,       /**< Identifies the part of the document it contains list element solid. */
-  INITIALSTRAINSOLID, /**< Identifies the part of the document it contains initial strain on solid element. */
-  INITIALSTRESSSHELL, /**< Identifies the part of the document it contains stress on shell element.*/
-  END                 /**< Identifies the end of the document. */
+  Header,             /**<  header's document. */
+  KeyWord,            /**<  other keyword not specified. */
+  Node,               /**< list node declaration. */
+  ElementShell,       /**< list element shell. */
+  ElementSolid,       /**< list element solid. */
+  InitialStrainSolid, /**< initial strain on solid element. */
+  InitialStressShell, /**< stress on shell element.*/
+  End                 /**< end document. */
 };
-// clang-on
 
-} // namespace lsdyna
-} // namespace sintax
+}  // namespace lsdyna
+}  // namespace sintax
 
-std::ostream& operator<<(std::ostream &os, const sintax::lsdyna::KeywordDyna &key);
+template <class T>
+inline T& operator<<(T& os, const sintax::lsdyna::KeywordDyna& key) {
+  switch (key) {
+    case sintax::lsdyna::KeywordDyna::Header:
+      os << "$";
+      break;
+    case sintax::lsdyna::KeywordDyna::KeyWord:
+      os << "KEYWORD";
+      break;
+    case sintax::lsdyna::KeywordDyna::Node:
+      os << "NODE";
+      break;
+    case sintax::lsdyna::KeywordDyna::ElementShell:
+      os << "ELEMENTSHELL";
+      break;
+    case sintax::lsdyna::KeywordDyna::ElementSolid:
+      os << "ELEMENTSOLID";
+      break;
+    case sintax::lsdyna::KeywordDyna::InitialStrainSolid:
+      os << "INITIALSTRAINSOLID";
+      break;
+    case sintax::lsdyna::KeywordDyna::InitialStressShell:
+      os << "INITIALSTRESSSHELL";
+      break;
+    case sintax::lsdyna::KeywordDyna::End:
+      os << "END";
+      break;
+  }
+  return os;
+}
 
-QDebug operator<<(QDebug os, const sintax::lsdyna::KeywordDyna &key);
-
-#endif // LSDYNA_SINTAX_KEYWORD_H
+#endif  // LSDYNA_SINTAX_KEYWORD_H
