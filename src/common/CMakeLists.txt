@@ -5,6 +5,7 @@ set(LIBRARY_TARGET_NAME "common")
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/filemanager.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/element_shell_four_node.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementproperty.cc
 )
 
 # List of (header) library files.

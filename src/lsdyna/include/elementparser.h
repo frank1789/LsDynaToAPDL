@@ -8,7 +8,7 @@
 #include "elementproperty.h"
 #include "unique_cast.h"
 
-class ElementParser {
+class alignas(64) ElementParser {
  public:
   static QSharedPointer<ElementParser> getInstance();
   ~ElementParser() = default;
@@ -26,11 +26,14 @@ class ElementParser {
   void createParser(ShellType sn);
 
  private:
-  ElementParser() = default;
+  ElementParser() noexcept = default;
+
+ private:
+  // static members
   static QSharedPointer<ElementParser> p_instance_;
   static QMutex mutex_;
-  ElementFactory element_factory_{};
 
+  std::unique_ptr<ElementFactory> element_factory_{nullptr};
   std::unique_ptr<Element> generic_elem_{nullptr};
   ShellType shell_type_;
 };

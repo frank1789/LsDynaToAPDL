@@ -2,7 +2,7 @@
 
 #include <QMutexLocker>
 
-ElementFactory::ElementFactory() {
+ElementFactory::ElementFactory() noexcept {
   prototypes_[ShellType::FourNode] = std::make_unique<ShellFourNode>();
 }
 

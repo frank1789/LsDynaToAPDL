@@ -1,11 +1,15 @@
 #ifndef ELEMENT_SHELL_FOUR_NODE_H
 #define ELEMENT_SHELL_FOUR_NODE_H
 
+#include <QDebug>
+#include <iomanip>
+#include <ostream>
+
 #include "elementproperty.h"
 
 constexpr int kFourNode{4};
 
-class ShellFourNode : public Element {
+class alignas(std::max_align_t) ShellFourNode : public Element {
  public:
   /**
    * @brief Construct a new Shell Four Node object

@@ -18,10 +18,13 @@ QSharedPointer<ElementParser> ElementParser::getInstance() {
 }
 
 void ElementParser::createParser(ShellType sn) {
+  if (element_factory_ == nullptr) {
+    element_factory_ = std::make_unique<ElementFactory>();
+  }
   switch (sn) {
     case ShellType::FourNode: {
       shell_type_ = sn;
-      generic_elem_ = element_factory_.createElement(shell_type_);
+      generic_elem_ = element_factory_->createElement(shell_type_);
     } break;
   }
 }
