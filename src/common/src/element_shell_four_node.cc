@@ -1,10 +1,11 @@
+#include "element_shell_four_node.h"
+
 #include <QDebug>
 #include <QRegularExpression>
 
-#include "element_shellfournode.h"
 #include "logger_tools.h"
 
-ShellFourNode::ShellFourNode()
+ShellFourNode::ShellFourNode() noexcept
     : Element(), node_flag_(false), thickness_flag_(false) {
   element_id_.reserve(kFourNode);
 }
@@ -101,26 +102,6 @@ qreal ShellFourNode::getThickness() const { return thickness_; }
 
 QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
 
-std::ostream &operator<<(std::ostream &os, const ShellFourNode &s) {
-  os << "element:\n\t";
-  os << "id: " << std::setw(15) << s.getId() << "\t";
-  auto nodes = s.getNodesId();
-  for (auto i = 0; i < nodes.size(); i++) {
-    os << "node " << i + 1 << ":" << std::setw(15) << nodes[i];
-  }
-  os << "\n";
-  os << "thickness: " << std::setprecision(7) << s.getThickness() << "\n";
-  return os;
-}
-
-QDebug &operator<<(QDebug &os, const ShellFourNode &s) {
-  os << "element:\n\t";
-  os << "id: " << s.getId() << "\t";
-  auto nodes = s.getNodesId();
-  for (auto i = 0; i < nodes.size(); i++) {
-    os << "node " << i + 1 << ":" << nodes[i];
-  }
-  os << "\n";
-  os << "thickness: " << s.getThickness() << "\n";
-  return os;
+std::unique_ptr<Element> ShellFourNode::clone() {
+  return std::make_unique<ShellFourNode>();
 }

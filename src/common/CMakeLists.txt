@@ -13,7 +13,7 @@ set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/elementproperty.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/node_type_impl.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/filemanager.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shellfournode.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shell_four_node.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
