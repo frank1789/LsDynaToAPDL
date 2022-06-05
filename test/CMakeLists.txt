@@ -1,7 +1,3 @@
-
-# Disable qDebug output
-add_definitions(-D QT_NO_DEBUG_OUTPUT)
-
 add_executable(log test_logger.cc)
 add_executable(femtypes test_femtypes.cc)
 add_executable(converter test_converter.cc)

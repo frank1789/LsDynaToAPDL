@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 TEST(FiniteElementTypes, NodeProperty) {
-  auto node = PropertyNode<long long, double>(375, 33.17, 22.45, 0.0);
+  auto node = PropertyNode<std::int64_t, double>(375, 33.17, 22.45, 0.0);
   EXPECT_EQ(node.id_node(), 375);
   EXPECT_EQ(node.coordinate_x(), 33.17);
   EXPECT_EQ(node.coordinate_y(), 22.45);
@@ -12,10 +12,21 @@ TEST(FiniteElementTypes, NodeProperty) {
 }
 
 TEST(FiniteElementTypes, NodePrint) {
-  auto node = PropertyNode<long long, double>(375, 33.17, 22.45, 0.0);
+  auto node = PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0);
   std::ostringstream out;
   out << node;
-  EXPECT_EQ(out.str(), "[375, 33.170000, 22.450000, 0.000000]");
+  EXPECT_EQ(out.str(), "[375, 33.17, 22.45, 0]");
+}
+
+TEST(FiniteElementTypes, NodeComparision) {
+  EXPECT_TRUE((PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0) ==
+               PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0)));
+  EXPECT_TRUE((PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0) !=
+               PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 1.0)));
+  EXPECT_FALSE((PropertyNode<u_int64_t, double>(175498, 33.17, 23.45, 0.0) ==
+                PropertyNode<u_int64_t, double>(175498, 33.17, 23.45, 1.00)));
+  EXPECT_FALSE((PropertyNode<u_int64_t, double>(175498, 33.17, 23.45, 1.0) !=
+                PropertyNode<u_int64_t, double>(175498, 33.17, 23.45, 1.00)));
 }
 
 TEST(FiniteElementTypes, ElementProperty) {

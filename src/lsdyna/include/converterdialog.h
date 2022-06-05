@@ -17,7 +17,7 @@ QT_END_NAMESPACE
 class ConverterDialog : public QDialog {
   Q_OBJECT
  public:
-  ConverterDialog(QWidget *parent = nullptr);
+  explicit ConverterDialog(QWidget *parent = nullptr);
   ~ConverterDialog() override = default;
 
   void process();

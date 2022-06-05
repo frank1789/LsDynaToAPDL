@@ -1,30 +1,32 @@
 cmake_minimum_required(VERSION 3.16)
+set(TARGET_NAME "core")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
 
-set(HEADERS
+set(${TARGET_NAME}_HEADERS
   ${CMAKE_CURRENT_SOURCE_DIR}/about.h
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
   ${CMAKE_CURRENT_SOURCE_DIR}/version.h
 )
 
-set(SOURCES
+set(${TARGET_NAME}_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
 )
 
-set(UIFORM
+set(${TARGET_NAME}_UIFORM
   ${CMAKE_CURRENT_SOURCE_DIR}/about.ui 
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
 )
 
-qt5_add_resources(RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
+file(GLOB_RECURSE ${TARGET_NAME}_QRC ${PROJECT_SOURCE_DIR}/*.qrc)
+qt5_add_resources(${TARGET_NAME}_RESOURCES ${${TARGET_NAME}_QRC})
 
-add_executable(${NAME_PROJECT} ${SOURCES} ${UIFORM} ${RESOURCES})
+add_executable(${NAME_PROJECT} ${${TARGET_NAME}_SOURCES} ${${TARGET_NAME}_UIFORM} ${${TARGET_NAME}_RESOURCES})
 target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets lsdyna common)
 target_compile_options(${NAME_PROJECT} PRIVATE -c -fPIC -fstack-protector-strong)
 

@@ -20,18 +20,17 @@ About::About(QWidget *parent) : QDialog(parent), ui(new Ui::About) {
   // define plain text object and content
   ui->plainTextEdit->setReadOnly(true);
   ui->plainTextEdit->appendPlainText(
-      readLicense(":/Resources/Resources/License/License.txt"));
+      readLicense(QStringLiteral(":/Resource/LICENSE")));
   // set image property
-  QPixmap imageObject(":/Resources/Resources/Icon/generic.png");
+  QPixmap imageObject(QStringLiteral(":/Resource/generic.png"));
   imageObject.scaled(120, 120);
   // define visualization
   ui->logo->setPixmap(imageObject);
   // add author
-  ui->author->setText(QString("LsDynaToAPDL\nFrancesco Argentieri"));
+  ui->author->setText(QStringLiteral("LsDynaToAPDL\nFrancesco Argentieri"));
   // add information builder
-  auto version = QString::fromStdString(compact_version());
+  auto version = compact_version();
   ui->version->setText(QString("Version %1").arg(version));
-  ui->build->setText(QString("Build %1").arg(kBuild));
 }
 
 /**
@@ -46,19 +45,15 @@ About::~About() { delete ui; }
  * @param[in] event: pointer closing event
  */
 void About::closeEvent(QCloseEvent *event) {
-  if (event != nullptr) {
-    emit dialogClosed();
-    event->accept();
-    close();
-  } else {
-    event->ignore();
-  }
+  emit dialogClosed();
+  event->accept();
+  close();
 }
 
 QString About::readLicense(const QString &filename) {
   QFile fileInput(filename);
   if (!fileInput.open(QFile::ReadOnly | QFile::Text)) {
-    qDebug() << "failed to open file";
+    qWarning() << "[WARNING] failed to open file" << filename;
     return "";
   }
   QTextStream text(&fileInput);

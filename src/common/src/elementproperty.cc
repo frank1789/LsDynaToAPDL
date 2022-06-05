@@ -1,3 +1,3 @@
 #include "elementproperty.h"
 
-Element::~Element() {}
+Element::~Element() = default;

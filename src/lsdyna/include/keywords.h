@@ -20,11 +20,8 @@ enum class KeywordDyna {
   End                 /**< end document. */
 };
 
-}  // namespace lsdyna
-}  // namespace sintax
-
 template <class T>
-inline T& operator<<(T& os, const sintax::lsdyna::KeywordDyna& key) {
+inline T& operator<<(T& os, const KeywordDyna& key) {
   switch (key) {
     case sintax::lsdyna::KeywordDyna::Header:
       os << "$";
@@ -53,5 +50,8 @@ inline T& operator<<(T& os, const sintax::lsdyna::KeywordDyna& key) {
   }
   return os;
 }
+
+}  // namespace lsdyna
+}  // namespace sintax
 
 #endif  // LSDYNA_SINTAX_KEYWORD_H

@@ -1,9 +1,12 @@
-#ifndef ABOUT_H
-#define ABOUT_H
+#ifndef CORE_ABOUT_H
+#define CORE_ABOUT_H
 
 #include <QCloseEvent>
 #include <QDialog>
-#include <QString>
+
+QT_BEGIN_NAMESPACE
+class QString;
+QT_END_NAMESPACE
 
 namespace Ui {
 class About;
@@ -17,16 +20,16 @@ class About : public QDialog {
   Q_OBJECT
  public:
   explicit About(QWidget *parent = nullptr);
-  ~About();
+  ~About() override;
 
  signals:
   void dialogClosed();
 
  private:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
   QString readLicense(const QString &filename);
 
-  Ui::About *ui;
+  Ui::About *ui{nullptr};
 };
 
-#endif  // ABOUT_H
+#endif  // CORE_ABOUT_H

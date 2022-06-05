@@ -43,6 +43,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # -----------------------------------------------------------------------------
 if(COVERAGE)
   set(COVERAGE_CHECK "ON")
+  add_definitions(-D QT_NO_DEBUG_OUTPUT)
   add_library(coverage INTERFACE)
   if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(
