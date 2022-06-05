@@ -16,7 +16,8 @@ namespace core {
 
 static auto kLicense = QStringLiteral(":/Resource/LICENSE");
 static auto kIcon = QStringLiteral(":/Resource/generic.png");
-static auto kAuthor = QStringLiteral("LsDynaToAPDL\nFrancesco Argentieri");
+static auto kProjectName = QStringLiteral("LsDynaToAPDL");
+static auto kAuthor = QStringLiteral("Francesco Argentieri");
 
 /**
  * @brief About::About default constructor ui to show information and license.
@@ -67,6 +68,7 @@ void About::makeLayout() {
 
   close_btn_ = new QPushButton(QStringLiteral("close"), this);
   author_label_ = new QLabel(kAuthor, this);
+  project_name_label_ = new QLabel(kProjectName, this);
   build_label_ = new QLabel(compact_version(), this);
   license_label_ =
       new QLabel(/*readLicense(kLicense)*/
@@ -75,16 +77,18 @@ void About::makeLayout() {
                  this);
   icon_label_ = new QLabel(this);
   icon_label_->setPixmap(scaled_img);
+  icon_label_->setScaledContents(true);
 
-  // define vertical layout
+  // define the layout
   about_layout_ = new QGridLayout(this);
   about_layout_->setVerticalSpacing(10);
   about_layout_->setHorizontalSpacing(5);
   about_layout_->addWidget(icon_label_, 0, 0, 2, 1, Qt::AlignHCenter);
-  about_layout_->addWidget(author_label_, 0, 1);
-  about_layout_->addWidget(build_label_, 1, 1);
-  about_layout_->addWidget(license_label_, 2, 1);
-  about_layout_->addWidget(close_btn_, 3, 2, Qt::AlignHCenter);
+  about_layout_->addWidget(project_name_label_, 0, 1);
+  about_layout_->addWidget(author_label_, 1, 1);
+  about_layout_->addWidget(build_label_, 3, 1);
+  about_layout_->addWidget(license_label_, 4, 1);
+  about_layout_->addWidget(close_btn_, 5, 2, Qt::AlignHCenter);
 }
 
 }  // namespace core

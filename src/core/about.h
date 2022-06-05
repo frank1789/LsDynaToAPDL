@@ -32,6 +32,7 @@ class About : public QDialog {
 
   QPushButton *close_btn_{nullptr};
   QGridLayout *about_layout_{nullptr};
+  QLabel *project_name_label_{nullptr};
   QLabel *author_label_{nullptr};
   QLabel *build_label_{nullptr};
   QLabel *license_label_{nullptr};
