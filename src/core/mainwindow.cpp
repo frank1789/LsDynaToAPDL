@@ -7,9 +7,8 @@
 #include "logger_tools.h"
 #include "node.h"
 //#include "shell.h"
-#include "ui_mainwindow.h"
-
 #include "about.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -121,7 +120,7 @@ void MainWindow::on_Exit_released() {
 }
 
 void MainWindow::on_actionInformazioni_triggered() {
-  About about;
+  core::About about;
   about.exec();
 }
 
