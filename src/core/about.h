@@ -6,11 +6,12 @@
 
 QT_BEGIN_NAMESPACE
 class QString;
+class QPushButton;
+class QGridLayout;
+class QLabel;
 QT_END_NAMESPACE
 
-namespace Ui {
-class About;
-}
+namespace core {
 
 /**
  * @brief The About class show the current author and version as well as the
@@ -29,7 +30,15 @@ class About : public QDialog {
   void closeEvent(QCloseEvent *event) override;
   QString readLicense(const QString &filename);
 
-  Ui::About *ui{nullptr};
+  QPushButton *close_btn_{nullptr};
+  QGridLayout *about_layout_{nullptr};
+  QLabel *author_label_{nullptr};
+  QLabel *build_label_{nullptr};
+  QLabel *license_label_{nullptr};
+  QLabel *icon_label_{nullptr};
+  void makeLayout();
 };
+
+}  // namespace core
 
 #endif  // CORE_ABOUT_H
