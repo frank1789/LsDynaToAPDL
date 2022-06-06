@@ -169,8 +169,8 @@ class PropertyNode : public QObject {
    */
   void setId_node(const N &id_node) { id_node_ = id_node; }
 
-  template <typename RT, class T, class U>
-  friend RT &operator<<(RT &os, const PropertyNode<T, U> &node);
+  template <class T, class U>
+  friend QDebug &operator<<(QDebug &os,  const PropertyNode<T, U> &node);
 
  protected:
   auto reflect() const {
@@ -184,8 +184,8 @@ class PropertyNode : public QObject {
   P coordinate_z_; /**< z coordinate in the space */
 };
 
-template <typename RT, class N, class P>
-inline RT &operator<<(RT &os, const PropertyNode<N, P> &node) {
+template <class N, class P>
+inline QDebug &operator<<(QDebug &os, const PropertyNode<N, P> &node) {
   os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", "
      << node.coordinate_y_ << ", " << node.coordinate_z_ << "]";
   return os;

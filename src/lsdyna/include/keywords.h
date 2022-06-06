@@ -20,8 +20,7 @@ enum class KeywordDyna {
   End                 /**< end document. */
 };
 
-template <class T>
-inline T& operator<<(T& os, const KeywordDyna& key) {
+inline QDebug &operator<<(QDebug &os, const KeywordDyna &key) {
   switch (key) {
     case sintax::lsdyna::KeywordDyna::Header:
       os << "$";

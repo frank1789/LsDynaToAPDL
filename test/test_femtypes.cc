@@ -11,13 +11,6 @@ TEST(FiniteElementTypes, NodeProperty) {
   EXPECT_EQ(node.coordinate_z(), 0.0);
 }
 
-TEST(FiniteElementTypes, NodePrint) {
-  auto node = PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0);
-  std::ostringstream out;
-  out << node;
-  EXPECT_EQ(out.str(), "[375, 33.17, 22.45, 0]");
-}
-
 TEST(FiniteElementTypes, NodeComparision) {
   EXPECT_TRUE((PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0) ==
                PropertyNode<u_int64_t, double>(375, 33.17, 22.45, 0.0)));
