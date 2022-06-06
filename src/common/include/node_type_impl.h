@@ -29,15 +29,14 @@
  * @tparam N: type for node IDs
  * @tparam P: type for spatial coordinate
  */
-template <class N, class P>
-class PropertyNode : public QObject {
+template <class N, class P> class PropertyNode : public QObject {
   static_assert(std::is_integral_v<N>,
                 "N must be instantiated with integral template argument.");
   static_assert(std::is_arithmetic_v<P>,
                 "P must be instantiated with integral or floating-point "
                 "template argument.");
 
- public:
+public:
   /**
    * @brief Construct a new Property Node object
    *
@@ -61,10 +60,8 @@ class PropertyNode : public QObject {
    * @param o
    */
   PropertyNode(const PropertyNode &o)
-      : id_node_(o.id_node_),
-        coordinate_x_(o.coordinate_z_),
-        coordinate_y_(o.coordinate_z_),
-        coordinate_z_(o.coordinate_z_) {}
+      : id_node_(o.id_node_), coordinate_x_(o.coordinate_z_),
+        coordinate_y_(o.coordinate_z_), coordinate_z_(o.coordinate_z_) {}
 
   /**
    * @brief Construct a new Property Node object
@@ -170,14 +167,14 @@ class PropertyNode : public QObject {
   void setId_node(const N &id_node) { id_node_ = id_node; }
 
   template <class T, class U>
-  friend QDebug &operator<<(QDebug &os,  const PropertyNode<T, U> &node);
+  friend QDebug &operator<<(QDebug &os, const PropertyNode<T, U> &node);
 
- protected:
+protected:
   auto reflect() const {
     return std::tie(id_node_, coordinate_x_, coordinate_y_, coordinate_z_);
   }
 
- private:
+private:
   N id_node_;      /**< uniquely identifies node IDs */
   P coordinate_x_; /**< x coordinate in the space */
   P coordinate_y_; /**< y coordinate in the space */
@@ -191,4 +188,4 @@ inline QDebug &operator<<(QDebug &os, const PropertyNode<N, P> &node) {
   return os;
 }
 
-#endif  // NODE_TYPE_IMPL_H
+#endif // NODE_TYPE_IMPL_H

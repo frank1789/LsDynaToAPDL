@@ -37,4 +37,4 @@ static inline QString info_file(char const *function, char const *file,
   return mess;
 }
 
-#endif  // LOGGER_TOOLS_H
+#endif // LOGGER_TOOLS_H

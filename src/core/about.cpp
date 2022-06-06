@@ -91,4 +91,4 @@ void About::makeLayout() {
   about_layout_->addWidget(close_btn_, 5, 2, Qt::AlignHCenter);
 }
 
-}  // namespace core
+} // namespace core

@@ -19,14 +19,14 @@ namespace core {
  */
 class About : public QDialog {
   Q_OBJECT
- public:
+public:
   explicit About(QWidget *parent = nullptr);
   ~About() override;
 
- signals:
+signals:
   void dialogClosed();
 
- private:
+private:
   void closeEvent(QCloseEvent *event) override;
   QString readLicense(const QString &filename);
 
@@ -40,6 +40,6 @@ class About : public QDialog {
   void makeLayout();
 };
 
-}  // namespace core
+} // namespace core
 
-#endif  // CORE_ABOUT_H
+#endif // CORE_ABOUT_H

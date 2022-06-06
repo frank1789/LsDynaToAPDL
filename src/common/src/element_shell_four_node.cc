@@ -105,3 +105,15 @@ QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
 std::unique_ptr<Element> ShellFourNode::clone() {
   return std::make_unique<ShellFourNode>();
 }
+
+QDebug &operator<<(QDebug &os, const ShellFourNode &s) {
+  os << "element:\n\t";
+  os << "id: " << s.getId() << "\t";
+  auto nodes = s.getNodesId();
+  for (auto i = 0; i < nodes.size(); i++) {
+    os << "node " << i + 1 << ":" << nodes[i];
+  }
+  os << "\n";
+  os << "thickness: " << s.getThickness() << "\n";
+  return os;
+}
