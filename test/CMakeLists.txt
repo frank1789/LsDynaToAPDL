@@ -4,19 +4,19 @@ add_executable(converter test_converter.cc)
 add_executable(managerfile test_managerfile.cc)
 
 target_link_libraries(
-  log Qt5::Core gtest_main logger lsdyna
+  log Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
 )
 
 target_link_libraries(
-  femtypes Qt5::Core gtest_main logger lsdyna
+  femtypes Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
 )
 
 target_link_libraries(
-  converter Qt5::Core gtest_main logger lsdyna
+  converter Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
 )
 
 target_link_libraries(
-  managerfile Qt5::Core gtest_main logger lsdyna
+  managerfile Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
 )
 
 if(COVERAGE)
@@ -30,3 +30,6 @@ add_test(NAME test-log COMMAND ${CMAKE_BINARY_DIR}/test/log)
 add_test(NAME test-femtypes COMMAND ${CMAKE_BINARY_DIR}/test/femtypes)
 add_test(NAME test-converter COMMAND ${CMAKE_BINARY_DIR}/test/converter)
 add_test(NAME test-managerfile COMMAND ${CMAKE_BINARY_DIR}/test/managerfile)
+
+
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
