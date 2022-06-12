@@ -15,7 +15,7 @@ using ull_t = unsigned long long;
 class ManageFile : public QObject {
   Q_OBJECT
 
-public:
+ public:
   /**
    * @brief Construct a new Manage File object
    *
@@ -51,20 +51,20 @@ public:
 
   QString getOutputfile() const;
 
-signals:
+ signals:
   void outputFilenameChanged(const QString &filename);
   void propertyFileChanged(const QString &label, const qint64 &size);
 
-public slots:
+ public slots:
   void processedFilename(const QString &filename);
 
-protected:
+ protected:
   void setNewFilename(const QString &filename);
   qint64 extractSizeFile(const QString &filename);
 
-private:
+ private:
   QString filename_;
   QString new_filename_;
 };
 
-#endif // FILEMANAGER_H
+#endif  // FILEMANAGER_H

@@ -29,7 +29,7 @@
 #define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__)
 
 static inline QString info_file(char const *function, char const *file,
-                                    long line) {
+                                long line) {
   auto mess = QString(function);
   mess += " ";
   mess += QString(file);
@@ -37,4 +37,4 @@ static inline QString info_file(char const *function, char const *file,
   return mess;
 }
 
-#endif // LOGGER_TOOLS_H
+#endif  // LOGGER_TOOLS_H

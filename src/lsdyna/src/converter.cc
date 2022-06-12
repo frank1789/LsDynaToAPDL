@@ -15,8 +15,8 @@
 
 constexpr quint64 kPresetElements{200000};
 
-sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
-    : QThread(parent) {
+sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) :
+    QThread(parent) {
   nodes_.reserve(kPresetElements);
   elements_.reserve(kPresetElements);
   parser_ = ElementParser::getInstance();
@@ -166,8 +166,7 @@ QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const {
 // Slot
 ///////////////////////////////////////////////////////////////////////////////
 
-void sintax::lsdyna::ConverterSintax::filenameChanged(
-    const QString &filename) {
+void sintax::lsdyna::ConverterSintax::filenameChanged(const QString &filename) {
   if (filename != filename_) {
     this->setInputFile(filename);
   }

@@ -17,7 +17,15 @@ namespace core {
 static auto kLicense = QStringLiteral(":/Resource/LICENSE");
 static auto kIcon = QStringLiteral(":/Resource/generic.png");
 static auto kProjectName = QStringLiteral("LsDynaToAPDL");
-static auto kAuthor = QStringLiteral("Francesco Argentieri");
+static auto kAuthor = QStringLiteral("Authors:");
+
+template <typename T>
+inline void safe_delete(T *&pointer) {
+  if (pointer != nullptr) {
+    delete pointer;
+    pointer = nullptr;
+  }
+}
 
 /**
  * @brief About::About default constructor ui to show information and license.
@@ -25,7 +33,7 @@ static auto kAuthor = QStringLiteral("Francesco Argentieri");
  */
 About::About(QWidget *parent) : QDialog(parent) {
   setWindowTitle(QStringLiteral("About LsDyna To APDL"));
-  setFixedSize(sizeHint());
+  setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
   makeLayout();
   QObject::connect(close_btn_, &QPushButton::clicked, this,
                    [this]() { close(); });
@@ -34,7 +42,15 @@ About::About(QWidget *parent) : QDialog(parent) {
 /**
  * @brief About::~About destructor
  */
-About::~About() = default;
+About::~About() {
+  safe_delete(close_btn_);
+  safe_delete(about_layout_);
+  safe_delete(project_name_label_);
+  safe_delete(authors_label_);
+  safe_delete(build_label_);
+  safe_delete(license_label_);
+  safe_delete(icon_label_);
+}
 
 /**
  * @brief About::closeEvent captures the closing event of the window when it is
@@ -67,7 +83,8 @@ void About::makeLayout() {
                                       Qt::SmoothTransformation);
 
   close_btn_ = new QPushButton(QStringLiteral("close"), this);
-  author_label_ = new QLabel(kAuthor, this);
+
+  authors_label_ = new QLabel(kAuthor, this);
   project_name_label_ = new QLabel(kProjectName, this);
   build_label_ = new QLabel(compact_version(), this);
   license_label_ =
@@ -85,10 +102,10 @@ void About::makeLayout() {
   about_layout_->setHorizontalSpacing(5);
   about_layout_->addWidget(icon_label_, 0, 0, 2, 1, Qt::AlignHCenter);
   about_layout_->addWidget(project_name_label_, 0, 1);
-  about_layout_->addWidget(author_label_, 1, 1);
+  about_layout_->addWidget(authors_label_, 1, 1);
   about_layout_->addWidget(build_label_, 3, 1);
   about_layout_->addWidget(license_label_, 4, 1);
   about_layout_->addWidget(close_btn_, 5, 2, Qt::AlignHCenter);
 }
 
-} // namespace core
+}  // namespace core

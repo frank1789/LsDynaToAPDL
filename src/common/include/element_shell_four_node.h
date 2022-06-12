@@ -1,16 +1,17 @@
 #ifndef ELEMENT_SHELL_FOUR_NODE_H
 #define ELEMENT_SHELL_FOUR_NODE_H
 
-#include <QDebug>
 #include <iomanip>
 #include <ostream>
+
+#include <QDebug>
 
 #include "elementproperty.h"
 
 constexpr int kFourNode{4};
 
 class alignas(std::max_align_t) ShellFourNode : public Element {
-public:
+ public:
   /**
    * @brief Construct a new Shell Four Node object
    *
@@ -81,11 +82,11 @@ public:
 
   friend QDebug &operator<<(QDebug &os, const ShellFourNode &s);
 
-private:
+ private:
   bool node_flag_;      /**< confirm extraction of node's connection. */
   bool thickness_flag_; /**< confirm extraction shell's thickness. */
 };
 
 QDebug &operator<<(QDebug &os, const ShellFourNode &s);
 
-#endif // ELEMENT_SHELL_FOUR_NODE_H
+#endif  // ELEMENT_SHELL_FOUR_NODE_H

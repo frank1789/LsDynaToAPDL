@@ -13,7 +13,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-  ui->Convert->setDisabled(true);
+  ui->Convert->setDisabled(false);
   ui->Preview->setDisabled(true);
   ui->information_file->setText("Process file: ");
   ui->dimensionfile->setText("Dimension: ");
@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
   indexlist = 0;
 
   // connect slot
-  // connect(this, &MainWindow::sizeList, manager_.data(), &ManageFile::setSizelist);
+  // connect(this, &MainWindow::sizeList, manager_.data(),
+  // &ManageFile::setSizelist);
   connect(this, &MainWindow::updateProcessedFilename,
           [this](const QString &filename) {
             manager_->processedFilename(filename);
@@ -40,27 +41,25 @@ MainWindow::MainWindow(QWidget *parent)
           [this](const QString &filename) {
             converter_dialog_->changedProcessedFilename(filename);
           });
-  connect(manager_.data(), &ManageFile::propertyFileChanged, this, &MainWindow::setPropertyFile);
-  connect(manager_.data(), &ManageFile::outputFilenameChanged, this, &MainWindow::setnameFileText);
+  connect(manager_.data(), &ManageFile::propertyFileChanged, this,
+          &MainWindow::setPropertyFile);
+  connect(manager_.data(), &ManageFile::outputFilenameChanged, this,
+          &MainWindow::setnameFileText);
 }
 
-MainWindow::~MainWindow() {
-  delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::setnameFileText(const QString &filename)
-{
+void MainWindow::setnameFileText(const QString &filename) {
   qDebug() << "called";
-    ui->lineEdit_converted->setText(filename);
+  ui->lineEdit_converted->setText(filename);
 }
-
 
 void MainWindow::closeEvent(QCloseEvent *event) {
   event->accept();
   QApplication::quit();
 }
 
-void MainWindow::setPropertyFile(const QString &filename, quint64 dimension){
+void MainWindow::setPropertyFile(const QString &filename, quint64 dimension) {
   ui->information_file->setText("Process file: " + filename);
   ui->dimensionfile->setText("Dimension: " + QString::number(dimension));
 }
@@ -84,13 +83,16 @@ void MainWindow::on_LoadFile_clicked() {
 }
 
 void MainWindow::on_Convert_clicked() {
-  foreach (auto file, process_files_) {
-    qDebug() << INFOFILE << "process file:" << file;
-    ui->lineEdit_original->setText(file);
-    emit updateProcessedFilename(file);
-    converter_dialog_->open();
-    converter_dialog_->process();
-  }
+  //  foreach (auto file, process_files_) {
+  //    qDebug() << INFOFILE << "process file:" << file;
+  //    ui->lineEdit_original->setText(file);
+  //    emit updateProcessedFilename(file);
+  //    converter_dialog_->open();
+  //    converter_dialog_->process();
+  //  }
+  dial_.reset(new core::Dialog);
+  assert(dial_ != nullptr);
+  dial_->open();
 }
 
 void MainWindow::on_Preview_clicked() {
@@ -106,7 +108,7 @@ void MainWindow::on_Preview_clicked() {
   //  &dialog, SLOT(setValue(int)));
   //  // Start to read file.
   ////  futureWatcher.setFuture(QtConcurrent::run(read,
-  ///managefile->getfileName(), converter, node, shell));
+  /// managefile->getfileName(), converter, node, shell));
   //  // Display the dialog and start the event loop.
   //  dialog.exec();
   //  futureWatcher.waitForFinished();

@@ -25,11 +25,8 @@
  */
 template <typename N, typename EN, typename T, int size>
 class ShellElement : public Element<typename N, typename EN> {
-public:
-private:
-  //clang-format off
+ private:
   T thickness_; /**< thickness of the element. */
-  //clang-format on
 };
 
-#endif // SHELLELEMENT_TYPE_IMPL_H
+#endif  // SHELLELEMENT_TYPE_IMPL_H

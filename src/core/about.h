@@ -19,27 +19,27 @@ namespace core {
  */
 class About : public QDialog {
   Q_OBJECT
-public:
+ public:
   explicit About(QWidget *parent = nullptr);
   ~About() override;
 
-signals:
+ signals:
   void dialogClosed();
 
-private:
+ private:
   void closeEvent(QCloseEvent *event) override;
+  void makeLayout();
   QString readLicense(const QString &filename);
 
   QPushButton *close_btn_{nullptr};
   QGridLayout *about_layout_{nullptr};
   QLabel *project_name_label_{nullptr};
-  QLabel *author_label_{nullptr};
+  QLabel *authors_label_{nullptr};
   QLabel *build_label_{nullptr};
   QLabel *license_label_{nullptr};
   QLabel *icon_label_{nullptr};
-  void makeLayout();
 };
 
-} // namespace core
+}  // namespace core
 
-#endif // CORE_ABOUT_H
+#endif  // CORE_ABOUT_H

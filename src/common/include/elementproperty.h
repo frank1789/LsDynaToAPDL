@@ -1,13 +1,14 @@
 #ifndef GENERIC_ELEMENT_H
 #define GENERIC_ELEMENT_H
 
-#include <QString>
-#include <QVector>
 #include <initializer_list>
 #include <memory>
 
+#include <QString>
+#include <QVector>
+
 class alignas(std::max_align_t) Element {
-public:
+ public:
   virtual ~Element() = 0;
 
   virtual std::unique_ptr<Element> clone() = 0;
@@ -22,10 +23,10 @@ public:
 
   virtual void parseElement(const QString &inputline) = 0;
 
-protected:
+ protected:
   QVector<quint64> element_id_;
   quint64 id_;
   qreal thickness_;
 };
 
-#endif // GENERIC_ELEMENT_H
+#endif  // GENERIC_ELEMENT_H

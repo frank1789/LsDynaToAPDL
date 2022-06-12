@@ -5,8 +5,8 @@
 
 #include "logger_tools.h"
 
-ShellFourNode::ShellFourNode() noexcept
-    : Element(), node_flag_(false), thickness_flag_(false) {
+ShellFourNode::ShellFourNode() noexcept :
+    Element(), node_flag_(false), thickness_flag_(false) {
   element_id_.reserve(kFourNode);
 }
 
@@ -55,7 +55,6 @@ void ShellFourNode::parseElement(const QString &inputline) {
     auto third_node = static_cast<quint64>(match.captured("node3").toInt());
     auto fourth_node = static_cast<quint64>(match.captured("node4").toInt());
     setNodes({first_node, second_node, third_node, fourth_node});
-    qDebug() << INFOFILE << *this;
     node_flag_ = true;
   }
   // verify second line string element thickeness replicated four times costant

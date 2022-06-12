@@ -18,7 +18,7 @@ set(${TARGET_NAME}_SOURCES
 )
 
 set(${TARGET_NAME}_UIFORM
-  ${CMAKE_CURRENT_SOURCE_DIR}/about.ui 
+#  ${CMAKE_CURRENT_SOURCE_DIR}/about.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
 )
