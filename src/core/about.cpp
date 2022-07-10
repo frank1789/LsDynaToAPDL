@@ -33,9 +33,30 @@ inline void safe_delete(T *&pointer) {
 About::About(QWidget *parent) : QDialog(parent) {
   setWindowTitle(QStringLiteral("About LsDyna To APDL"));
   setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+  setFixedSize(720, 480);
   makeLayout();
   QObject::connect(close_btn_, &QPushButton::clicked, this,
                    [this]() { close(); });
+
+  // lua_.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table,
+  //                     sol::lib::string, sol::lib::io, sol::lib::coroutine);
+  // lua_.script("print('bark bark bark!')");
+  //   license_ =
+}
+
+void About::showEvent(QShowEvent *event) {
+  if (is_opening) {
+    return;
+  }
+  is_opening = true;
+  QWidget::showEvent(event);
+  qDebug() << "pass here";
+  emit openChanged(is_opening);
+  // lua_.script_file(
+  //     "/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/"
+  //     "license-animation.lua");
+
+  is_opening = false;
 }
 
 /**
@@ -61,6 +82,8 @@ void About::closeEvent(QCloseEvent *event) {
   emit dialogClosed();
   event->accept();
   close();
+  is_opening = false;
+  emit openChanged(is_opening);
 }
 
 QString About::readLicense(const QString &filename) {
@@ -80,23 +103,19 @@ void About::makeLayout() {
   QPixmap icon_image(kIcon);
   auto scaled_img = icon_image.scaled(120, 120, Qt::KeepAspectRatio,
                                       Qt::SmoothTransformation);
-
   close_btn_ = new QPushButton(QStringLiteral("close"), this);
-
   authors_label_ = new QLabel(kAuthor, this);
   project_name_label_ = new QLabel(kProjectName, this);
   build_label_ = new QLabel(compact_version(), this);
-  license_label_ =
-      new QLabel(/*readLicense(kLicense)*/
-                 "Prova teseto molto lungo Prova teseto molto lungo Prova "
-                 "teseto molto lungo\n Prova teseto molto lungo ",
-                 this);
+  license_label_ = new QLabel("", this);
+  license_label_->setGeometry(0, 0, 80, 35);
   icon_label_ = new QLabel(this);
   icon_label_->setPixmap(scaled_img);
   icon_label_->setScaledContents(true);
 
   // define the layout
   about_layout_ = new QGridLayout(this);
+  about_layout_->setGeometry(QRect(0, 0, 710, 470));
   about_layout_->setVerticalSpacing(10);
   about_layout_->setHorizontalSpacing(5);
   about_layout_->addWidget(icon_label_, 0, 0, 2, 1, Qt::AlignHCenter);
@@ -105,6 +124,29 @@ void About::makeLayout() {
   about_layout_->addWidget(build_label_, 3, 1);
   about_layout_->addWidget(license_label_, 4, 1);
   about_layout_->addWidget(close_btn_, 5, 2, Qt::AlignHCenter);
+
+  //  license_ =
+  //  lua_.load_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
+  //  qDebug() << license_.valid();
+  //  if (!license_.valid()) {
+  //        sol::error err = license_;
+  //        std::cerr << "failed to load string-based script into the program"
+  //        << err.what() << std::endl;
+  //      }
+  //  script();
+  //      lua_.script_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
+
+  //  license_();
+  // clang-format off
+//  lua_.script("print('bark bark bark!')");
+  // auto res = lua_.load_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
+  // //  auto result =;
+  // qDebug() << res.valid();
+  // // clang-format on
+  // qDebug() << res.stack_index();
+  // res();
 }
+
+void About::setNewLine(const QString &text) { license_label_->setText(text); }
 
 }  // namespace core

@@ -1,3 +1,14 @@
+/**
+ * @file about.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-07-10
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #ifndef CORE_ABOUT_H
 #define CORE_ABOUT_H
 
@@ -23,13 +34,21 @@ class About : public QDialog {
   explicit About(QWidget *parent = nullptr);
   ~About() override;
 
+  void setNewLine(const QString &text);
  signals:
   void dialogClosed();
+  void openChanged(bool);
+
+ protected:
+  // void showEvent(QShowEvent *event);
+  void showEvent(QShowEvent *event) override;
 
  private:
   void closeEvent(QCloseEvent *event) override;
   void makeLayout();
   QString readLicense(const QString &filename);
+
+  // sol::state lua_{};
 
   QPushButton *close_btn_{nullptr};
   QGridLayout *about_layout_{nullptr};
@@ -38,6 +57,7 @@ class About : public QDialog {
   QLabel *build_label_{nullptr};
   QLabel *license_label_{nullptr};
   QLabel *icon_label_{nullptr};
+  bool is_opening{false};
 };
 
 }  // namespace core

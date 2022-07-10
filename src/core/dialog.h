@@ -19,8 +19,8 @@ QT_END_NAMESPACE
 class UserDefinedParameters {
  public:
   explicit UserDefinedParameters() noexcept = default;
-  explicit UserDefinedParameters(const QString &name, const QString &value)
-      : name_(name), value_(value){};
+  explicit UserDefinedParameters(const QString &name, const QString &value) :
+      name_(name), value_(value){};
 
   UserDefinedParameters(const UserDefinedParameters &o);
   UserDefinedParameters(UserDefinedParameters &&o);

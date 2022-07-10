@@ -53,13 +53,15 @@ class MainWindow : public QMainWindow {
 
   void updateProcessedFilename(const QString &filename);
 
+  void showAboutInformation();
+
  private:
   Ui::MainWindow *ui;
 
   void closeEvent(QCloseEvent *event);
 
   QScopedPointer<ConverterDialog> converter_dialog_{nullptr};
-  QScopedPointer<ManageFile> manager_{nullptr};
+  QScopedPointer<FileManager> manager_{nullptr};
   QList<QString> process_files_;
   QScopedPointer<core::Dialog> dial_{nullptr};
 

@@ -40,12 +40,20 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include( GitVersion )
 include(cmake/googletest.cmake)
-# include(cmake/sol2.cmake)
-# fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
+
 # -----------------------------------------------------------------------------
 # Google test
 # -----------------------------------------------------------------------------
 fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
+
+
+# -----------------------------------------------------------------------------
+# Scripting
+# -----------------------------------------------------------------------------
+# include(cmake/sol2.cmake)
+# fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
+find_package(Lua 5 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
 
 
 # Build test related commands
@@ -95,6 +103,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
 # -----------------------------------------------------------------------------
 # Code coverage
 # -----------------------------------------------------------------------------
@@ -131,7 +140,7 @@ set(CMAKE_AUTORCC ON)
 if(APPLE AND EXISTS /usr/local/opt/qt5)
   list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 endif()
-find_package(Qt5 COMPONENTS Core REQUIRED)
+
 find_package(Qt5 COMPONENTS Core Concurrent REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Network REQUIRED)
@@ -146,8 +155,10 @@ endif(${Qt5_FOUND})
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
+
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -march=native -pthread -Os -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
+
 
 # -----------------------------------------------------------------------------
 # Build Documentation

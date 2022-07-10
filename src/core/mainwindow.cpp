@@ -2,7 +2,15 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QMessageBox>
+#include <QProgressDialog>
+#include <QRegularExpression>
+#include <QScopedPointer>
+#include <QThread>
+#include <QtConcurrent/QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentRun>
 
 #include "logger_tools.h"
 #include "node.h"
@@ -26,25 +34,25 @@ MainWindow::MainWindow(QWidget *parent)
   process_files_.reserve(16);
   // converter = new ConverterSintax();
 
-  manager_.reset(new ManageFile());
+  manager_.reset(new FileManager());
   converter_dialog_.reset(new ConverterDialog(this));
   indexlist = 0;
 
   // connect slot
   // connect(this, &MainWindow::sizeList, manager_.data(),
   // &ManageFile::setSizelist);
-  connect(this, &MainWindow::updateProcessedFilename,
-          [this](const QString &filename) {
-            manager_->processedFilename(filename);
-          });
+  //  connect(this, &MainWindow::updateProcessedFilename,
+  //          [this](const QString &filename) {
+  //            manager_->processedFilename(filename);
+  //          });
   connect(this, &MainWindow::updateProcessedFilename,
           [this](const QString &filename) {
             converter_dialog_->changedProcessedFilename(filename);
           });
-  connect(manager_.data(), &ManageFile::propertyFileChanged, this,
-          &MainWindow::setPropertyFile);
-  connect(manager_.data(), &ManageFile::outputFilenameChanged, this,
-          &MainWindow::setnameFileText);
+  //  connect(manager_.data(), &ManageFile::propertyFileChanged, this,
+  //          &MainWindow::setPropertyFile);
+  //  connect(manager_.data(), &ManageFile::outputFilenameChanged, this,
+  //          &MainWindow::setnameFileText);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -82,14 +90,59 @@ void MainWindow::on_LoadFile_clicked() {
   }
 }
 
+void spin(int &iteration) {
+  const int work = 1000 * 1000 * 40;
+  int v = 0;
+  for (int j = 0; j < work; ++j) ++v;
+
+  qDebug() << "iteration" << iteration << "in thread"
+           << QThread::currentThreadId();
+}
+
 void MainWindow::on_Convert_clicked() {
-  //  foreach (auto file, process_files_) {
-  //    qDebug() << INFOFILE << "process file:" << file;
-  //    ui->lineEdit_original->setText(file);
-  //    emit updateProcessedFilename(file);
-  //    converter_dialog_->open();
-  //    converter_dialog_->process();
-  //  }
+  foreach (auto current_file, process_files_) {
+    manager_->setFilename(current_file);
+    ui->lineEdit_original->setText(current_file);
+    ui->lineEdit_converted->setText(manager_->getOutputfile());
+    ui->dimensionfile->setText(QString::number(manager_->getFilesize()));
+
+    //    emit updateProcessedFilename(file);
+    //    converter_dialog_->open();
+    //    converter_dialog_->process();
+
+    // Create a progress dialog.
+    QProgressDialog dialog;
+    dialog.setLabelText(QString("Progressing using %1 thread(s)...")
+                            .arg(QThread::idealThreadCount()));
+
+    QVector<int> vector;
+    for (int i = 0; i < 1000; ++i) {
+      vector.append(i);
+    }
+
+    // Create a QFutureWatcher and connect signals and slots.
+    QFutureWatcher<void> futureWatcher;
+    QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog,
+                     SLOT(reset()));
+    QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher,
+                     SLOT(cancel()));
+    QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
+                     &dialog, SLOT(setRange(int, int)));
+    QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
+                     SLOT(setValue(int)));
+
+    // Start the computation.
+    // futureWatcher.setFuture(QtConcurrent::map(vector, spin));
+    futureWatcher.setFuture(QtConcurrent::map(vector, spin));
+
+    // Display the dialog and start the event loop.
+    dialog.exec();
+
+    futureWatcher.waitForFinished();
+
+    // Query the future to check if was canceled.
+    qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+  }
   dial_.reset(new core::Dialog);
   assert(dial_ != nullptr);
   dial_->open();
@@ -122,8 +175,10 @@ void MainWindow::on_Exit_released() {
 }
 
 void MainWindow::on_actionInformazioni_triggered() {
-  core::About about;
-  about.exec();
+  //  core::About about;
+  //  about.exec();
+
+  emit showAboutInformation();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e) {

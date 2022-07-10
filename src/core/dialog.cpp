@@ -98,7 +98,7 @@ void Dialog::onShearModulTextChanged(const QString &value) {
 
 void Dialog::onPoissonTextChanged(const QString &value) {
   psm_linedt_->setValidator(
-      setFloatNumberValidator("(\\+?\\-?[0-9]\\d+\\.[0-9]\\d+)"));
+      setFloatNumberValidator(R"((\+?\-?[0-9]\d+\.[0-9]\d+))"));
   if (psm_linedt_->hasAcceptableInput()) {
     qDebug() << value;
   }

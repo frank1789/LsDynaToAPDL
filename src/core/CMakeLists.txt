@@ -18,16 +18,19 @@ set(${TARGET_NAME}_SOURCES
 )
 
 set(${TARGET_NAME}_UIFORM
-#  ${CMAKE_CURRENT_SOURCE_DIR}/about.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
 )
 
-file(GLOB_RECURSE ${TARGET_NAME}_QRC ${PROJECT_SOURCE_DIR}/*.qrc)
+file(GLOB_RECURSE ${TARGET_NAME}_QRC ${PROJECT_SOURCE_DIR}/**/*.qrc)
 qt5_add_resources(${TARGET_NAME}_RESOURCES ${${TARGET_NAME}_QRC})
 
-add_executable(${NAME_PROJECT} ${${TARGET_NAME}_SOURCES} ${${TARGET_NAME}_UIFORM} ${${TARGET_NAME}_RESOURCES})
-target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets lsdyna common)
+add_executable(${NAME_PROJECT}
+    ${${TARGET_NAME}_SOURCES}
+    ${${TARGET_NAME}_HEADERS}
+    ${${TARGET_NAME}_UIFORM}
+    ${${TARGET_NAME}_RESOURCES})
+target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets Qt5::Concurrent lsdyna common)
 target_compile_options(${NAME_PROJECT} PRIVATE -c -fPIC -fstack-protector-strong)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -35,3 +38,11 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     target_link_libraries(coverage)
   endif()
 endif()
+
+
+# Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
+install(TARGETS ${NAME_PROJECT}
+    BUNDLE DESTINATION . COMPONENT Runtime
+    RUNTIME DESTINATION bin COMPONENT Runtime
+)
+
