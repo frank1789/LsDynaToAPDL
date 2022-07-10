@@ -52,8 +52,8 @@ fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
 # -----------------------------------------------------------------------------
 # include(cmake/sol2.cmake)
 # fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
-find_package(Lua 5 REQUIRED)
-include_directories(${LUA_INCLUDE_DIR})
+# find_package(Lua 5 REQUIRED)
+# include_directories(${LUA_INCLUDE_DIR})
 
 
 # Build test related commands
