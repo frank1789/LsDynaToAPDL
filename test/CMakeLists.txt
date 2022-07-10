@@ -49,8 +49,9 @@ add_test(NAME test-managerfile
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
 
 
-# add_custom_command(
-#                     TARGET test-managerfile POST_BUILD
-#                     COMMAND ${CMAKE_COMMAND} -E copy 
-#                       ${CMAKE_CURRENT_SOURCE_DIR}/example.k 
-#                       $<TARGET_FILE_DIR:managerfile>)
+add_custom_command(
+  TARGET managerfile POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/example.k
+    $<TARGET_FILE_DIR:managerfile>
+)
