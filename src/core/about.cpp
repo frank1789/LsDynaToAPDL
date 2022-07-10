@@ -9,7 +9,6 @@
 #include <QTextStream>
 #include <QVBoxLayout>
 
-#include "ui_about.h"
 #include "version.h"
 
 namespace core {

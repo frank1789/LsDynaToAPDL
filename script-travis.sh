@@ -34,7 +34,7 @@ compile_debug() {
     # clear lcov
     lcov --directory . --zerocounters
     # setup cmake
-    cmake -D CMAKE_BUILD_TYPE=Debug -D COVERAGE=ON ..
+    cmake -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=ON -D COVERAGE=OFF  ..
     make clean && make -j$(nproc)
     ctest
     # Create lcov report capturing coverage info

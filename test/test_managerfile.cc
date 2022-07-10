@@ -1,21 +1,25 @@
 #include "filemanager.h"
 #include "gtest/gtest.h"
 
-TEST(Creation, ManageFile) {
-  auto manager = ManageFile();
-  EXPECT_NO_THROW(ManageFile());
+static constexpr char kExampleFile[] = "../bin/example.k";
+
+TEST(Creation, FileManager) { EXPECT_NO_THROW(FileManager()); }
+
+auto s_manager = FileManager();
+
+TEST(FileManager, ExistFile) {
+  EXPECT_TRUE(FileManager::isValidFile(kExampleFile));
 }
 
-TEST(ManageFile, Setup) {
-  auto manager = ManageFile();
-  manager.processedFilename("path/to/folder/testnofile.k");
-  EXPECT_EQ(manager.getFilename(), "testnofile.k");
+TEST(FileManager, setNewFilename) {
+  s_manager.setFilename(kExampleFile);
+  EXPECT_EQ(s_manager.getFilename(), QStringLiteral("example.k"));
+  // EXPECT_EQ(s_manager.getCompleteFilename(), QString(kExampleFile));
 }
 
-TEST(ManageFile, UpdateName) {
-  auto manager = ManageFile();
-  manager.processedFilename("path/to/folder/EmptyFile.k");
-  EXPECT_EQ(manager.getFilename(), QString("EmptyFile.k"));
-  EXPECT_EQ(manager.getOutputfile(),
-            QString("path/to/folder/EmptyFile_converted.txt"));
+TEST(FileManager, fileSize) { EXPECT_EQ(s_manager.getFilesize(), 5016); }
+
+TEST(FileManager, UpdateName) {
+  EXPECT_EQ(s_manager.getOutputfile(),
+            QStringLiteral("../bin/example_converted.txt"));
 }

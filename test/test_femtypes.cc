@@ -24,7 +24,8 @@ TEST(FiniteElementTypes, NodeComparision) {
 
 TEST(FiniteElementTypes, ElementProperty) {
   auto shellnode = ShellFourNode();
-  const QString example{"1282666       4 1248032 1248085 1248031 1248031\n \
+  const QString example{
+      "1282666       4 1248032 1248085 1248031 1248031\n \
      3.9554682       3.9554682       3.9554682       3.955468"};
 
   shellnode.parseElement(example);
@@ -37,7 +38,8 @@ TEST(FiniteElementTypes, ElementProperty) {
   // check thickness
   EXPECT_EQ(shellnode.getThickness(), 3.9554682);
 
-  const QString another{"1283206       4 1248600 1248624 1248605 1248605\n \
+  const QString another{
+      "1283206       4 1248600 1248624 1248605 1248605\n \
      3.9421899       3.9421899       3.9421899       3.9421899"};
 
   shellnode.parseElement(another);

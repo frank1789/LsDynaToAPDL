@@ -26,10 +26,31 @@ if(COVERAGE)
   target_link_libraries(managerfile coverage)
 endif(COVERAGE)
 
-add_test(NAME test-log COMMAND ${CMAKE_BINARY_DIR}/test/log)
-add_test(NAME test-femtypes COMMAND ${CMAKE_BINARY_DIR}/test/femtypes)
-add_test(NAME test-converter COMMAND ${CMAKE_BINARY_DIR}/test/converter)
-add_test(NAME test-managerfile COMMAND ${CMAKE_BINARY_DIR}/test/managerfile)
+add_test(NAME test-log
+         COMMAND log
+         WORKING_DIRECTORY $<TARGET_FILE_DIR:log>
+)
 
+add_test(NAME test-femtypes
+         COMMAND femtypes
+         WORKING_DIRECTORY $<TARGET_FILE_DIR:femtypes>
+)
+
+add_test(NAME test-converter
+         COMMAND converter
+         WORKING_DIRECTORY $<TARGET_FILE_DIR:converter>
+)
+
+add_test(NAME test-managerfile
+         COMMAND managerfile
+         WORKING_DIRECTORY $<TARGET_FILE_DIR:managerfile>
+)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
+
+
+# add_custom_command(
+#                     TARGET test-managerfile POST_BUILD
+#                     COMMAND ${CMAKE_COMMAND} -E copy 
+#                       ${CMAKE_CURRENT_SOURCE_DIR}/example.k 
+#                       $<TARGET_FILE_DIR:managerfile>)

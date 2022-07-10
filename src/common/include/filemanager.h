@@ -4,67 +4,93 @@
 #include <QObject>
 #include <QString>
 
-using ull_t = unsigned long long;
-
 /**
- * @brief The ManageFile class manages incoming files.
- * @details It allows to extract the information of the incoming files as:
+ * @brief The FileManager class manages incoming files.
+ * @details It allows to extract informations obout files sucha as:
  * name, extension, size, etc.
- * Defines the name of the output file and checks if it already exists
+ * Furthmore, it generates the name of the output file and checks if it already
+ * exists.
  */
-class ManageFile : public QObject {
+class FileManager : public QObject {
   Q_OBJECT
 
  public:
   /**
-   * @brief Construct a new Manage File object
+   * @brief Construct a new Manage File object.
    *
    * @param parent
    */
-  explicit ManageFile(QObject *parent = nullptr);
+  explicit FileManager(QObject *parent = nullptr);
 
   /**
-   * @brief Destroy the Manage File object
+   * @brief Destroy the Manage File object.
    *
    */
-  ~ManageFile() override;
-
-  void print();
-
-  int getSizelistFile();
-
-  void convert();
+  ~FileManager() override;
 
   /**
-   * @brief Set the Filename object
+   * @brief Set the Filename object.
    *
-   * @param filename
+   * @param filename stream holds the complete filename.
    */
   void setFilename(const QString &filename);
 
+  void setFilename(const char *filename);
+
+  void setFilename(const std::string &filename);
+
   /**
-   * @brief Get the Filename object
+   * @brief Get the only filename stream.
    *
    * @return QString
    */
-  QString getFilename() const;
+  [[nodiscard]] QString getFilename() const;
 
-  QString getOutputfile() const;
+  /**
+   * @brief Get the complete Filename stream.
+   *
+   * @return QString
+   */
+  [[nodiscard]] QString getCompleteFilename() const;
+
+  /**
+   * @brief Get the new filename.
+   * It holds the original filename within the postfix "_converted.txt"
+   *
+   * @return QString
+   */
+  [[nodiscard]] QString getOutputfile() const;
+
+  /**
+   * @brief Get the file's dimension in byte.
+   *
+   * @return qint64
+   */
+  [[nodiscard]] inline auto getFilesize() const -> qint64 { return file_size_; }
+
+  /**
+   * @brief The isValidFile method checks is file exists and ensures is regular
+   * file.
+   *
+   * @param filename stream holds the complete filename.
+   * @return true
+   * @return false
+   */
+  [[nodiscard]] static auto isValidFile(const QString &filename) -> bool;
+
+ private:
+  void extractFileFeatures(const QString &filename);
+  void setNewFilename(const QString &filename);
 
  signals:
   void outputFilenameChanged(const QString &filename);
-  void propertyFileChanged(const QString &label, const qint64 &size);
-
- public slots:
-  void processedFilename(const QString &filename);
-
- protected:
-  void setNewFilename(const QString &filename);
-  qint64 extractSizeFile(const QString &filename);
+  void sizeFileChanged(const qint64 &size);
 
  private:
-  QString filename_;
-  QString new_filename_;
+  QString complete_filename_{""};
+  QString filename_{""};
+  QString new_filename_{""};
+  qint64 file_size_{0};
 };
 
 #endif  // FILEMANAGER_H

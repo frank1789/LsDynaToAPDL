@@ -27,11 +27,8 @@ target_link_libraries(${LIBRARY_TARGET_NAME} Qt5::Core Qt5::Widgets common)
 # Set two minimum target properties for the library.
 # See https://cmake.org/cmake/help/latest/command/set_target_properties.html
 # Properties are: 1) Library version number 2) list of corresponding public headers
-set_property(TARGET ${LIBRARY_TARGET_NAME} 
-  APPEND PROPERTY
-    VERSION ${VERSION}
-    INCLUDE_DIRECTORIES "${${LIBRARY_TARGET_NAME}_HDR}"
-)
+set_property(TARGET ${LIBRARY_TARGET_NAME} PROPERTY VERSION ${${PROJECT_NAME}_VERSION}
+                                                    PUBLIC_HEADER "${${LIBRARY_TARGET_NAME}_HDR}")
 
 # Specify include directories for both compilation and installation process.
 # The $<INSTALL_PREFIX> generator expression is useful to ensure to create
