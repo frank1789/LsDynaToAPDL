@@ -37,11 +37,6 @@ About::About(QWidget *parent) : QDialog(parent) {
   makeLayout();
   QObject::connect(close_btn_, &QPushButton::clicked, this,
                    [this]() { close(); });
-
-  // lua_.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table,
-  //                     sol::lib::string, sol::lib::io, sol::lib::coroutine);
-  // lua_.script("print('bark bark bark!')");
-  //   license_ =
 }
 
 void About::showEvent(QShowEvent *event) {
@@ -52,10 +47,6 @@ void About::showEvent(QShowEvent *event) {
   QWidget::showEvent(event);
   qDebug() << "pass here";
   emit openChanged(is_opening);
-  // lua_.script_file(
-  //     "/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/"
-  //     "license-animation.lua");
-
   is_opening = false;
 }
 
@@ -124,27 +115,6 @@ void About::makeLayout() {
   about_layout_->addWidget(build_label_, 3, 1);
   about_layout_->addWidget(license_label_, 4, 1);
   about_layout_->addWidget(close_btn_, 5, 2, Qt::AlignHCenter);
-
-  //  license_ =
-  //  lua_.load_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
-  //  qDebug() << license_.valid();
-  //  if (!license_.valid()) {
-  //        sol::error err = license_;
-  //        std::cerr << "failed to load string-based script into the program"
-  //        << err.what() << std::endl;
-  //      }
-  //  script();
-  //      lua_.script_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
-
-  //  license_();
-  // clang-format off
-//  lua_.script("print('bark bark bark!')");
-  // auto res = lua_.load_file("/Users/francesco/Documents/Project/LsDynaToAPDL/scripts/license-animation.lua");
-  // //  auto result =;
-  // qDebug() << res.valid();
-  // // clang-format on
-  // qDebug() << res.stack_index();
-  // res();
 }
 
 void About::setNewLine(const QString &text) { license_label_->setText(text); }

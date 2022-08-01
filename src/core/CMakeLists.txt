@@ -8,6 +8,7 @@ set(${TARGET_NAME}_HEADERS
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
   ${CMAKE_CURRENT_SOURCE_DIR}/version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/parser.h
 )
 
 set(${TARGET_NAME}_SOURCES
@@ -15,6 +16,7 @@ set(${TARGET_NAME}_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/parser.cc
 )
 
 set(${TARGET_NAME}_UIFORM
@@ -30,7 +32,7 @@ add_executable(${NAME_PROJECT}
     ${${TARGET_NAME}_HEADERS}
     ${${TARGET_NAME}_UIFORM}
     ${${TARGET_NAME}_RESOURCES})
-target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets Qt5::Concurrent lsdyna common)
+target_link_libraries(${NAME_PROJECT} Qt5::Core Qt5::Widgets Qt5::Concurrent lsdyna common apdl)
 target_compile_options(${NAME_PROJECT} PRIVATE -c -fPIC -fstack-protector-strong)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")

@@ -1,7 +1,7 @@
 /**
  * @file about.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
- * @brief
+ * @brief The class show information regarding authors.
  * @version 0.1
  * @date 2022-07-10
  *
@@ -40,15 +40,12 @@ class About : public QDialog {
   void openChanged(bool);
 
  protected:
-  // void showEvent(QShowEvent *event);
   void showEvent(QShowEvent *event) override;
 
  private:
   void closeEvent(QCloseEvent *event) override;
   void makeLayout();
   QString readLicense(const QString &filename);
-
-  // sol::state lua_{};
 
   QPushButton *close_btn_{nullptr};
   QGridLayout *about_layout_{nullptr};

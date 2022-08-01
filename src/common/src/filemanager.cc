@@ -13,7 +13,9 @@
 
 FileManager::FileManager(QObject *parent) : QObject(parent) {}
 
-FileManager::~FileManager() { qDebug() << INFOFILE << "dtor FileManager"; }
+FileManager::~FileManager() {
+  qDebug().noquote() << INFOFILE << "dtor FileManager";
+}
 
 void FileManager::setFilename(const char *filename) {
   setFilename(QString::fromLatin1(filename));
@@ -25,7 +27,7 @@ void FileManager::setFilename(const std::string &filename) {
 
 void FileManager::setFilename(const QString &filename) {
   if (isValidFile(filename)) {
-    qDebug() << INFOFILE << "process valid file:" << filename;
+    qDebug().noquote() << INFOFILE << "process valid file:" << filename;
     QFile f(filename);
     QFileInfo fileInfo(f.fileName());
     complete_filename_ = fileInfo.absoluteFilePath();
@@ -47,7 +49,7 @@ void FileManager::setNewFilename(const QString &filename) {
   new_filename_ = filename;
   new_filename_.replace(re, replace);
   emit outputFilenameChanged(new_filename_);
-  qDebug() << INFOFILE << new_filename_;
+  qDebug().noquote() << INFOFILE << new_filename_;
 }
 
 void FileManager::extractFileFeatures(const QString &filename) {
