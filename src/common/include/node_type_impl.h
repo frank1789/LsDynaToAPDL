@@ -1,12 +1,23 @@
+/**
+ * @file node_type_impl.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The node class represent a finite element base the Node.
+ * @version 0.1
+ * @date 2022-08-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+#include <QDebug>
+
 #ifndef NODE_TYPE_IMPL_H
 #define NODE_TYPE_IMPL_H
 
+#include <QTextStream>
 #include <cassert>
 #include <ostream>
 #include <type_traits>
 #include <utility>
-
-#include <QTextStream>
 
 #include "logger_tools.h"
 
@@ -42,8 +53,11 @@ class PropertyNode {
    * @brief Construct a new Property Node object
    *
    */
-  constexpr PropertyNode() :
-      id_node_(0), coordinate_x_(0.0), coordinate_y_(0.0), coordinate_z_(0.0) {}
+  constexpr PropertyNode()
+      : id_node_(0),
+        coordinate_x_(0.0),
+        coordinate_y_(0.0),
+        coordinate_z_(0.0) {}
 
   /**
    * @brief Construct a new Property Node object
@@ -53,30 +67,30 @@ class PropertyNode {
    * @param y
    * @param z
    */
-  explicit PropertyNode(N id, P x, P y, P z) :
-      id_node_(id), coordinate_x_(x), coordinate_y_(y), coordinate_z_(z) {}
+  explicit PropertyNode(N id, P x, P y, P z)
+      : id_node_(id), coordinate_x_(x), coordinate_y_(y), coordinate_z_(z) {}
 
   /**
    * @brief Construct a new Property Node object
    *
    * @param o
    */
-  PropertyNode(const PropertyNode &o) :
-      id_node_(o.id_node_),
-      coordinate_x_(o.coordinate_x_),
-      coordinate_y_(o.coordinate_y_),
-      coordinate_z_(o.coordinate_z_) {}
+  PropertyNode(const PropertyNode &o)
+      : id_node_(o.id_node_),
+        coordinate_x_(o.coordinate_x_),
+        coordinate_y_(o.coordinate_y_),
+        coordinate_z_(o.coordinate_z_) {}
 
   /**
    * @brief Construct a new Property Node object
    *
    * @param o
    */
-  PropertyNode(PropertyNode &&o) noexcept :
-      id_node_(std::move(o.id_node_)),
-      coordinate_x_(std::move(o.coordinate_x_)),
-      coordinate_y_(std::move(o.coordinate_y_)),
-      coordinate_z_(std::move(o.coordinate_z_)) {
+  PropertyNode(PropertyNode &&o) noexcept
+      : id_node_(std::move(o.id_node_)),
+        coordinate_x_(std::move(o.coordinate_x_)),
+        coordinate_y_(std::move(o.coordinate_y_)),
+        coordinate_z_(std::move(o.coordinate_z_)) {
     o.id_node_ = 0;
     o.coordinate_x_ = 0;
     o.coordinate_y_ = 0;
@@ -199,6 +213,13 @@ inline std::ostream &operator<<(std::ostream &os,
   os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", "
      << node.coordinate_y_ << ", " << node.coordinate_z_ << "]";
   return os;
+}
+
+template <class N, class P>
+QDebug operator<<(QDebug os, const PropertyNode<N, P> &node) {
+  os << "[" << node.id_node() << ", " << node.coordinate_x() << ", "
+     << node.coordinate_y() << ", " << node.coordinate_z() << "]";
+  return os.noquote();
 }
 
 #endif  // NODE_TYPE_IMPL_H
