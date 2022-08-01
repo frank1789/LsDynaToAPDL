@@ -1,14 +1,24 @@
+/**
+ * @file node_type_impl.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The node class represent a finite element base the Node.
+ * @version 0.1
+ * @date 2022-08-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+#include <QDebug>
+
 #ifndef NODE_TYPE_IMPL_H
 #define NODE_TYPE_IMPL_H
 
-#include <QDebug>
-#include <QObject>
+#include <QTextStream>
 #include <cassert>
 #include <ostream>
 #include <type_traits>
 #include <utility>
 
-#include "finite_element_types.h"
 #include "logger_tools.h"
 
 /**
@@ -31,7 +41,7 @@
  * @tparam P: type for spatial coordinate
  */
 template <class N, class P>
-class PropertyNode : public QObject {
+class PropertyNode {
   static_assert(std::is_integral_v<N>,
                 "N must be instantiated with integral template argument.");
   static_assert(std::is_arithmetic_v<P>,
@@ -43,7 +53,11 @@ class PropertyNode : public QObject {
    * @brief Construct a new Property Node object
    *
    */
-  PropertyNode() = default;
+  constexpr PropertyNode()
+      : id_node_(0),
+        coordinate_x_(0.0),
+        coordinate_y_(0.0),
+        coordinate_z_(0.0) {}
 
   /**
    * @brief Construct a new Property Node object
@@ -63,8 +77,8 @@ class PropertyNode : public QObject {
    */
   PropertyNode(const PropertyNode &o)
       : id_node_(o.id_node_),
-        coordinate_x_(o.coordinate_z_),
-        coordinate_y_(o.coordinate_z_),
+        coordinate_x_(o.coordinate_x_),
+        coordinate_y_(o.coordinate_y_),
         coordinate_z_(o.coordinate_z_) {}
 
   /**
@@ -74,9 +88,14 @@ class PropertyNode : public QObject {
    */
   PropertyNode(PropertyNode &&o) noexcept
       : id_node_(std::move(o.id_node_)),
-        coordinate_x_(std::move(o.coordinate_z_)),
-        coordinate_y_(std::move(o.coordinate_z_)),
-        coordinate_z_(std::move(o.coordinate_z_)) {}
+        coordinate_x_(std::move(o.coordinate_x_)),
+        coordinate_y_(std::move(o.coordinate_y_)),
+        coordinate_z_(std::move(o.coordinate_z_)) {
+    o.id_node_ = 0;
+    o.coordinate_x_ = 0;
+    o.coordinate_y_ = 0;
+    o.coordinate_z_ = 0;
+  }
 
   /**
    * @brief
@@ -86,8 +105,8 @@ class PropertyNode : public QObject {
    */
   PropertyNode &operator=(const PropertyNode &o) {
     id_node_ = o.id_node_;
-    coordinate_x_ = o.coordinate_z_;
-    coordinate_y_ = o.coordinate_z_;
+    coordinate_x_ = o.coordinate_x_;
+    coordinate_y_ = o.coordinate_y_;
     coordinate_z_ = o.coordinate_z_;
     return *this;
   }
@@ -98,13 +117,22 @@ class PropertyNode : public QObject {
    * @param o
    * @return PropertyNode&
    */
-  PropertyNode &operator=(PropertyNode &&o) {
-    id_node_ = std::move(o.id_node_);
-    coordinate_x_ = std::move(o.coordinate_z_);
-    coordinate_y_ = std::move(o.coordinate_z_);
-    coordinate_z_ = std::move(o.coordinate_z_);
-    qDebug() << INFOFILE << "move assigned\n";
+  PropertyNode &operator=(PropertyNode &&o) noexcept {
+    if (o != *this) {
+      id_node_ = std::move(o.id_node_);
+      coordinate_x_ = std::move(o.coordinate_x_);
+      coordinate_y_ = std::move(o.coordinate_y_);
+      coordinate_z_ = std::move(o.coordinate_z_);
+    }
     return *this;
+  }
+
+  bool operator==(const PropertyNode &rhs) const {
+    return this->reflect() == rhs.reflect();
+  }
+
+  bool operator!=(const PropertyNode &rhs) const {
+    return !(this->reflect() == rhs.reflect());
   }
 
   /**
@@ -163,33 +191,35 @@ class PropertyNode : public QObject {
    */
   void setId_node(const N &id_node) { id_node_ = id_node; }
 
-  // clang-format off
- template <class T, class U>
-  friend std::ostream &operator<< (std::ostream &os, const PropertyNode<T, U> &node);
- template <class T, class U>
-  friend QDebug &operator<< (QDebug& os, const PropertyNode<T, U> &node);
- // clang-format on
-private:
- N id_node_;      /**< uniquely identifies node IDs */
- P coordinate_x_; /**< x coordinate in the space */
- P coordinate_y_; /**< y coordinate in the space */
- P coordinate_z_; /**< z coordinate in the space */
+  template <class T, class U>
+  friend std::ostream &operator<<(std::ostream &os,
+                                  const PropertyNode<T, U> &node);
+
+ protected:
+  auto reflect() const {
+    return std::tie(id_node_, coordinate_x_, coordinate_y_, coordinate_z_);
+  }
+
+ private:
+  N id_node_;      /**< uniquely identifies node IDs */
+  P coordinate_x_; /**< x coordinate in the space */
+  P coordinate_y_; /**< y coordinate in the space */
+  P coordinate_z_; /**< z coordinate in the space */
 };
 
 template <class N, class P>
-std::ostream &operator<<(std::ostream &os, const PropertyNode<N, P> &node) {
-  os << "[" << std::to_string(node.id_node_) << ", "
-     << std::to_string(node.coordinate_x_) << ", "
-     << std::to_string(node.coordinate_y_) << ", "
-     << std::to_string(node.coordinate_z_) << "]";
+inline std::ostream &operator<<(std::ostream &os,
+                                const PropertyNode<N, P> &node) {
+  os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", "
+     << node.coordinate_y_ << ", " << node.coordinate_z_ << "]";
   return os;
 }
 
 template <class N, class P>
-QDebug &operator<<(QDebug &os, const PropertyNode<N, P> &node) {
-  os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", "
-     << node.coordinate_y_ << ", " << node.coordinate_z_ << "]";
-  return os;
+QDebug operator<<(QDebug os, const PropertyNode<N, P> &node) {
+  os << "[" << node.id_node() << ", " << node.coordinate_x() << ", "
+     << node.coordinate_y() << ", " << node.coordinate_z() << "]";
+  return os.noquote();
 }
 
 #endif  // NODE_TYPE_IMPL_H

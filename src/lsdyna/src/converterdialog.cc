@@ -6,21 +6,37 @@
 #include <QPushButton>
 
 ConverterDialog::ConverterDialog(QWidget *parent) : QDialog(parent) {
-  this->setWindowTitle("Progress...");
+  this->setWindowTitle(QStringLiteral("Processing file"));
   this->setupLayout();
-  converter_ = QSharedPointer<sintax::lsdyna::ConverterSintax>(
-      new sintax::lsdyna::ConverterSintax(this));
-  QObject::connect(cancel_btn_.data(), &QPushButton::clicked, [this]() {
-    if (converter_->isRunning()) {
-      converter_->terminate();
-      this->close();
-    }
+  converter_ = new sintax::lsdyna::ConverterSintax;
+  QObject::connect(cancel_btn_, &QPushButton::clicked, this, [this]() {
+    qWarning().noquote() << INFOFILE << "terminate current thread";
+    converter_->quit();
+    close();
+    emit closed();
   });
 
-  connect(this, &ConverterDialog::updateProcessedFilename,
+  QObject::connect(converter_, &sintax::lsdyna::ConverterSintax::finished, this,
+                   &ConverterDialog::close);
+
+  connect(this, &ConverterDialog::updateProcessedFilename, this,
           [this](const QString &filename) {
             converter_->filenameChanged(filename);
           });
+  setWindowFlag(Qt::WindowStaysOnTopHint);
+}
+
+ConverterDialog::~ConverterDialog() {
+  delete grid_layot_;
+  grid_layot_ = nullptr;
+  delete pbar_;
+  pbar_ = nullptr;
+  delete label_;
+  label_ = nullptr;
+  delete cancel_btn_;
+  cancel_btn_ = nullptr;
+  delete converter_;
+  converter_ = nullptr;
 }
 
 void ConverterDialog::setInputFile(const QString &filename) {
@@ -28,12 +44,7 @@ void ConverterDialog::setInputFile(const QString &filename) {
   emit updateProcessedFilename(filename_);
 }
 
-void ConverterDialog::process() {
-  this->show();
-  //  QScopedPointer<QThread> thread = QScopedPointer<QThread>(new
-  //  QThread(this)); pbar_->moveToThread(thread.data()); thread->start();
-  converter_->run();
-}
+void ConverterDialog::process() { converter_->run(); }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Slot
@@ -50,19 +61,19 @@ void ConverterDialog::changedProcessedFilename(const QString &filename) {
 ///////////////////////////////////////////////////////////////////////////////
 
 void ConverterDialog::setupLayout() {
-  grid_layot_ = QSharedPointer<QGridLayout>(new QGridLayout(this));
+  grid_layot_ = new QGridLayout(this);
 
   // setup progressbar
-  pbar_ = QSharedPointer<QProgressBar>(new QProgressBar(this));
+  pbar_ = new QProgressBar;
   pbar_->setMinimum(0);
   pbar_->setMaximum(0);
 
   // setup button
-  cancel_btn_ = QSharedPointer<QPushButton>(new QPushButton(this));
-  cancel_btn_->setText("cancel");
+  cancel_btn_ = new QPushButton;
+  cancel_btn_->setText(QStringLiteral("cancel"));
 
   // setup grid
-  grid_layot_->addWidget(pbar_.data(), 0, 5);
+  grid_layot_->addWidget(pbar_, 0, 5);
   //   grid_layot_->addWidget();
-  grid_layot_->addWidget(cancel_btn_.data(), 2, 5);
+  grid_layot_->addWidget(cancel_btn_, 2, 5);
 }

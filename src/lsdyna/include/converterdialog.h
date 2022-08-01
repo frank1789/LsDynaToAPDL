@@ -2,7 +2,7 @@
 #define LSDYNA_CONVERTER_DIALOG_H
 
 #include <QDialog>
-#include <QSharedPointer>
+#include <QScopedPointer>
 #include <QString>
 
 #include "converter.h"
@@ -17,8 +17,8 @@ QT_END_NAMESPACE
 class ConverterDialog : public QDialog {
   Q_OBJECT
  public:
-  ConverterDialog(QWidget *parent = nullptr);
-  ~ConverterDialog() override = default;
+  explicit ConverterDialog(QWidget *parent = nullptr);
+  ~ConverterDialog() override;
 
   void process();
 
@@ -30,16 +30,17 @@ class ConverterDialog : public QDialog {
  signals:
   void start();
   void stop();
+  void closed();
   void updateProcessedFilename(const QString &filename);
 
  private:
   void setupLayout();
   QString filename_;
-  QSharedPointer<QGridLayout> grid_layot_{nullptr};
-  QSharedPointer<QProgressBar> pbar_{nullptr};
-  QSharedPointer<QLabel> label_{nullptr};
-  QSharedPointer<QPushButton> cancel_btn_{nullptr};
-  QSharedPointer<sintax::lsdyna::ConverterSintax> converter_{nullptr};
+  QGridLayout *grid_layot_{nullptr};
+  QProgressBar *pbar_{nullptr};
+  QLabel *label_{nullptr};
+  QPushButton *cancel_btn_{nullptr};
+  sintax::lsdyna::ConverterSintax *converter_{nullptr};
 };
 
 #endif  // LSDYNA_CONVERTER_DIALOG_H

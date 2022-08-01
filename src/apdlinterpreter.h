@@ -1,14 +1,15 @@
 #ifndef APDLINTERPRETER_H
 #define APDLINTERPRETER_H
-#include <QString>
 #include <QFile>
+#include <QString>
 #include <QTextStream>
+
 #include "lsdynainterpreter.h"
 
 namespace APDLsintax {
 
-
-void Writer(QString pfilename, QVector<NodeProperty> pVectorNode, QVector<ShellProperty> pVectorElementShell);
+void Writer(QString pfilename, QVector<NodeProperty> pVectorNode,
+            QVector<ShellProperty> pVectorElementShell);
 }
 /*
 class ApdlInterpreter
@@ -42,4 +43,4 @@ private:
 };
 }
 */
-#endif // TYPEELEMENT_H
+#endif  // TYPEELEMENT_H

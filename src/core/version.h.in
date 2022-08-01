@@ -11,18 +11,19 @@
 #ifndef LSDYNA_TO_APDL_CONVERTER_VERSION_H
 #define LSDYNA_TO_APDL_CONVERTER_VERSION_H
 
-#include <sstream>
+#include <QString>
 
-constexpr char kVersionMajor[] = "@VERSION_MAJOR@";
-constexpr char kVersionMinor[] = "@VERSION_MINOR@";
-constexpr char kVersionPatch[] = "@VERSION_PATCH@";
-constexpr char kBuild[] = "@VERSION_SHA1@";
+static constexpr char kVersionMajor[] = "@VERSION_MAJOR@";
+static constexpr char kVersionMinor[] = "@VERSION_MINOR@";
+static constexpr char kVersionPatch[] = "@VERSION_PATCH@";
+static constexpr char kBuild[] = "@VERSION_SHA1@";
 
-std::string compact_version() {
-  std::stringstream v;
-  v << kVersionMajor << "." << kVersionMinor << "." << kVersionPatch << "\t"
-    << "build: " << kBuild;
-  return v.str();
+inline auto compact_version() {
+  return QString("%1.%2.%3 build: %4")
+      .arg(kVersionMajor)
+      .arg(kVersionMinor)
+      .arg(kVersionPatch)
+      .arg(kBuild);
 }
 
 #endif  // LSDYNA_TO_APDL_CONVERTER_VERSION_H

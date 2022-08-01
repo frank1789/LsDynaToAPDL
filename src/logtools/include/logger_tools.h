@@ -1,10 +1,21 @@
+/**
+ * @file logger_tools.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The extend logger tools.
+ * @version 0.1
+ * @date 2022-08-01
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#include <QString>
+#include <ostream>
+#include <string>
+
 #ifndef LOGGER_TOOLS_H
 #define LOGGER_TOOLS_H
 
-#include <QString>
-
-#define PROFILING 1
-#if PROFILING
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || \
     (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
 #define CLIENT_FUNC_SIG __PRETTY_FUNCTION__
@@ -24,17 +35,20 @@
 #else
 #define CLIENT_FUNC_SIG "FUNC_SIG unknown!"
 #endif
-#endif
 
-#define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__)
+inline std::ostream& operator<<(std::ostream& os, const QString& qstr) {
+  os << qstr.toStdString();
+  return os;
+}
 
-static inline QString info_file(char const *function, char const *file,
-                                    long line) {
+static QString info_file(char const* function, char const* file, long line) {
   auto mess = QString(function);
   mess += " ";
   mess += QString(file);
-  mess += ":" + QString::number(line) + "] ";
+  mess += ":" + QString::number(line) + "]";
   return mess;
 }
+
+#define INFOFILE info_file(CLIENT_FUNC_SIG, __FILE__, __LINE__)
 
 #endif  // LOGGER_TOOLS_H

@@ -6,9 +6,9 @@
 
 #include "finite_element_types.h"
 
-class ElementFactory {
+class alignas(std::max_align_t) ElementFactory {
  public:
-  explicit ElementFactory();
+  explicit ElementFactory() noexcept;
   ~ElementFactory() = default;
 
   std::unique_ptr<Element> createElement(ShellType elem_type);

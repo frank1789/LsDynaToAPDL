@@ -1,11 +1,12 @@
+#include "element_shell_four_node.h"
+
 #include <QDebug>
 #include <QRegularExpression>
 
-#include "element_shellfournode.h"
 #include "logger_tools.h"
 
-ShellFourNode::ShellFourNode()
-    : Element(), node_flag_(false), thickness_flag_(false) {
+ShellFourNode::ShellFourNode() noexcept :
+    Element(), node_flag_(false), thickness_flag_(false) {
   element_id_.reserve(kFourNode);
 }
 
@@ -35,7 +36,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
   //  extract element card ignored -----+               |                |                |               |
   //  extract id -------+               |               |                |                |               |
   //                    +               +               +                +                +               +
-  re.setPattern("(?<id>\\d+)\\s+(?<card>\\d+)\\s(?<node1>\\d+)\\s(?<node2>\\d+)\\s(?<node3>\\d+)\\s(?<node4>\\d+)");
+  re.setPattern(R"((?<id>\d+)\s+(?<card>\d+)\s(?<node1>\d+)\s(?<node2>\d+)\s(?<node3>\d+)\s(?<node4>\d+))");
   // clang-format on
   // verify captured groups
   QRegularExpressionMatch match = re.match(inputline);
@@ -48,19 +49,18 @@ void ShellFourNode::parseElement(const QString &inputline) {
             << re.captureCount();
     // clang-format on
     // capture id element
-    setId(match.captured("id").toInt());
+    setId(static_cast<quint64>(match.captured("id").toInt()));
     auto first_node = static_cast<quint64>(match.captured("node1").toInt());
     auto second_node = static_cast<quint64>(match.captured("node2").toInt());
     auto third_node = static_cast<quint64>(match.captured("node3").toInt());
     auto fourth_node = static_cast<quint64>(match.captured("node4").toInt());
     setNodes({first_node, second_node, third_node, fourth_node});
-    qDebug() << INFOFILE << *this;
     node_flag_ = true;
   }
   // verify second line string element thickeness replicated four times costant
   // for element
   // clang-format off
-  re.setPattern("(\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)       (\\d+?.\\d+)");
+  re.setPattern(R"((\d+?.\d+)       (\d+?.\d+)       (\d+?.\d+)       (\d+?.\d+))");
   // clang-format on
   match = re.match(inputline);
   if (match.hasMatch()) {
@@ -101,16 +101,8 @@ qreal ShellFourNode::getThickness() const { return thickness_; }
 
 QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
 
-std::ostream &operator<<(std::ostream &os, const ShellFourNode &s) {
-  os << "element:\n\t";
-  os << "id: " << std::setw(15) << s.getId() << "\t";
-  auto nodes = s.getNodesId();
-  for (auto i = 0; i < nodes.size(); i++) {
-    os << "node " << i + 1 << ":" << std::setw(15) << nodes[i];
-  }
-  os << "\n";
-  os << "thickness: " << std::setprecision(7) << s.getThickness() << "\n";
-  return os;
+std::unique_ptr<Element> ShellFourNode::clone() {
+  return std::make_unique<ShellFourNode>();
 }
 
 QDebug &operator<<(QDebug &os, const ShellFourNode &s) {

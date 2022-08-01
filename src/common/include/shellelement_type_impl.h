@@ -4,7 +4,7 @@
 /**
  * @brief The propelem struct defines the general appearance of the parameters.
  * of an element.
- * 
+ *
  * @details The content of the structure represents the element defined by a
  * unique ID, by the number of nodes that constitute it. The thickness used for
  * shell-like elements.
@@ -17,7 +17,7 @@
  *      - number of nodes of the element;
  *  - Float Data type:
  *      - thickness.
- * 
+ *
  * @tparam N: type for elments IDs
  * @tparam EN: type for node IDs
  * @tparam T: type for element's thickness
@@ -25,11 +25,8 @@
  */
 template <typename N, typename EN, typename T, int size>
 class ShellElement : public Element<typename N, typename EN> {
-public:
-private:
-  //clang-format off
-  T thickness_;          /**< thickness of the element. */
-  //clang-format on
+ private:
+  T thickness_; /**< thickness of the element. */
 };
 
-#endif // SHELLELEMENT_TYPE_IMPL_H
+#endif  // SHELLELEMENT_TYPE_IMPL_H

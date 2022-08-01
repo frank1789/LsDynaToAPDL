@@ -50,10 +50,10 @@ class ConverterSintax : public QThread {
   void run() override;
 
   void setInputFile(const QString &filename);
-  QString getFilename() const;
+  [[nodiscard]] QString getFilename() const;
 
-  QVector<PropertyNode<quint64, qreal>> getNodes() const;
-  QVector<ShellFourNode> getElements() const;
+  [[nodiscard]] QVector<PropertyNode<quint64, qreal>> getNodes() const;
+  [[nodiscard]] QVector<ShellFourNode> getElements() const;
 
  public slots:
   void filenameChanged(const QString &filename);

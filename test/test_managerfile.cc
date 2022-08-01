@@ -1,21 +1,32 @@
 #include "filemanager.h"
 #include "gtest/gtest.h"
 
-TEST(Creation, ManageFile) {
-  auto manager = ManageFile();
-  EXPECT_NO_THROW(ManageFile());
+static constexpr char kExampleFile[] = "../bin/example.k";
+
+TEST(Creation, FileManager) {
+  EXPECT_NO_THROW(FileManager());
 }
 
-TEST(ManageFile, Setup) {
-  auto manager = ManageFile();
-  manager.processedFilename("path/to/folder/testnofile.k");
-  EXPECT_EQ(manager.getFilename(), "testnofile.k");
+auto s_manager = FileManager();
+
+TEST(FileManager, ExistFile) {
+  EXPECT_FALSE(FileManager::isValidFile("../bin/example2.k"));
+  EXPECT_TRUE(FileManager::isValidFile(kExampleFile));
 }
 
-TEST(ManageFile, UpdateName) {
-  auto manager = ManageFile();
-  manager.processedFilename("path/to/folder/EmptyFile.k");
-  EXPECT_EQ(manager.getFilename(), QString("EmptyFile.k"));
-  EXPECT_EQ(manager.getOutputfile(),
-            QString("path/to/folder/EmptyFile_converted.txt"));
+TEST(FileManager, setNewFilename) {
+  s_manager.setFilename(kExampleFile);
+  EXPECT_EQ(s_manager.getFilename(), QStringLiteral("example.k"));
+  s_manager.setFilename(std::string(kExampleFile));
+  EXPECT_EQ(s_manager.getFilename(), QStringLiteral("example.k"));
+  s_manager.setFilename(QString(kExampleFile));
+  EXPECT_EQ(s_manager.getFilename(), QStringLiteral("example.k"));
+  // EXPECT_EQ(s_manager.getCompleteFilename(), QString(kExampleFile));
+}
+
+TEST(FileManager, fileSize) { EXPECT_EQ(s_manager.getFilesize(), 5016); }
+
+TEST(FileManager, UpdateName) {
+  EXPECT_EQ(s_manager.getOutputfile(),
+            QStringLiteral("../bin/example_converted.txt"));
 }

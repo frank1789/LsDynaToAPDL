@@ -1,3 +1,14 @@
+/**
+ * @file node.cc
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The node parser.
+ * @version 0.1
+ * @date 2022-08-01
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #include "node.h"
 
 #include <QDebug>
@@ -23,7 +34,7 @@ PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
     // extract coordinate x from string ------+                |                        |
     // extract node id ---+                   |                |                        |
     //                    +                   +                +                        +
-    re.setPattern("(\\d+) ?\\s*   (-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)?\\s*(-?\\d+\\.+\\d+)");
+    re.setPattern(R"((\d+) ?\s*   (-?\d+\.+\d+)?\s*(-?\d+\.+\d+)?\s*(-?\d+\.+\d+))");
     QRegularExpressionMatch match = re.match(inputline);
     qDebug() << INFOFILE << "fonud groups:" << re.captureCount();
   // clang-format on
@@ -38,7 +49,7 @@ PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
     auto z = static_cast<qreal>(match.captured(4).toDouble());
     // other field in input string are ignored
     node = PropertyNode<quint64, qreal>(id, x, y, z);
-    qDebug() << INFOFILE << node;
+    // qDebug().noquote() << INFOFILE << node;
   }
   return node;
 }
