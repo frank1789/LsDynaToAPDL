@@ -158,14 +158,14 @@
      </property>
      <layout class="QHBoxLayout" name="Information">
       <item>
-       <widget class="QLabel" name="dimensionfile">
+       <widget class="QLabel" name="information_file">
         <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="information_file">
+       <widget class="QLabel" name="dimensionfile">
         <property name="text">
          <string>TextLabel</string>
         </property>
