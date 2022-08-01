@@ -1,3 +1,17 @@
+/**
+ * @file keywords.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief Useful keywords used in LS-DYNA
+ * @version 0.1
+ * @date 2022-08-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
+#include <QDebug>
+#include <QString>
+
 #ifndef LSDYNA_SINTAX_KEYWORD_H
 #define LSDYNA_SINTAX_KEYWORD_H
 
@@ -20,31 +34,31 @@ enum class KeywordDyna {
   End                 /**< end document. */
 };
 
-inline QDebug &operator<<(QDebug &os, const KeywordDyna &key) {
+inline QDebug operator<<(QDebug os, const KeywordDyna &key) {
   switch (key) {
     case sintax::lsdyna::KeywordDyna::Header:
-      os << "$";
+      os << QStringLiteral("$");
       break;
     case sintax::lsdyna::KeywordDyna::KeyWord:
-      os << "KEYWORD";
+      os << QStringLiteral("KEYWORD");
       break;
     case sintax::lsdyna::KeywordDyna::Node:
-      os << "NODE";
+      os << QStringLiteral("NODE");
       break;
     case sintax::lsdyna::KeywordDyna::ElementShell:
-      os << "ELEMENTSHELL";
+      os << QStringLiteral("ELEMENTSHELL");
       break;
     case sintax::lsdyna::KeywordDyna::ElementSolid:
-      os << "ELEMENTSOLID";
+      os << QStringLiteral("ELEMENTSOLID");
       break;
     case sintax::lsdyna::KeywordDyna::InitialStrainSolid:
-      os << "INITIALSTRAINSOLID";
+      os << QStringLiteral("INITIALSTRAINSOLID");
       break;
     case sintax::lsdyna::KeywordDyna::InitialStressShell:
-      os << "INITIALSTRESSSHELL";
+      os << QStringLiteral("INITIALSTRESSSHELL");
       break;
     case sintax::lsdyna::KeywordDyna::End:
-      os << "END";
+      os << QStringLiteral("END");
       break;
   }
   return os;

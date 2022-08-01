@@ -1,8 +1,17 @@
-
-#include <ostream>
-#include <string>
+/**
+ * @file logger_tools.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The extend logger tools.
+ * @version 0.1
+ * @date 2022-08-01
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 
 #include <QString>
+#include <ostream>
+#include <string>
 
 #ifndef LOGGER_TOOLS_H
 #define LOGGER_TOOLS_H
@@ -36,7 +45,7 @@ static QString info_file(char const* function, char const* file, long line) {
   auto mess = QString(function);
   mess += " ";
   mess += QString(file);
-  mess += ":" + QString::number(line) + "] ";
+  mess += ":" + QString::number(line) + "]";
   return mess;
 }
 
