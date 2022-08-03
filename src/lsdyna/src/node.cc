@@ -49,7 +49,7 @@ PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
     auto z = static_cast<qreal>(match.captured(4).toDouble());
     // other field in input string are ignored
     node = PropertyNode<quint64, qreal>(id, x, y, z);
-    // qDebug().noquote() << INFOFILE << node;
+    qDebug().noquote() << INFOFILE << node;
   }
   return node;
 }

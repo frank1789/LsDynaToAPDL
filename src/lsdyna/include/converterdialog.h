@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QScopedPointer>
 #include <QString>
+#include <QTimer>
+#include <QTime>
 
 #include "converter.h"
 
@@ -33,14 +35,23 @@ class ConverterDialog : public QDialog {
   void closed();
   void updateProcessedFilename(const QString &filename);
 
+  protected:
+  void showEvent(QShowEvent *event) override;
+
  private:
   void setupLayout();
   QString filename_;
   QGridLayout *grid_layot_{nullptr};
-  QProgressBar *pbar_{nullptr};
+  QLabel *file_label_{nullptr};
+  QLabel *filename_label_{nullptr};
+  QLabel *elapsedtime_label_{nullptr};
+  QLabel *time_label_{nullptr};
   QLabel *label_{nullptr};
+  QProgressBar *pbar_{nullptr};
   QPushButton *cancel_btn_{nullptr};
   sintax::lsdyna::ConverterSintax *converter_{nullptr};
+  QTimer* timer_{nullptr};
+  QTime* elapsed_time_{nullptr};
 };
 
 #endif  // LSDYNA_CONVERTER_DIALOG_H

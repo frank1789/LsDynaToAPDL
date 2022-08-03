@@ -46,7 +46,6 @@ void Parser::elaborateFilename(const QString& filename) {
   filemanager_->setFilename(filename);
   converter_->setInputFile(filename);
   converter_->exec();
-  converter_->process();
   emit finished();
 }
 

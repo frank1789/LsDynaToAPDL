@@ -40,6 +40,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include( GitVersion )
 include(cmake/googletest.cmake)
+include( sanitizer )
 
 # -----------------------------------------------------------------------------
 # Google test
@@ -60,7 +61,7 @@ fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
 option(BUILD_TESTING "Create tests using CMake" OFF)
 if(BUILD_TESTING)
   enable_testing()
-  add_definitions(-D QT_NO_DEBUG_OUTPUT)
+  #add_definitions(-D QT_NO_DEBUG_OUTPUT)
 endif()
 
 
@@ -85,10 +86,11 @@ endif()
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
   set(CMAKE_BUILD_TYPE Debug)
+  set(SANITIZER "Address Leak")
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "Release")
   message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
   set(CMAKE_BUILD_TYPE Release)
-  add_definitions(-D QT_NO_DEBUG_OUTPUT)
+  #add_definitions(-D QT_NO_DEBUG_OUTPUT)
   add_definitions(-D PROFILING=0)
 endif()
 
@@ -156,8 +158,8 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
 
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
-set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -march=native -pthread -Os -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -pthread -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
 
 
 # -----------------------------------------------------------------------------

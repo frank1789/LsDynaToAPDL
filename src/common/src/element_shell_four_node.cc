@@ -56,6 +56,8 @@ void ShellFourNode::parseElement(const QString &inputline) {
     auto fourth_node = static_cast<quint64>(match.captured("node4").toInt());
     setNodes({first_node, second_node, third_node, fourth_node});
     node_flag_ = true;
+  } else {
+    qWarning().noquote() << "WARNING - invalid regex, could be lose information\n\t" << inputline; 
   }
   // verify second line string element thickeness replicated four times costant
   // for element
@@ -65,14 +67,16 @@ void ShellFourNode::parseElement(const QString &inputline) {
   match = re.match(inputline);
   if (match.hasMatch()) {
     // clang-format off
-    qDebug() << INFOFILE 
+    qDebug().noquote() << INFOFILE 
             << "has match: " << match.hasMatch()
             << ", fonud groups:" 
             << re.captureCount();
     // clang-format on
     setThickness(match.captured(1).toDouble());
-    qDebug() << INFOFILE << "thickness element:" << getThickness();
+    qDebug().noquote() << INFOFILE << "thickness element:" << getThickness();
     thickness_flag_ = true;
+  } else {
+    qWarning().noquote() << "WARNING - invalid regex, could be lose information\n\t" << inputline; 
   }
   //  fill vector element then reset the flags
   if (node_flag_ == true && thickness_flag_ == true) {
