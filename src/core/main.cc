@@ -9,16 +9,31 @@
  *
  */
 
+#include <iostream>
+
 #include <QApplication>
-#include <QTimer>
 
 #include "about.h"
-#include "customassert.h"
 #include "mainwindow.h"
 #include "parser.h"
+#include "version.h"
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
+
+  std::cout <<
+      R"( 
+   _       _____ _____                 _______                      _ _  
+  | |     / ____|  __ \               |__   __|     /\             | | | 
+  | |    | (___ | |  | |_   _ _ __   __ _| | ___   /  \   _ __   __| | | 
+  | |     \___ \| |  | | | | | '_ \ / _` | |/ _ \ / /\ \ | '_ \ / _` | | 
+  | |____ ____) | |__| | |_| | | | | (_| | | (_) / ____ \| |_) | (_| | | 
+  |______|_____/|_____/ \__, |_| |_|\__,_|_|\___/_/    \_\ .__/ \__,_|_| 
+                        __/ |                           | |              
+                       |___/                            |_|              
+ )" << std::endl;
+  std::cout << "version " << compact_version().toStdString() << std::endl;
+  std::cout << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n\n";
   MainWindow w;
   QScopedPointer<core::About> about_widget(new core::About);
   QScopedPointer<core::Parser> parser(new core::Parser);

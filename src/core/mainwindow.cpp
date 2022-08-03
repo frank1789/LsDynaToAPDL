@@ -126,7 +126,7 @@ void MainWindow::on_Preview_clicked() {
 }
 
 void MainWindow::on_Exit_released() {
-  qDebug() << INFOFILE << "release resources and close app";
+  qDebug().noquote() << INFOFILE << "release resources and close app";
   QApplication::quit();
 }
 
