@@ -12,20 +12,17 @@
 #include "parser.h"
 
 #include <QDebug>
-#include <QFuture>
-#include <QFutureWatcher>
-#include <QProgressDialog>
-#include <QtConcurrent>
 
 #include "logger_tools.h"
 #include "writeapdl.h"
 
 namespace core {
 
-Parser::Parser(QObject* parent)
-    : QObject(parent),
-      filemanager_(new FileManager),
-      converter_(new ConverterDialog) {
+Parser::Parser(QObject* parent) :
+    QObject(parent),
+    filemanager_(new FileManager),
+    converter_(new ConverterDialog),
+    writer_(new apdl::WriterDialog) {
   QObject::connect(converter_.get(), &ConverterDialog::closed, this, [=]() {
     qDebug().noquote() << INFOFILE << "check for the next file";
     emit finished();
@@ -49,40 +46,11 @@ void Parser::elaborateFilename(const QString& filename) {
   emit finished();
 }
 
-void Parser::readFilename(const QString& filename) { return; }
-
 void Parser::writeToFile() {
-  // Create a progress dialog.
-  QProgressDialog dialog;
-  dialog.setLabelText(
-      QStringLiteral("Write to file").arg(QThread::idealThreadCount()));
-
-  // Create a QFutureWatcher and connect signals and slots.
-  // Monitor progress changes of the future
-  QFutureWatcher<void> futureWatcher;
-  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
-                   &dialog, SLOT(setRange(int, int)));
-  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
-                   SLOT(setValue(int)));
-
-  // Start the computation.
-  futureWatcher.setFuture(QtConcurrent::run([this] {
-    QScopedPointer<apdl::Writer> w(
-        new apdl::Writer(filemanager_->getOutputfile()));
-
-    w->writeNode();
-    w->writeElement();
-  }));
-
-  // Display the dialog and start the event loop.
-  dialog.exec();
-
-  futureWatcher.waitForFinished();
-
-  // Query the future to check if was canceled.
-  qDebug() << "Canceled?" << futureWatcher.future().isCanceled();
+  qDebug().noquote() << INFOFILE << "ready to write on file:"
+                     << filemanager_->getOutputfile();
+  writer_->setOutputFilename(filemanager_->getOutputfile());
+  writer_->exec();
 }
 
 }  // namespace core

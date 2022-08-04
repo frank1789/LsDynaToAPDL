@@ -17,6 +17,7 @@
 #include <QScopedPointer>
 
 #include "converterdialog.h"
+#include "writerdialog.h"
 #include "filemanager.h"
 
 namespace core {
@@ -39,7 +40,7 @@ class Parser : public QObject {
  private:
   QScopedPointer<FileManager> filemanager_{nullptr};
   QScopedPointer<ConverterDialog> converter_{nullptr};
-  void readFilename(const QString& filename);
+  QScopedPointer<apdl::WriterDialog> writer_{nullptr};
 };
 
 }  // namespace core
