@@ -4,16 +4,18 @@ set(LIBRARY_TARGET_NAME "apdl")
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/writeapdl.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/writerdialog.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/writeapdl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/writerdialog.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
 add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
-target_link_libraries(${LIBRARY_TARGET_NAME} Qt5::Core logger)
+target_link_libraries(${LIBRARY_TARGET_NAME} Qt5::Core Qt5::Widgets logger)
 target_compile_options(${LIBRARY_TARGET_NAME} PRIVATE -c -fPIC -fstack-protector-strong)
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
