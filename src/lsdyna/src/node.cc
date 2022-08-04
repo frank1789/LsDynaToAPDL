@@ -36,7 +36,7 @@ PropertyNode<quint64, qreal> Node::parseNode(const QString &inputline) {
     //                    +                   +                +                        +
     re.setPattern(R"((\d+) ?\s*   (-?\d+\.+\d+)?\s*(-?\d+\.+\d+)?\s*(-?\d+\.+\d+))");
     QRegularExpressionMatch match = re.match(inputline);
-    qDebug() << INFOFILE << "fonud groups:" << re.captureCount();
+    qDebug().noquote() << INFOFILE << "fonud groups:" << re.captureCount();
   // clang-format on
   if (match.hasMatch()) {
     // capture id node = number's node

@@ -111,10 +111,6 @@ void WriterDialog::process() {
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Slot
-///////////////////////////////////////////////////////////////////////////////
-
 void WriterDialog::showEvent(QShowEvent *event) {
   qDebug().noquote() << INFOFILE << "ui has shown then execute thread";
   timer_->start();
@@ -124,6 +120,7 @@ void WriterDialog::showEvent(QShowEvent *event) {
 
 void WriterDialog::closeEvent(QCloseEvent *e) {
   qDebug().noquote() << INFOFILE << "ui has closed then wait thread";
+  timer_->stop();
   Q_UNUSED(e)
 }
 
