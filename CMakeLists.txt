@@ -40,7 +40,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include( GitVersion )
 include(cmake/googletest.cmake)
-include( sanitizer )
 
 # -----------------------------------------------------------------------------
 # Google test

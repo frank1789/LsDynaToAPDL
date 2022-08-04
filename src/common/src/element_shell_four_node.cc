@@ -41,13 +41,8 @@ void ShellFourNode::parseElement(const QString &inputline) {
   // verify captured groups
   QRegularExpressionMatch match = re.match(inputline);
   if (match.hasMatch()) {
-    // clang-format off
-    qDebug() << INFOFILE 
-            << "has match: " 
-            << match.hasMatch()
-            << ", fonud groups:" 
-            << re.captureCount();
-    // clang-format on
+    qDebug().noquote() << INFOFILE << "has match: " << match.hasMatch()
+                       << ", fonud groups:" << re.captureCount();
     // capture id element
     setId(static_cast<quint64>(match.captured("id").toInt()));
     auto first_node = static_cast<quint64>(match.captured("node1").toInt());
@@ -57,7 +52,9 @@ void ShellFourNode::parseElement(const QString &inputline) {
     setNodes({first_node, second_node, third_node, fourth_node});
     node_flag_ = true;
   } else {
-    qWarning().noquote() << "WARNING - invalid regex, could be lose information\n\t" << inputline; 
+    qWarning().noquote()
+        << INFOFILE << "WARNING - invalid regex, could be lose information\n\t"
+        << inputline;
   }
   // verify second line string element thickeness replicated four times costant
   // for element
@@ -76,7 +73,9 @@ void ShellFourNode::parseElement(const QString &inputline) {
     qDebug().noquote() << INFOFILE << "thickness element:" << getThickness();
     thickness_flag_ = true;
   } else {
-    qWarning().noquote() << "WARNING - invalid regex, could be lose information\n\t" << inputline; 
+    qWarning().noquote()
+        << INFOFILE << "WARNING - invalid regex, could be lose information\n\t"
+        << inputline;
   }
   //  fill vector element then reset the flags
   if (node_flag_ == true && thickness_flag_ == true) {
