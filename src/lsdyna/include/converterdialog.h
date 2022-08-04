@@ -2,7 +2,6 @@
 #define LSDYNA_CONVERTER_DIALOG_H
 
 #include <QDialog>
-#include <QScopedPointer>
 #include <QString>
 #include <QTimer>
 #include <QTime>
