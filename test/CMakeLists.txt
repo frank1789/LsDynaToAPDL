@@ -1,57 +1,30 @@
-add_executable(log test_logger.cc)
-add_executable(femtypes test_femtypes.cc)
-add_executable(converter test_converter.cc)
-add_executable(managerfile test_managerfile.cc)
+set(TEST_TARGET_NAME LsDynaToApdlTests)
 
-target_link_libraries(
-  log Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
+
+file(GLOB_RECURSE ${TEST_TARGET_NAME}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/**.test.cc)
+
+
+add_executable(${TEST_TARGET_NAME} ${${TEST_TARGET_NAME}_SRCS})
+
+target_link_libraries(${TEST_TARGET_NAME} 
+  PRIVATE 
+  GTest::gtest 
+  GTest::gtest_main 
+  GTest::gmock 
+  GTest::gmock_main
+  fmt::fmt
+  ${PROJECT_NAME}::common
+  ${PROJECT_NAME}::lsdyna
 )
 
-target_link_libraries(
-  femtypes Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
-)
+target_compile_definitions(${TEST_TARGET_NAME} PRIVATE TEST_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(
-  converter Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
-)
-
-target_link_libraries(
-  managerfile Qt5::Core gtest_main ${PROJECT_NAME}::logger ${PROJECT_NAME}::lsdyna
-)
-
-if(COVERAGE)
-  target_link_libraries(log coverage)
-  target_link_libraries(femtypes coverage)
-  target_link_libraries(converter coverage)
-  target_link_libraries(managerfile coverage)
-endif(COVERAGE)
-
-add_test(NAME test-log
-         COMMAND log
-         WORKING_DIRECTORY $<TARGET_FILE_DIR:log>
-)
-
-add_test(NAME test-femtypes
-         COMMAND femtypes
-         WORKING_DIRECTORY $<TARGET_FILE_DIR:femtypes>
-)
-
-add_test(NAME test-converter
-         COMMAND converter
-         WORKING_DIRECTORY $<TARGET_FILE_DIR:converter>
-)
-
-add_test(NAME test-managerfile
-         COMMAND managerfile
-         WORKING_DIRECTORY $<TARGET_FILE_DIR:managerfile>
-)
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
-
+gtest_add_tests(TARGET ${TEST_TARGET_NAME})
+gtest_discover_tests(${TEST_TARGET_NAME})
 
 add_custom_command(
-  TARGET managerfile POST_BUILD
+  TARGET ${TEST_TARGET_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy
     ${CMAKE_CURRENT_SOURCE_DIR}/example.k
-    $<TARGET_FILE_DIR:managerfile>
+    $<TARGET_FILE_DIR:${TEST_TARGET_NAME}>
 )

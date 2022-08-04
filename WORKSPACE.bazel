@@ -1,0 +1,21 @@
+workspace(name = "LsdynaToApdl")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "com_google_googletest",
+    strip_prefix = "googletest-1.15.2",
+    urls = ["https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz"],
+)
+
+http_archive(
+    name = "com_github_fmtlib_fmt",
+    strip_prefix = "fmt-11.0.2",
+    urls = ["https://github.com/fmtlib/fmt/releases/download/11.0.2/fmt-11.0.2.zip"],
+)
+
+http_archive(
+    name = "com_github_gabime_spdlog",
+    strip_prefix = "spdlog-1.14.1",
+    urls = ["https://github.com/gabime/spdlog/archive/refs/tags/v1.14.1.tar.gz"],
+)

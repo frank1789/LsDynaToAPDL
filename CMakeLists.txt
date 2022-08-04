@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.25)
 project(LsDynaToApdl LANGUAGES CXX C VERSION 0.0.0)
-set(NAME_PROJECT "LsDynaToApdl")
-set(CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
+
+# append additional scripts
+list(APPEND CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
 
 include(GNUInstallDirs)
 
@@ -34,49 +35,26 @@ if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
-# Build position independent code.
-# Position Independent Code (PIC) is commonly used for shared libraries so that
-# the same shared library code can be loaded in each program address space in a
-# location where it will not overlap with any other uses of such memory.
-# In particular, this option avoids problems occurring when a process wants to
-# load more than one shared library at the same virtual address.
-# Since shared libraries cannot predict where other shared libraries could be
-# loaded, this is an unavoidable problem with the traditional shared library
-# concept.
-# Generating position-independent code is often the default behavior for most
-# modern compilers.
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static" ON)
+option(BUILD_TESTING "Create tests using CMake" OFF)
+option(COVERAGE "Build with code coverage enabled" OFF)
+option(BUILD_DOCUMENTATION "Build the docucmentation using Doxygen" OFF)
 
 
 # -----------------------------------------------------------------------------
 # load cmake module
 # -----------------------------------------------------------------------------
-include( GitVersion )
-include(cmake/googletest.cmake)
-set(${PROJECT_VERSION_MAJOR} "${VERSION_MAJOR}")
-set(${PROJECT_VERSION_MINOR} "${VERSION_MINOR}")
-set(${PROJECT_VERSION_PATCH} "${VERSION_PATCH}")
-
-
-# -----------------------------------------------------------------------------
-# Scripting
-# -----------------------------------------------------------------------------
-# include(cmake/sol2.cmake)
-# fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
-# find_package(Lua 5 REQUIRED)
-# include_directories(${LUA_INCLUDE_DIR})
+include(GitVersion)
+set(CMAKE_PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} CACHE STATIC "" FORCE)
 
 
 # Build test related commands
-option(BUILD_TESTING "Create tests using CMake" OFF)
-if(BUILD_TESTING)
-  # -----------------------------------------------------------------------------
-  # Google test
-  # -----------------------------------------------------------------------------
-  fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
-  
+if(BUILD_TESTING)  
   enable_testing()
-  add_definitions(-D QT_NO_DEBUG_OUTPUT)
+  find_package(GTest CONFIG REQUIRED)
+  include(GoogleTest)
 
   # -----------------------------------------------------------------------------
   # Code coverage
@@ -120,7 +98,6 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     endif()
 endif()
 
-
 # -----------------------------------------------------------------------------
 # C/C++ standard extensions
 # -----------------------------------------------------------------------------
@@ -133,44 +110,40 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
-# Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-
-# -----------------------------------------------------------------------------
-# Library and Dependecies
-# -----------------------------------------------------------------------------
-# Find the Qt library
-if(APPLE AND EXISTS /usr/local/opt/qt5)
-  list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
-endif()
-
-find_package(Qt5 COMPONENTS Core Concurrent REQUIRED)
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt5 COMPONENTS Network REQUIRED)
-
-if(${Qt5_FOUND})
-  message(STATUS "Found Qt 5")
-else(${Qt5_FOUND})
-  message(FATAL_ERROR "Could not locate Qt.")
-endif(${Qt5_FOUND})
 
 # Find PThread Library
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
+# -----------------------------------------------------------------------------
+# Additional libraries
+# -----------------------------------------------------------------------------
+find_package(spdlog CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+find_package(xsimd CONFIG REQUIRED)
 
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
+set(GFLAGS_USE_TARGET_NAMESPACE ON)
+find_package(gflags CONFIG REQUIRED)
 
+if(NOT WIN32)
+  set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
+else()
+  set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} /nologo /EHsc /Zi /W4 /utf-8 /arch:AVX2")
+  set(CMAKE_CXX_FLAGS_RELEASE "/nologo /EHsc /W4 /utf-8 /O2 /arch:AVX2")
+  if(MSVC)
+    add_compile_options(
+      $<$<CONFIG:>:/MT> 
+      $<$<CONFIG:Debug>:/MTd>
+      $<$<CONFIG:Release>:/MT> 
+    )
+  endif()
+endif()
 
 # -----------------------------------------------------------------------------
 # Build Documentation
 # -----------------------------------------------------------------------------
-option(BUILD_DOC "Build documentation" OFF)
-if(BUILD_DOC)
+if(BUILD_DOCUMENTATION)
   find_package(Doxygen)
   if(DOXYGEN_FOUND)
     # set input and output files
@@ -197,16 +170,16 @@ endif()
 # -----------------------------------------------------------------------------
 add_subdirectory(src)
 if(BUILD_TESTING)
-    add_subdirectory(test)
+  add_subdirectory(test)
 endif()
-
 
 include(InstallBasicPackageFiles)
 install_basic_package_files(${PROJECT_NAME}
                             VERSION ${${PROJECT_NAME}_VERSION}
                             COMPATIBILITY AnyNewerVersion
                             VARS_PREFIX ${PROJECT_NAME}
-                            NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+                            NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
 # Add the uninstall target
 include(AddUninstallTarget)
 
@@ -224,7 +197,7 @@ message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
 message(STATUS "C++ flags (Debug): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "Coverage:\t\t${COVERAGE}")
-message(STATUS "Documentation:\t${BUILD_DOC}")
+message(STATUS "Documentation:\t${BUILD_DOCUMENTATION}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)
 message(STATUS "possible options: Debug Release")

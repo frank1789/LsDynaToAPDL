@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "apdl",
+    srcs = [
+        "src/writeapdl.cc",
+    ],
+    hdrs = [
+        "include/apdl/keypoint.h",
+        "include/apdl/node.h",
+        "include/apdl/writeapdl.h"
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/common",
+        "@com_github_gabime_spdlog//:spdlog",
+        "@fmt",
+    ],
+)

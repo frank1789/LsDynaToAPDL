@@ -1,0 +1,26 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "lsdyna",
+    srcs = [
+        "src/converter.cc",
+        "src/keywords.cc",
+        "src/node.cc",
+        "src/lsdyna.cc"
+    ],
+    hdrs = [
+        "include/converter.h",
+        "include/keywords.h",
+        "include/node.h",
+        "include/lsdyna/lsdyna.h"
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/common",
+        "//src/logtools",
+        "//src/apdl",
+        "@com_github_gabime_spdlog//:spdlog",
+        "@fmt",
+    ],
+)

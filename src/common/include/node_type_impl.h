@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2022
  *
  */
-#include <QDebug>
 
 #ifndef NODE_TYPE_IMPL_H
 #define NODE_TYPE_IMPL_H
@@ -17,10 +16,6 @@
 #include <ostream>
 #include <type_traits>
 #include <utility>
-
-#include <QTextStream>
-
-#include "logger_tools.h"
 
 /**
  * @brief PropertyNode contains the information of a single node.
@@ -53,7 +48,8 @@ class PropertyNode {
    * @brief Construct a new Property Node object
    *
    */
-  constexpr PropertyNode() : id_node_(0), coordinate_x_(0.0), coordinate_y_(0.0), coordinate_z_(0.0) {}
+  constexpr PropertyNode() :
+      id_node_(0), coordinate_x_(0.0), coordinate_y_(0.0), coordinate_z_(0.0) {}
 
   /**
    * @brief Construct a new Property Node object
@@ -63,7 +59,10 @@ class PropertyNode {
    * @param y
    * @param z
    */
-  explicit PropertyNode(N id, P x, P y, P z) : id_node_(id), coordinate_x_(x), coordinate_y_(y), coordinate_z_(z) {}
+  explicit PropertyNode(N id, P x, P y, P z) :
+      id_node_(id), coordinate_x_(x), coordinate_y_(y), coordinate_z_(z) {}
+
+  ~PropertyNode() noexcept = default;
 
   /**
    * @brief Construct a new Property Node object
@@ -194,19 +193,5 @@ class PropertyNode {
   P coordinate_y_; /**< y coordinate in the space */
   P coordinate_z_; /**< z coordinate in the space */
 };
-
-template <class N, class P>
-inline std::ostream &operator<<(std::ostream &os, const PropertyNode<N, P> &node) {
-  os << "[" << node.id_node_ << ", " << node.coordinate_x_ << ", " << node.coordinate_y_ << ", " << node.coordinate_z_
-     << "]";
-  return os;
-}
-
-template <class N, class P>
-QDebug operator<<(QDebug os, const PropertyNode<N, P> &node) {
-  os << "[" << node.id_node() << ", " << node.coordinate_x() << ", " << node.coordinate_y() << ", "
-     << node.coordinate_z() << "]";
-  return os.noquote();
-}
 
 #endif  // NODE_TYPE_IMPL_H

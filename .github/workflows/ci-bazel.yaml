@@ -1,0 +1,42 @@
+name: LsDynaToApdl Bazel Continuous Integration
+
+on: [push, pull_request]
+
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Windows-MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          }
+        - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW",
+            os: windows-latest,
+            cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Linux",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++"
+          }
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: build and test
+        run: |
+          bazel build //... -c opt
+          bazel test //... -c opt --test_output=all

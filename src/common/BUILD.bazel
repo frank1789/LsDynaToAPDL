@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "common",
+    srcs = [
+        "src/filemanager.cc",
+        "src/elementproperty.cc"
+    ],
+    hdrs = [
+        "include/filemanager.h",
+        "include/elementproperty.h",
+        "include/finite_element_types.h",
+        "include/common/element_shell.h"
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_gabime_spdlog//:spdlog",
+        "@fmt",
+    ],
+)

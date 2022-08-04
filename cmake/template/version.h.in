@@ -1,0 +1,28 @@
+/**
+ * @file version.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief Application version
+ * @version @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@
+ * @date 2021-11-13
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+
+#ifndef LSDYNA_TO_APDL_CONVERTER_VERSION_H
+#define LSDYNA_TO_APDL_CONVERTER_VERSION_H
+
+#include <fmt/core.h>
+
+#include <string_view>
+
+inline constexpr char kVersionMajor[] = "@VERSION_MAJOR@";
+inline constexpr char kVersionMinor[] = "@VERSION_MINOR@";
+inline constexpr char kVersionPatch[] = "@VERSION_PATCH@";
+inline constexpr char kBuild[] = "@VERSION_SHA1@";
+
+inline constexpr auto compact_version() {
+  return fmt::format("{}.{}.{} build: {}", kVersionMajor, kVersionMinor, kVersionPatch, kBuild);
+}
+
+#endif  // LSDYNA_TO_APDL_CONVERTER_VERSION_H

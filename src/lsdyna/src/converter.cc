@@ -11,28 +11,29 @@
 
 #include "converter.h"
 
-#include <QDebug>
-#include <QFile>
-#include <QMessageBox>
-#include <QMutex>
-#include <QMutexLocker>
-#include <QScopedPointer>
-#include <QTextStream>
+// #include "elementfactory.h"
+// #include "elementproperty.h"
+// #include "logger_tools.h"
+// #include "node.h"
 
-#include "elementfactory.h"
-#include "elementproperty.h"
-#include "logger_tools.h"
-#include "node.h"
+#include <fmt/std.h>
+
+#include <string>
+#include <thread>
+
+#include "filemanager.h"
+#include "lsdyna/lsdyna.h"
 
 namespace syntax {
 namespace lsdyna {
 
-constexpr quint64 kPresetElements{200000};
+void reader_fun(const std::string &filename);
 
-ConverterSyntax::ConverterSyntax(QObject *parent) : QThread(parent) {
-  nodes_.reserve(kPresetElements);
-  elements_.reserve(kPresetElements);
-  parser_ = ElementParser::getInstance();
+ConverterSyntax::ConverterSyntax() :
+    m_logger(spdlog::get(lsdynatoapdl::lsdyna::logger_name.data())) {
+  if (m_logger) {
+    m_logger->debug("initialize converter syntax");
+  }
 }
 
 /**
@@ -44,48 +45,41 @@ ConverterSyntax::ConverterSyntax(QObject *parent) : QThread(parent) {
  * appropriate mode is saved. Otherwise the lines are
  * transparent to the function and the set mode is not changed.
  *
- * @param[in] textline: line of the document to be analyzed.
+ * @param[in] line_text: line of the document to be analyzed.
  */
-void ConverterSyntax::testInputLine(const QString &textline) {
-  if (textline.contains("$")) {
-    doc_section_ = KeywordDyna::Header;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_;
+void ConverterSyntax::testInputLine(const std::string &line_text) {
+  if (line_text.starts_with("$")) {
+    m_current_document_section = KeywordDyna::Header;
   }
-
-  if (textline.contains("*KEYWORD")) {
-    doc_section_ = KeywordDyna::KeyWord;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_;
+  if (line_text.starts_with("*KEYWORD")) {
+    m_current_document_section = KeywordDyna::KeyWord;
   }
-
-  if (textline.contains("*NODE")) {
-    doc_section_ = KeywordDyna::Node;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading node declaration";
+  if (line_text.starts_with("*NODE")) {
+    m_current_document_section = KeywordDyna::Node;
   }
-
-  if (textline.contains("*ELEMENT_SHELL_THICKNESS")) {
-    doc_section_ = KeywordDyna::ElementShell;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading element shell declaration";
+  if (line_text.starts_with("*ELEMENT_SHELL_THICKNESS")) {
+    m_current_document_section = KeywordDyna::ElementShell;
   }
-
-  if (textline.contains("*ELEMENT_SOLID")) {
-    doc_section_ = KeywordDyna::ElementSolid;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading solid element declaration";
+  if (line_text.starts_with("*ELEMENT_SOLID")) {
+    m_current_document_section = KeywordDyna::ElementSolid;
   }
-
-  if (textline.contains("*INITIAL_STRAIN_SOLID")) {
-    doc_section_ = KeywordDyna::InitialStrainSolid;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading intial strain solid declaration";
+  if (line_text.starts_with("*INITIAL_STRAIN_SOLID")) {
+    m_current_document_section = KeywordDyna::InitialStrainSolid;
   }
-
-  if (textline.contains("*INITIAL_STRESS_SHELL")) {
-    doc_section_ = KeywordDyna::InitialStressShell;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading initial stress shell declaration";
+  if (line_text.starts_with("*INITIAL_STRESS_SHELL")) {
+    m_current_document_section = KeywordDyna::InitialStressShell;
+  }
+  if (line_text.starts_with("*END")) {
+    m_current_document_section = KeywordDyna::End;
+  }
+  if (m_logger) {
+    m_logger->debug("parse section \"{}\"", m_current_document_section);
   }
 }
 
-void ConverterSyntax::parseLine(const QString &line) {
+void ConverterSyntax::parseLine(const std::string &line) {
   testInputLine(line);
-  switch (doc_section_) {
+  switch (m_current_document_section) {
     case KeywordDyna::Header:
       break;
 
@@ -93,14 +87,14 @@ void ConverterSyntax::parseLine(const QString &line) {
       break;
 
     case KeywordDyna::Node: {
-      auto node = Node::parseNode(line);
-      nodes_.push_back(node);
+      // auto node = Node::parseNode(line);
+      // nodes_.push_back(node);
     } break;
 
     case KeywordDyna::ElementShell: {
-      parser_->createParser(ShellType::FourNode);
-      auto shell_four = parser_->parseElement<ShellFourNode>(line);
-      elements_.push_back(shell_four);
+      // parser_->createParser(ShellType::FourNode);
+      // auto shell_four = parser_->parseElement<ShellFourNode>(line);
+      // elements_.push_back(shell_four);
     } break;
 
     case KeywordDyna::ElementSolid:
@@ -117,56 +111,63 @@ void ConverterSyntax::parseLine(const QString &line) {
   }
 }
 
-void ConverterSyntax::run() {
-  if (filename_.isEmpty()) {
-    qWarning().noquote() << INFOFILE
-                         << "WARNING - use ConverterSyntax::setInputFile(const "
-                            "QString &filename)";
-    return;
+void ConverterSyntax::parse() {
+  if (!m_is_ready) {
+    if (m_logger) {
+      m_logger->error(
+          "LsDyna parser is not ready or the input file is not valid");
+    }
+    std::exit(1002);
   }
 
-  QMutex mutex;
-  QMutexLocker lock(&mutex);
-  // clang-format off
-  qDebug().noquote() << INFOFILE
-           << "acquires thread" 
-           << QThread::currentThreadId()
-           << "then open file" << filename_;
-  // clang-format on
-
-  // read file
-  QScopedPointer<QFile> file(new QFile(filename_));
-  if (!file->open(QIODevice::ReadOnly)) {
-    qWarning().noquote() << "WARNING - Error while opening file:" << file.data()->errorString();
-    QMessageBox::information(nullptr, QStringLiteral("Error"), file.data()->errorString());
-    return;
+  std::thread reader(&ConverterSyntax::reader, this, m_current_file);
+  if (m_logger) {
+    m_logger->debug("create reader thread {}", reader.get_id());
   }
-
-  QTextStream in(file.data());
-  quint64 counter = 0;
-  while (!in.atEnd()) {
-    QString textline = in.readLine();
-    parseLine(textline);
-    counter++;
+  if (reader.joinable()) {
+    reader.join();
   }
-  file->close();
-}
-
-void ConverterSyntax::setInputFile(const QString &filename) {
-  if (filename != filename_) {
-    filename_ = filename;
+  m_is_ready = false;
+  if (m_logger) {
+    m_logger->debug("thread has finished and reset the ready flag");
   }
 }
 
-QVector<PropertyNode<quint64, qreal>> ConverterSyntax::getNodes() const { return nodes_; }
+void ConverterSyntax::reader(const std::string &filename) {
+  if (std::ifstream ifs(filename.data()); ifs) {
+    std::string line;
+    // read all lines and put them in the set:
+    while (std::getline(ifs, line)) {
+      parseLine(line);
+    }
+  } else {
+    const auto msg = fmt::format("{}: {}", filename, std::strerror(errno));
+    if (m_logger) {
+      m_logger->error(msg);
+    }
+    throw std::runtime_error(msg);
+  }
+}
 
-QVector<ShellFourNode> ConverterSyntax::getElements() const { return elements_; }
+bool ConverterSyntax::isReady() const { return m_is_ready; }
 
-///////////////////////////////////////////////////////////////////////////////
-// Slot
-///////////////////////////////////////////////////////////////////////////////
+void ConverterSyntax::setInputFile(const std::string &filename) {
+  if (filename != m_current_file) {
+    m_current_file = filename;
+  }
+  m_is_ready = !m_current_file.empty() && FileManager::isValidFile(filename);
+  if (m_logger) {
+    m_logger->debug("analyze current file: \"{}\"", filename);
+  }
+}
 
-void ConverterSyntax::filenameChanged(const QString &filename) { setInputFile(filename); }
+// QVector<PropertyNode<uint64_t, double>> ConverterSyntax::getNodes() const {
+//   return nodes_;
+// }
+
+// QVector<ShellFourNode> ConverterSyntax::getElements() const {
+//   return elements_;
+// }
 
 }  // namespace lsdyna
 }  // namespace syntax
