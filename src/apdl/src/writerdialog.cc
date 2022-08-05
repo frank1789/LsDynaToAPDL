@@ -1,10 +1,10 @@
 #include "writerdialog.h"
 
+#include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
 #include <QProgressBar>
 #include <QPushButton>
-#include <QDebug>
 
 #include "logger_tools.h"
 
@@ -21,10 +21,7 @@ inline void safe_delete(T *&pointer) {
 }
 
 WriterDialog::WriterDialog(QWidget *parent) :
-    QDialog(parent),
-    filename_(""),
-    timer_(new QTimer),
-    elapsed_time_(new QTime(0, 0, 0, 0)) {
+    QDialog(parent), filename_(""), timer_(new QTimer), elapsed_time_(new QTime(0, 0, 0, 0)) {
   setWindowFlag(Qt::WindowStaysOnTopHint);
   this->setWindowTitle(QStringLiteral("Processing file"));
   this->setupLayout();
@@ -51,10 +48,7 @@ WriterDialog::WriterDialog(QWidget *parent) :
 }
 
 WriterDialog::WriterDialog(const QString &filename, QWidget *parent) :
-    QDialog(parent),
-    filename_(filename),
-    timer_(new QTimer),
-    elapsed_time_(new QTime(0, 0, 0, 0)) {
+    QDialog(parent), filename_(filename), timer_(new QTimer), elapsed_time_(new QTime(0, 0, 0, 0)) {
   setWindowFlag(Qt::WindowStaysOnTopHint);
   this->setWindowTitle(QStringLiteral("Processing file"));
   this->setupLayout();
@@ -101,10 +95,9 @@ void WriterDialog::setOutputFilename(const QString &filename) {
   }
 }
 
-void WriterDialog::process() { 
-  if(!filename_.isEmpty()) {
-
-  //converter_->run();
+void WriterDialog::process() {
+  if (!filename_.isEmpty()) {
+    // converter_->run();
   } else {
     qWarning().noquote() << INFOFILE << "invalid filename_";
     return;

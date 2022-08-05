@@ -37,11 +37,9 @@ int main(int argc, char *argv[]) {
   MainWindow w;
   QScopedPointer<core::About> about_widget(new core::About);
   QScopedPointer<core::Parser> parser(new core::Parser);
-  // clang-format off
   QObject::connect(&w, &MainWindow::showAboutInformation, about_widget.get(), &core::About::open);
   QObject::connect(&w, &MainWindow::updateProcessedFilename, parser.get(), &core::Parser::elaborateFilename);
 //  QObject::connect(parser.get(), &core::Parser::finished, parser.get(), &w, &MainWindow::triggerNextFile);
-  // clang-format on
   w.show();
 
   return a.exec();

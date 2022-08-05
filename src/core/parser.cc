@@ -19,10 +19,7 @@
 namespace core {
 
 Parser::Parser(QObject* parent) :
-    QObject(parent),
-    filemanager_(new FileManager),
-    converter_(new ConverterDialog),
-    writer_(new apdl::WriterDialog) {
+    QObject(parent), filemanager_(new FileManager), converter_(new ConverterDialog), writer_(new apdl::WriterDialog) {
   QObject::connect(converter_.get(), &ConverterDialog::closed, this, [=]() {
     qDebug().noquote() << INFOFILE << "check for the next file";
     emit finished();
@@ -47,8 +44,7 @@ void Parser::elaborateFilename(const QString& filename) {
 }
 
 void Parser::writeToFile() {
-  qDebug().noquote() << INFOFILE << "ready to write on file:"
-                     << filemanager_->getOutputfile();
+  qDebug().noquote() << INFOFILE << "ready to write on file:" << filemanager_->getOutputfile();
   writer_->setOutputFilename(filemanager_->getOutputfile());
   writer_->exec();
 }

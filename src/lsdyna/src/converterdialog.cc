@@ -32,13 +32,10 @@ ConverterDialog::ConverterDialog(QWidget *parent) :
     emit closed();
   });
 
-  QObject::connect(converter_, &sintax::lsdyna::ConverterSintax::finished, this,
-                   &ConverterDialog::close);
+  QObject::connect(converter_, &sintax::lsdyna::ConverterSintax::finished, this, &ConverterDialog::close);
 
   connect(this, &ConverterDialog::updateProcessedFilename, this,
-          [this](const QString &filename) {
-            converter_->filenameChanged(filename);
-          });
+          [this](const QString &filename) { converter_->filenameChanged(filename); });
 
   timer_->setInterval(kTimeInterval);
   QObject::connect(timer_, &QTimer::timeout, this, [=]() {

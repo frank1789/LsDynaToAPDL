@@ -15,8 +15,7 @@
 
 constexpr quint64 kPresetElements{200000};
 
-sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent)
-    : QThread(parent) {
+sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(parent) {
   nodes_.reserve(kPresetElements);
   elements_.reserve(kPresetElements);
   parser_ = ElementParser::getInstance();
@@ -46,32 +45,27 @@ void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
 
   if (textline.contains("*NODE")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::Node;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_
-                       << "start reading node declaration";
+    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading node declaration";
   }
 
   if (textline.contains("*ELEMENT_SHELL_THICKNESS")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::ElementShell;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_
-                       << "start reading element shell declaration";
+    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading element shell declaration";
   }
 
   if (textline.contains("*ELEMENT_SOLID")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::ElementSolid;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_
-                       << "start reading solid element declaration";
+    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading solid element declaration";
   }
 
   if (textline.contains("*INITIAL_STRAIN_SOLID")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::InitialStrainSolid;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_
-                       << "start reading intial strain solid declaration";
+    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading intial strain solid declaration";
   }
 
   if (textline.contains("*INITIAL_STRESS_SHELL")) {
     doc_section_ = sintax::lsdyna::KeywordDyna::InitialStressShell;
-    qDebug().noquote() << INFOFILE << "set mode" << doc_section_
-                       << "start reading initial stress shell declaration";
+    qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading initial stress shell declaration";
   }
 }
 
@@ -128,10 +122,8 @@ void sintax::lsdyna::ConverterSintax::run() {
   // read file
   QScopedPointer<QFile> file(new QFile(filename_));
   if (!file->open(QIODevice::ReadOnly)) {
-    qWarning().noquote() << "WARNING - Error while opening file:"
-                         << file.data()->errorString();
-    QMessageBox::information(nullptr, QStringLiteral("Error"),
-                             file.data()->errorString());
+    qWarning().noquote() << "WARNING - Error while opening file:" << file.data()->errorString();
+    QMessageBox::information(nullptr, QStringLiteral("Error"), file.data()->errorString());
     return;
   }
 
@@ -145,22 +137,13 @@ void sintax::lsdyna::ConverterSintax::run() {
   file->close();
 }
 
-void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) {
-  filename_ = filename;
-}
+void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) { filename_ = filename; }
 
-QString sintax::lsdyna::ConverterSintax::getFilename() const {
-  return filename_;
-}
+QString sintax::lsdyna::ConverterSintax::getFilename() const { return filename_; }
 
-QVector<PropertyNode<quint64, qreal>>
-sintax::lsdyna::ConverterSintax::getNodes() const {
-  return nodes_;
-}
+QVector<PropertyNode<quint64, qreal>> sintax::lsdyna::ConverterSintax::getNodes() const { return nodes_; }
 
-QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const {
-  return elements_;
-}
+QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const { return elements_; }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Slot

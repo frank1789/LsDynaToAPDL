@@ -8,8 +8,7 @@
 
 namespace APDLsintax {
 
-void Writer(QString pfilename, QVector<NodeProperty> pVectorNode,
-            QVector<ShellProperty> pVectorElementShell);
+void Writer(QString pfilename, QVector<NodeProperty> pVectorNode, QVector<ShellProperty> pVectorElementShell);
 }
 /*
 class ApdlInterpreter

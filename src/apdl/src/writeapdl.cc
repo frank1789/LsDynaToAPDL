@@ -6,9 +6,7 @@
 
 namespace apdl {
 
-Writer::Writer(const QString& filename) : filename_(filename) {
-  ptr_file_.reset(new QFile(filename_));
-}
+Writer::Writer(const QString& filename) : filename_(filename) { ptr_file_.reset(new QFile(filename_)); }
 
 Writer::~Writer() { ptr_file_->close(); }
 

@@ -5,8 +5,7 @@
 
 #include "logger_tools.h"
 
-ShellFourNode::ShellFourNode() noexcept :
-    Element(), node_flag_(false), thickness_flag_(false) {
+ShellFourNode::ShellFourNode() noexcept : Element(), node_flag_(false), thickness_flag_(false) {
   element_id_.reserve(kFourNode);
 }
 
@@ -41,8 +40,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
   // verify captured groups
   QRegularExpressionMatch match = re.match(inputline);
   if (match.hasMatch()) {
-    qDebug().noquote() << INFOFILE << "has match: " << match.hasMatch()
-                       << ", fonud groups:" << re.captureCount();
+    qDebug().noquote() << INFOFILE << "has match: " << match.hasMatch() << ", fonud groups:" << re.captureCount();
     // capture id element
     setId(static_cast<quint64>(match.captured("id").toInt()));
     auto first_node = static_cast<quint64>(match.captured("node1").toInt());
@@ -52,9 +50,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
     setNodes({first_node, second_node, third_node, fourth_node});
     node_flag_ = true;
   } else {
-    qWarning().noquote()
-        << INFOFILE << "WARNING - invalid regex, could be lose information\n\t"
-        << inputline;
+    qWarning().noquote() << INFOFILE << "WARNING - invalid regex, could be lose information\n\t" << inputline;
   }
   // verify second line string element thickeness replicated four times costant
   // for element
@@ -73,9 +69,7 @@ void ShellFourNode::parseElement(const QString &inputline) {
     qDebug().noquote() << INFOFILE << "thickness element:" << getThickness();
     thickness_flag_ = true;
   } else {
-    qWarning().noquote()
-        << INFOFILE << "WARNING - invalid regex, could be lose information\n\t"
-        << inputline;
+    qWarning().noquote() << INFOFILE << "WARNING - invalid regex, could be lose information\n\t" << inputline;
   }
   //  fill vector element then reset the flags
   if (node_flag_ == true && thickness_flag_ == true) {
@@ -104,9 +98,7 @@ qreal ShellFourNode::getThickness() const { return thickness_; }
 
 QVector<quint64> ShellFourNode::getNodesId() const { return element_id_; }
 
-std::unique_ptr<Element> ShellFourNode::clone() {
-  return std::make_unique<ShellFourNode>();
-}
+std::unique_ptr<Element> ShellFourNode::clone() { return std::make_unique<ShellFourNode>(); }
 
 QDebug &operator<<(QDebug &os, const ShellFourNode &s) {
   os << "element:\n\t";

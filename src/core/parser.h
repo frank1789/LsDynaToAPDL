@@ -17,8 +17,8 @@
 #include <QScopedPointer>
 
 #include "converterdialog.h"
-#include "writerdialog.h"
 #include "filemanager.h"
+#include "writerdialog.h"
 
 namespace core {
 

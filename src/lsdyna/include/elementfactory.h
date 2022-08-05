@@ -14,8 +14,7 @@ class alignas(std::max_align_t) ElementFactory {
   std::unique_ptr<Element> createElement(ShellType elem_type);
 
  private:
-  std::unordered_map<ShellType, std::unique_ptr<Element>, std::hash<ShellType>>
-      prototypes_;
+  std::unordered_map<ShellType, std::unique_ptr<Element>, std::hash<ShellType>> prototypes_;
 };
 
 #endif  // ELEMENT_FACTORY_H

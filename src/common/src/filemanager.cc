@@ -7,23 +7,17 @@
 #include <QRegularExpression>
 #include <QScopedPointer>
 #include <QThread>
-#include <QtConcurrent/QtConcurrentRun>
 
 #include "logger_tools.h"
+#include <QtConcurrent/QtConcurrentRun>
 
 FileManager::FileManager(QObject *parent) : QObject(parent) {}
 
-FileManager::~FileManager() {
-  qDebug().noquote() << INFOFILE << "dtor FileManager";
-}
+FileManager::~FileManager() { qDebug().noquote() << INFOFILE << "dtor FileManager"; }
 
-void FileManager::setFilename(const char *filename) {
-  setFilename(QString::fromLatin1(filename));
-}
+void FileManager::setFilename(const char *filename) { setFilename(QString::fromLatin1(filename)); }
 
-void FileManager::setFilename(const std::string &filename) {
-  setFilename(QString::fromStdString(filename));
-}
+void FileManager::setFilename(const std::string &filename) { setFilename(QString::fromStdString(filename)); }
 
 void FileManager::setFilename(const QString &filename) {
   if (isValidFile(filename)) {
@@ -80,8 +74,7 @@ void FileManager::extractFileFeatures(const QString &filename) {
 }
 
 bool FileManager::isValidFile(const QString &filename) {
-  bool file_exists =
-      QFileInfo::exists(filename) && QFileInfo(filename).isFile();
+  bool file_exists = QFileInfo::exists(filename) && QFileInfo(filename).isFile();
   if (file_exists) {
     return true;
   }

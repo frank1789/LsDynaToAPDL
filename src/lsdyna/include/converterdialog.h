@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include <QString>
-#include <QTimer>
 #include <QTime>
+#include <QTimer>
 
 #include "converter.h"
 
@@ -34,7 +34,7 @@ class ConverterDialog : public QDialog {
   void closed();
   void updateProcessedFilename(const QString &filename);
 
-  protected:
+ protected:
   void showEvent(QShowEvent *event) override;
 
  private:
@@ -49,8 +49,8 @@ class ConverterDialog : public QDialog {
   QProgressBar *pbar_{nullptr};
   QPushButton *cancel_btn_{nullptr};
   sintax::lsdyna::ConverterSintax *converter_{nullptr};
-  QTimer* timer_{nullptr};
-  QTime* elapsed_time_{nullptr};
+  QTimer *timer_{nullptr};
+  QTime *elapsed_time_{nullptr};
 };
 
 #endif  // LSDYNA_CONVERTER_DIALOG_H

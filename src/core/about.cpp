@@ -35,8 +35,7 @@ About::About(QWidget *parent) : QDialog(parent) {
   setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
   setFixedSize(720, 480);
   makeLayout();
-  QObject::connect(close_btn_, &QPushButton::clicked, this,
-                   [this]() { close(); });
+  QObject::connect(close_btn_, &QPushButton::clicked, this, [this]() { close(); });
 }
 
 void About::showEvent(QShowEvent *event) {
@@ -92,8 +91,7 @@ QString About::readLicense(const QString &filename) {
 void About::makeLayout() {
   // set image property
   QPixmap icon_image(kIcon);
-  auto scaled_img = icon_image.scaled(120, 120, Qt::KeepAspectRatio,
-                                      Qt::SmoothTransformation);
+  auto scaled_img = icon_image.scaled(120, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
   close_btn_ = new QPushButton(QStringLiteral("close"), this);
   authors_label_ = new QLabel(kAuthor, this);
   project_name_label_ = new QLabel(kProjectName, this);
