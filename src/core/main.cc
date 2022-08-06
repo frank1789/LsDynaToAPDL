@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   QScopedPointer<core::Parser> parser(new core::Parser);
   QObject::connect(&w, &MainWindow::showAboutInformation, about_widget.get(), &core::About::open);
   QObject::connect(&w, &MainWindow::updateProcessedFilename, parser.get(), &core::Parser::elaborateFilename);
-//  QObject::connect(parser.get(), &core::Parser::finished, parser.get(), &w, &MainWindow::triggerNextFile);
+  //  QObject::connect(parser.get(), &core::Parser::finished, parser.get(), &w, &MainWindow::triggerNextFile);
   w.show();
 
   return a.exec();
