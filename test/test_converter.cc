@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 TEST(ConverterSyntax, Keyword) {
-  auto converter = sintax::lsdyna::ConverterSintax();
+  auto converter = syntax::lsdyna::ConverterSyntax();
   EXPECT_NO_THROW(converter.testInputLine("$"));
   EXPECT_NO_THROW(converter.testInputLine("*KEYWORD"));
   EXPECT_NO_THROW(converter.testInputLine("*NODE"));
@@ -12,7 +12,7 @@ TEST(ConverterSyntax, Keyword) {
 }
 
 TEST(ConverterSyntax, Filename) {
-  auto converter = sintax::lsdyna::ConverterSintax();
+  auto converter = syntax::lsdyna::ConverterSyntax();
   converter.filenameChanged("testfile.k");
   EXPECT_EQ(converter.getFilename(), QString("testfile.k"));
 }
@@ -46,7 +46,7 @@ TEST(ConverterSyntax, Node) {
     {"1234676     -82.9492569      201.396851     -31.0835438     0.0     0.0"}
   };
   // clang-format on
-  auto converter = sintax::lsdyna::ConverterSintax();
+  auto converter = syntax::lsdyna::ConverterSyntax();
   for (const auto &line : text_lines) {
     converter.parseLine(line);
   }
@@ -109,7 +109,7 @@ TEST(ConverterSyntax, Shell) {
       4.4648633       4.4648633       4.4648633       4.4648633"},
   };
   // clang-format on
-  auto converter = sintax::lsdyna::ConverterSintax();
+  auto converter = syntax::lsdyna::ConverterSyntax();
   for (const auto &line : text_lines) {
     converter.parseLine(line);
   }

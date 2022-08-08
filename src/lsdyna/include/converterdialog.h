@@ -48,7 +48,7 @@ class ConverterDialog : public QDialog {
   QLabel *label_{nullptr};
   QProgressBar *pbar_{nullptr};
   QPushButton *cancel_btn_{nullptr};
-  sintax::lsdyna::ConverterSintax *converter_{nullptr};
+  syntax::lsdyna::ConverterSyntax *converter_{nullptr};
   QTimer *timer_{nullptr};
   QTime *elapsed_time_{nullptr};
 };
