@@ -1,3 +1,14 @@
+/**
+ * @file converter.h
+ * @author Francesco Argentieri (francesco.argentieri89@gmaol.com)
+ * @brief The ConverterSyntax interpreter of the LS-Dyna format.
+ * @version 0.1
+ * @date 2022-08-08
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #include "converter.h"
 
 #include <QDebug>
@@ -13,16 +24,19 @@
 #include "logger_tools.h"
 #include "node.h"
 
+namespace syntax {
+namespace lsdyna {
+
 constexpr quint64 kPresetElements{200000};
 
-sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(parent) {
+ConverterSyntax::ConverterSyntax(QObject *parent) : QThread(parent) {
   nodes_.reserve(kPresetElements);
   elements_.reserve(kPresetElements);
   parser_ = ElementParser::getInstance();
 }
 
 /**
- * @brief ConverterSintax::setInputLine
+ * @brief ConverterSyntax::setInputLine
  *
  * @details The function scrolls the document reading the
  * line in input and checking if it contains one of the
@@ -32,85 +46,74 @@ sintax::lsdyna::ConverterSintax::ConverterSintax(QObject *parent) : QThread(pare
  *
  * @param[in] textline: line of the document to be analyzed.
  */
-void sintax::lsdyna::ConverterSintax::testInputLine(const QString &textline) {
+void ConverterSyntax::testInputLine(const QString &textline) {
   if (textline.contains("$")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::Header;
+    doc_section_ = KeywordDyna::Header;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_;
   }
 
   if (textline.contains("*KEYWORD")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::KeyWord;
+    doc_section_ = KeywordDyna::KeyWord;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_;
   }
 
   if (textline.contains("*NODE")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::Node;
+    doc_section_ = KeywordDyna::Node;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading node declaration";
   }
 
   if (textline.contains("*ELEMENT_SHELL_THICKNESS")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::ElementShell;
+    doc_section_ = KeywordDyna::ElementShell;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading element shell declaration";
   }
 
   if (textline.contains("*ELEMENT_SOLID")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::ElementSolid;
+    doc_section_ = KeywordDyna::ElementSolid;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading solid element declaration";
   }
 
   if (textline.contains("*INITIAL_STRAIN_SOLID")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::InitialStrainSolid;
+    doc_section_ = KeywordDyna::InitialStrainSolid;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading intial strain solid declaration";
   }
 
   if (textline.contains("*INITIAL_STRESS_SHELL")) {
-    doc_section_ = sintax::lsdyna::KeywordDyna::InitialStressShell;
+    doc_section_ = KeywordDyna::InitialStressShell;
     qDebug().noquote() << INFOFILE << "set mode" << doc_section_ << "start reading initial stress shell declaration";
   }
 }
 
-/**
- * @brief ConverterSintax::test select the read mode by invoking the input Node
- * and Shell classes to interpret the data.
- *
- * @param[in] line: line of the document to be analyzed.
- *
- */
-void sintax::lsdyna::ConverterSintax::parseLine(const QString &line) {
+void ConverterSyntax::parseLine(const QString &line) {
   testInputLine(line);
   switch (doc_section_) {
-    case sintax::lsdyna::KeywordDyna::Header:
-      break;
+    case KeywordDyna::Header : break;
 
-    case sintax::lsdyna::KeywordDyna::KeyWord:
-      break;
+    case KeywordDyna::KeyWord : break;
 
-    case sintax::lsdyna::KeywordDyna::Node: {
+    case KeywordDyna::Node : {
       auto node = Node::parseNode(line);
       nodes_.push_back(node);
-    } break;
+    }
+    break;
 
-    case sintax::lsdyna::KeywordDyna::ElementShell: {
+    case KeywordDyna::ElementShell : {
       parser_->createParser(ShellType::FourNode);
       auto shell_four = parser_->parseElement<ShellFourNode>(line);
       elements_.push_back(shell_four);
-    } break;
+    }
+    break;
 
-    case sintax::lsdyna::KeywordDyna::ElementSolid:
-      break;
+    case KeywordDyna::ElementSolid : break;
 
-    case sintax::lsdyna::KeywordDyna::InitialStrainSolid:
-      break;
+    case KeywordDyna::InitialStrainSolid : break;
 
-    case sintax::lsdyna::KeywordDyna::InitialStressShell:
-      break;
+    case KeywordDyna::InitialStressShell : break;
 
-    case sintax::lsdyna::KeywordDyna::End:
-      break;
+    case KeywordDyna::End : break;
   }
 }
 
-void sintax::lsdyna::ConverterSintax::run() {
+void ConverterSyntax::run() {
   QMutex mutex;
   QMutexLocker lock(&mutex);
   // clang-format off
@@ -137,20 +140,23 @@ void sintax::lsdyna::ConverterSintax::run() {
   file->close();
 }
 
-void sintax::lsdyna::ConverterSintax::setInputFile(const QString &filename) { filename_ = filename; }
+void ConverterSyntax::setInputFile(const QString &filename) { filename_ = filename; }
 
-QString sintax::lsdyna::ConverterSintax::getFilename() const { return filename_; }
+QString ConverterSyntax::getFilename() const { return filename_; }
 
-QVector<PropertyNode<quint64, qreal>> sintax::lsdyna::ConverterSintax::getNodes() const { return nodes_; }
+QVector<PropertyNode<quint64, qreal>> ConverterSyntax::getNodes() const { return nodes_; }
 
-QVector<ShellFourNode> sintax::lsdyna::ConverterSintax::getElements() const { return elements_; }
+QVector<ShellFourNode> ConverterSyntax::getElements() const { return elements_; }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Slot
 ///////////////////////////////////////////////////////////////////////////////
 
-void sintax::lsdyna::ConverterSintax::filenameChanged(const QString &filename) {
+void ConverterSyntax::filenameChanged(const QString &filename) {
   if (filename != filename_) {
     this->setInputFile(filename);
   }
 }
+
+}  // namespace lsdyna
+}  // namespace syntax
