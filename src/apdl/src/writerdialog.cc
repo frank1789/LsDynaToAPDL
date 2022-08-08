@@ -1,3 +1,14 @@
+/**
+ * @file writerdialog.cc
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief UI shows information while writes the output file.
+ * @version 0.1
+ * @date 2022-08-08
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #include "writerdialog.h"
 
 #include <QDebug>
@@ -25,39 +36,12 @@ WriterDialog::WriterDialog(QWidget *parent) :
   setWindowFlag(Qt::WindowStaysOnTopHint);
   this->setWindowTitle(QStringLiteral("Processing file"));
   this->setupLayout();
-  // converter_ = new sintax::lsdyna::ConverterSintax;
-  // converter_->wait();
+  converter_ = new Writer;
+  converter_->wait();
   QObject::connect(cancel_btn_, &QPushButton::clicked, this, [this]() {
     qWarning().noquote() << INFOFILE << "terminate current thread";
-    // converter_->quit();
-    // converter_->wait();
-    timer_->stop();
-    *elapsed_time_ = QTime(0, 0, 0, 0);
-    close();
-    emit closed();
-  });
-
-  // QObject::connect(converter_, &sintax::lsdyna::ConverterSintax::finished, this,
-  //                  &WriterDialog::close);
-
-  timer_->setInterval(kTimeInterval);
-  QObject::connect(timer_, &QTimer::timeout, this, [=]() {
-    *elapsed_time_ = elapsed_time_->addMSecs(kTimeInterval);
-    time_label_->setText(elapsed_time_->toString("hh:mm:ss.zzz"));
-  });
-}
-
-WriterDialog::WriterDialog(const QString &filename, QWidget *parent) :
-    QDialog(parent), filename_(filename), timer_(new QTimer), elapsed_time_(new QTime(0, 0, 0, 0)) {
-  setWindowFlag(Qt::WindowStaysOnTopHint);
-  this->setWindowTitle(QStringLiteral("Processing file"));
-  this->setupLayout();
-  // converter_ = new sintax::lsdyna::ConverterSintax;
-  // converter_->wait();
-  QObject::connect(cancel_btn_, &QPushButton::clicked, this, [this]() {
-    qWarning().noquote() << INFOFILE << "terminate current thread";
-    // converter_->quit();
-    // converter_->wait();
+    converter_->quit();
+    converter_->wait();
     timer_->stop();
     *elapsed_time_ = QTime(0, 0, 0, 0);
     close();
@@ -65,10 +49,8 @@ WriterDialog::WriterDialog(const QString &filename, QWidget *parent) :
   });
 
   timer_->setInterval(kTimeInterval);
-  QObject::connect(timer_, &QTimer::timeout, this, [=]() {
-    *elapsed_time_ = elapsed_time_->addMSecs(kTimeInterval);
-    time_label_->setText(elapsed_time_->toString("hh:mm:ss.zzz"));
-  });
+  connect(converter_, &Writer::finished, converter_, &QObject::deleteLater);
+  connect(converter_, &Writer::finished, this, &WriterDialog::close);
 }
 
 WriterDialog::~WriterDialog() {
@@ -80,11 +62,6 @@ WriterDialog::~WriterDialog() {
   safe_delete(label_);
   safe_delete(pbar_);
   safe_delete(cancel_btn_);
-
-  // stop thread
-  // converter_->quit();
-  // converter_->wait();
-  // safe_delete(converter_);
   safe_delete(elapsed_time_);
   safe_delete(timer_);
 }
@@ -92,22 +69,14 @@ WriterDialog::~WriterDialog() {
 void WriterDialog::setOutputFilename(const QString &filename) {
   if (QString::compare(filename_, filename, Qt::CaseInsensitive) != 0) {
     filename_ = filename;
-  }
-}
-
-void WriterDialog::process() {
-  if (!filename_.isEmpty()) {
-    // converter_->run();
-  } else {
-    qWarning().noquote() << INFOFILE << "invalid filename_";
-    return;
+    emit outputFilenameChanged();
   }
 }
 
 void WriterDialog::showEvent(QShowEvent *event) {
   qDebug().noquote() << INFOFILE << "ui has shown then execute thread";
   timer_->start();
-  // converter_->start();
+  converter_->start();
   Q_UNUSED(event)
 }
 
@@ -129,7 +98,7 @@ void WriterDialog::setupLayout() {
   time_label_ = new QLabel(elapsed_time_->toString("hh:mm:ss.zzz"));
   filename_label_ = new QLabel(filename_);
 
-  // setup progressbar
+  // setup progress-bar
   pbar_ = new QProgressBar;
   pbar_->setMinimum(0);
   pbar_->setMaximum(0);
@@ -145,6 +114,16 @@ void WriterDialog::setupLayout() {
   grid_layot_->addWidget(time_label_, 1, 1, 1, 3);
   grid_layot_->addWidget(pbar_, 2, 0, 1, 5);
   grid_layot_->addWidget(cancel_btn_, 3, 4, 1, 1);
+
+  QObject::connect(timer_, &QTimer::timeout, this, [=]() {
+    *elapsed_time_ = elapsed_time_->addMSecs(kTimeInterval);
+    time_label_->setText(elapsed_time_->toString("hh:mm:ss.zzz"));
+  });
+
+  QObject::connect(this, &WriterDialog::outputFilenameChanged, this, [=]() {
+    filename_label_->setText(filename_);
+    converter_->setFilename(filename_);
+  });
 }
 
 }  // namespace apdl
