@@ -15,10 +15,10 @@
 #ifndef LSDYNA_SINTAX_KEYWORD_H
 #define LSDYNA_SINTAX_KEYWORD_H
 
-namespace sintax {
+namespace syntax {
 namespace lsdyna {
 /**
- * @brief The KeywordDyna enum define keywords in languange LsDyna
+ * @brief The KeywordDyna enum define keywords in language LS-DYNA
  * All keywords are preceded by symbol so it is possible move between
  * different mode to interpret the data.
  *
@@ -36,28 +36,28 @@ enum class KeywordDyna {
 
 inline QDebug operator<<(QDebug os, const KeywordDyna &key) {
   switch (key) {
-    case sintax::lsdyna::KeywordDyna::Header:
+    case KeywordDyna::Header:
       os << QStringLiteral("$");
       break;
-    case sintax::lsdyna::KeywordDyna::KeyWord:
+    case KeywordDyna::KeyWord:
       os << QStringLiteral("KEYWORD");
       break;
-    case sintax::lsdyna::KeywordDyna::Node:
+    case KeywordDyna::Node:
       os << QStringLiteral("NODE");
       break;
-    case sintax::lsdyna::KeywordDyna::ElementShell:
+    case KeywordDyna::ElementShell:
       os << QStringLiteral("ELEMENTSHELL");
       break;
-    case sintax::lsdyna::KeywordDyna::ElementSolid:
+    case KeywordDyna::ElementSolid:
       os << QStringLiteral("ELEMENTSOLID");
       break;
-    case sintax::lsdyna::KeywordDyna::InitialStrainSolid:
+    case KeywordDyna::InitialStrainSolid:
       os << QStringLiteral("INITIALSTRAINSOLID");
       break;
-    case sintax::lsdyna::KeywordDyna::InitialStressShell:
+    case KeywordDyna::InitialStressShell:
       os << QStringLiteral("INITIALSTRESSSHELL");
       break;
-    case sintax::lsdyna::KeywordDyna::End:
+    case KeywordDyna::End:
       os << QStringLiteral("END");
       break;
   }
@@ -65,6 +65,6 @@ inline QDebug operator<<(QDebug os, const KeywordDyna &key) {
 }
 
 }  // namespace lsdyna
-}  // namespace sintax
+}  // namespace syntax
 
 #endif  // LSDYNA_SINTAX_KEYWORD_H

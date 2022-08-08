@@ -20,7 +20,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) :
   setWindowFlag(Qt::WindowStaysOnTopHint);
   this->setWindowTitle(QStringLiteral("Processing file"));
   this->setupLayout();
-  converter_ = new sintax::lsdyna::ConverterSintax;
+  converter_ = new syntax::lsdyna::ConverterSyntax;
   converter_->wait();
   QObject::connect(cancel_btn_, &QPushButton::clicked, this, [this]() {
     qWarning().noquote() << INFOFILE << "terminate current thread";
@@ -32,7 +32,7 @@ ConverterDialog::ConverterDialog(QWidget *parent) :
     emit closed();
   });
 
-  QObject::connect(converter_, &sintax::lsdyna::ConverterSintax::finished, this, &ConverterDialog::close);
+  QObject::connect(converter_, &syntax::lsdyna::ConverterSyntax::finished, this, &ConverterDialog::close);
 
   connect(this, &ConverterDialog::updateProcessedFilename, this,
           [this](const QString &filename) { converter_->filenameChanged(filename); });
