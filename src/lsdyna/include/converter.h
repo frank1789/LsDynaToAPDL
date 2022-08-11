@@ -66,13 +66,6 @@ class ConverterSyntax : public QThread {
   void setInputFile(const QString &filename);
 
   /**
-   * @brief Get the Filename object
-   *
-   * @return QString
-   */
-  [[nodiscard]] QString getFilename() const;
-
-  /**
    * @brief Get the Nodes object
    *
    * @return QVector<PropertyNode<quint64, qreal>>

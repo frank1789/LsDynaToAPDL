@@ -24,4 +24,4 @@ TEST(FileManager, setNewFilename) {
 
 TEST(FileManager, fileSize) { EXPECT_EQ(s_manager.getFilesize(), 5016); }
 
-TEST(FileManager, UpdateName) { EXPECT_EQ(s_manager.getOutputfile(), QStringLiteral("../bin/example_converted.txt")); }
+TEST(FileManager, UpdateName) { EXPECT_EQ(s_manager.getOutputFile(), QStringLiteral("../bin/example_converted.txt")); }

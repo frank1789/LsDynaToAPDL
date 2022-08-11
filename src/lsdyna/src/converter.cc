@@ -86,34 +86,45 @@ void ConverterSyntax::testInputLine(const QString &textline) {
 void ConverterSyntax::parseLine(const QString &line) {
   testInputLine(line);
   switch (doc_section_) {
-    case KeywordDyna::Header : break;
+    case KeywordDyna::Header:
+      break;
 
-    case KeywordDyna::KeyWord : break;
+    case KeywordDyna::KeyWord:
+      break;
 
-    case KeywordDyna::Node : {
+    case KeywordDyna::Node: {
       auto node = Node::parseNode(line);
       nodes_.push_back(node);
-    }
-    break;
+    } break;
 
-    case KeywordDyna::ElementShell : {
+    case KeywordDyna::ElementShell: {
       parser_->createParser(ShellType::FourNode);
       auto shell_four = parser_->parseElement<ShellFourNode>(line);
       elements_.push_back(shell_four);
-    }
-    break;
+    } break;
 
-    case KeywordDyna::ElementSolid : break;
+    case KeywordDyna::ElementSolid:
+      break;
 
-    case KeywordDyna::InitialStrainSolid : break;
+    case KeywordDyna::InitialStrainSolid:
+      break;
 
-    case KeywordDyna::InitialStressShell : break;
+    case KeywordDyna::InitialStressShell:
+      break;
 
-    case KeywordDyna::End : break;
+    case KeywordDyna::End:
+      break;
   }
 }
 
 void ConverterSyntax::run() {
+  if (filename_.isEmpty()) {
+    qWarning().noquote() << INFOFILE
+                         << "WARNING - use ConverterSyntax::setInputFile(const "
+                            "QString &filename)";
+    return;
+  }
+
   QMutex mutex;
   QMutexLocker lock(&mutex);
   // clang-format off
@@ -122,6 +133,7 @@ void ConverterSyntax::run() {
            << QThread::currentThreadId()
            << "then open file" << filename_;
   // clang-format on
+
   // read file
   QScopedPointer<QFile> file(new QFile(filename_));
   if (!file->open(QIODevice::ReadOnly)) {
@@ -140,9 +152,11 @@ void ConverterSyntax::run() {
   file->close();
 }
 
-void ConverterSyntax::setInputFile(const QString &filename) { filename_ = filename; }
-
-QString ConverterSyntax::getFilename() const { return filename_; }
+void ConverterSyntax::setInputFile(const QString &filename) {
+  if (filename != filename_) {
+    filename_ = filename;
+  }
+}
 
 QVector<PropertyNode<quint64, qreal>> ConverterSyntax::getNodes() const { return nodes_; }
 
@@ -152,11 +166,7 @@ QVector<ShellFourNode> ConverterSyntax::getElements() const { return elements_; 
 // Slot
 ///////////////////////////////////////////////////////////////////////////////
 
-void ConverterSyntax::filenameChanged(const QString &filename) {
-  if (filename != filename_) {
-    this->setInputFile(filename);
-  }
-}
+void ConverterSyntax::filenameChanged(const QString &filename) { setInputFile(filename); }
 
 }  // namespace lsdyna
 }  // namespace syntax
