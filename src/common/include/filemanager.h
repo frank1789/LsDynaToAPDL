@@ -6,9 +6,9 @@
 
 /**
  * @brief The FileManager class manages incoming files.
- * @details It allows to extract informations obout files sucha as:
+ * @details It allows to extract informations about files such as:
  * name, extension, size, etc.
- * Furthmore, it generates the name of the output file and checks if it already
+ * Furthermore, it generates the name of the output file and checks if it already
  * exists.
  */
 class FileManager : public QObject {
@@ -18,7 +18,7 @@ class FileManager : public QObject {
   /**
    * @brief Construct a new Manage File object.
    *
-   * @param parent
+   * @param parent QObject pointer to parent
    */
   explicit FileManager(QObject *parent = nullptr);
 
@@ -59,7 +59,7 @@ class FileManager : public QObject {
    *
    * @return QString
    */
-  [[nodiscard]] QString getOutputfile() const;
+  [[nodiscard]] QString getOutputFile() const;
 
   /**
    * @brief Get the file's dimension in byte.
@@ -89,7 +89,7 @@ class FileManager : public QObject {
  private:
   QString complete_filename_{""};
   QString filename_{""};
-  QString new_filename_{""};
+  QString out_filename_{""};
   qint64 file_size_{0};
 };
 

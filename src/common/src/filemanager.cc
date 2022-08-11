@@ -35,15 +35,15 @@ QString FileManager::getFilename() const { return filename_; }
 
 QString FileManager::getCompleteFilename() const { return complete_filename_; }
 
-QString FileManager::getOutputfile() const { return new_filename_; }
+QString FileManager::getOutputFile() const { return out_filename_; }
 
 void FileManager::setNewFilename(const QString &filename) {
   static const QRegularExpression re("(\\.\\w+)");
   static const QString replace = "_converted.txt";
-  new_filename_ = filename;
-  new_filename_.replace(re, replace);
-  emit outputFilenameChanged(new_filename_);
-  qDebug().noquote() << INFOFILE << new_filename_;
+  out_filename_ = filename;
+  out_filename_.replace(re, replace);
+  emit outputFilenameChanged(out_filename_);
+  qDebug().noquote() << INFOFILE << out_filename_;
 }
 
 void FileManager::extractFileFeatures(const QString &filename) {
