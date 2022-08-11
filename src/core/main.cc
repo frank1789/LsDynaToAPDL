@@ -18,7 +18,7 @@
 #include "parser.h"
 #include "version.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
 
   std::cout <<
@@ -35,11 +35,15 @@ int main(int argc, char *argv[]) {
   std::cout << "version " << compact_version().toStdString() << std::endl;
   std::cout << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n\n";
   MainWindow w;
-  QScopedPointer<core::About> about_widget(new core::About);
-  QScopedPointer<core::Parser> parser(new core::Parser);
-  QObject::connect(&w, &MainWindow::showAboutInformation, about_widget.get(), &core::About::open);
-  QObject::connect(&w, &MainWindow::updateProcessedFilename, parser.get(), &core::Parser::elaborateFilename);
-  //  QObject::connect(parser.get(), &core::Parser::finished, parser.get(), &w, &MainWindow::triggerNextFile);
+  core::About about;
+  core::Parser parser;
+  QObject::connect(&w, &MainWindow::showAboutInformation, &about, &core::About::open);
+  QObject::connect(&w, &MainWindow::updatePositionWidget, &parser, &core::Parser::centerDialogWindow);
+  QObject::connect(&w, &MainWindow::updateProcessedFilename, &parser, [&parser, &w](const QString& infile) {
+    w.setDisabled(true);  // set the main window disabled
+    parser.elaborateFilename(infile);
+  });
+  QObject::connect(&parser, &core::Parser::finished, &w, [&w]() { w.setDisabled(false); });
   w.show();
 
   return a.exec();
