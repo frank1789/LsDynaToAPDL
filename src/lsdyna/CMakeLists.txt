@@ -5,7 +5,6 @@ set(LIBRARY_TARGET_NAME "lsdyna")
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/converterdialog.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc
 )
@@ -17,7 +16,6 @@ set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/elementparser.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/converterdialog.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})

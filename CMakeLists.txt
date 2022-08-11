@@ -131,11 +131,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set symbol visibility defaults for all targets.
-set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
-set(CMAKE_VISIBILITY_INLINES_HIDDEN True)
-
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed

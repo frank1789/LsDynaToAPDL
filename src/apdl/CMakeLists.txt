@@ -4,13 +4,11 @@ set(LIBRARY_TARGET_NAME "apdl")
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/writeapdl.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/writerdialog.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/writeapdl.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/writerdialog.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
