@@ -11,7 +11,6 @@
 #include <QString>
 #include <QVector>
 
-#include "converterdialog.h"
 #include "dialog.h"
 #include "filemanager.h"
 
@@ -47,6 +46,8 @@ class MainWindow : public QMainWindow {
   void setPropertyFile(const QString &filename, quint64 dimension);
 
  signals:
+
+  void activateParserDialog();
   void sizeList(const int &size);
 
   void filetoprocess(int index);
@@ -59,8 +60,6 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow *ui;
 
   void closeEvent(QCloseEvent *event);
-
-  QScopedPointer<ConverterDialog> converter_dialog_{nullptr};
   QScopedPointer<FileManager> manager_{nullptr};
   QList<QString> process_files_;
   QScopedPointer<core::Dialog> dial_{nullptr};

@@ -20,7 +20,7 @@
 #include "logger_tools.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), manager_(new FileManager()) {
   ui->setupUi(this);
   ui->Convert->setDisabled(true);
   ui->Preview->setDisabled(true);
@@ -34,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   // instanziate classes to work Lsdyna/APDL
   process_files_.reserve(16);
 
-  manager_.reset(new FileManager());
-  converter_dialog_.reset(new ConverterDialog(this));
   indexlist = 0;
 
   // connect slot
@@ -45,8 +43,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   //          [this](const QString &filename) {
   //            manager_->processedFilename(filename);
   //          });
-  connect(this, &MainWindow::updateProcessedFilename,
-          [this](const QString &filename) { converter_dialog_->changedProcessedFilename(filename); });
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -75,7 +71,7 @@ void MainWindow::on_LoadFile_clicked() {
       fileName += file + " ";
       process_files_.push_back(file);
       ui->lineEdit_original->setText(fileName);
-      ui->lineEdit_converted->setText(manager_->getOutputfile());
+      ui->lineEdit_converted->setText(manager_->getOutputFile());
     }
     // activate button convert
     ui->Convert->setEnabled(true);
@@ -88,10 +84,9 @@ void MainWindow::on_Convert_clicked() {
   foreach (auto current_file, process_files_) {
     manager_->setFilename(current_file);
     ui->lineEdit_original->setText(current_file);
-    ui->lineEdit_converted->setText(manager_->getOutputfile());
+    ui->lineEdit_converted->setText(manager_->getOutputFile());
     ui->dimensionfile->setText(QString::number(manager_->getFilesize()) + QStringLiteral(" byte"));
-    QThread::msleep(500);
-    emit updateProcessedFilename(manager_->getCompleteFilename());
+    emit updateProcessedFilename(current_file);
   }
 }
 
