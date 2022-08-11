@@ -11,12 +11,6 @@ TEST(ConverterSyntax, Keyword) {
   EXPECT_NO_THROW(converter.testInputLine("*ELEMENT_SHELL_THICKNESS"));
 }
 
-TEST(ConverterSyntax, Filename) {
-  auto converter = syntax::lsdyna::ConverterSyntax();
-  converter.filenameChanged("testfile.k");
-  EXPECT_EQ(converter.getFilename(), QString("testfile.k"));
-}
-
 TEST(ConverterSyntax, Node) {
   // clang-format off
   const QStringList text_lines = {
