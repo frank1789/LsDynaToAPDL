@@ -1,59 +1,145 @@
+include(InstallRequiredSystemLibraries)
+
 set(CPACK_PACKAGE_NAME "LsDynaToAPDL")
-set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
+set(CPACK_PACKAGE_CONTACT "Francesco Argentieri <francesco.argentieri89@gmail.com>")
+set(HOMEPAGE "https://github.com/frank1789/LsDynaToAPDL")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "LsDynaToAPDL")
 set(CPACK_PACKAGE_VENDOR "https://github.com/frank1789/LsDynaToAPDL.git")
 set(CPACK_PACKAGE_DESCRIPTION "Application converts LS-Dyna script to Ansys APDL.")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 
-set(CPACK_SOURCE_IGNORE_FILES 
-    ".svn" 
-    ".git"
-    ".chglog" 
-    ".settings" 
-    "${PROJECT_SOURCE_DIR}/build/[a-zA-Z0-9_]+" 
-    "~$" 
-    "${PROJECT_SOURCE_DIR}/.*${PROJECT_PREFIX}"
-    "${PROJECT_SOURCE_DIR}/.*${PROJECT_NAME}"
-    "${PROJECT_SOURCE_DIR}/.*[tT]est"
-    "${PROJECT_SOURCE_DIR}/.*[eE]xample"
-    ".DS_Store"
-)
 
-if(APPLE)
-  configure_file("${LsDynaToApdl_SOURCE_DIR}/LICENSE" "${LsDynaToApdl_BINARY_DIR}/COPYING.txt" @ONLY)
-  set(CPACK_RESOURCE_FILE_LICENSE "${LsDynaToApdl_BINARY_DIR}/COPYING.txt")
-  set(CPACK_PACKAGE_ICON "${LsDynaToApdl_SOURCE_DIR}/Resources/Icon/generic.icns")
-  set(CPACK_BUNDLE_ICON "${CPACK_PACKAGE_ICON}")
+# set human names to exetuables
+set(CPACK_PACKAGE_EXECUTABLES "LsDynaToAPDL" "LsDynaToAPDL")
+set(CPACK_CREATE_DESKTOP_LINKS "LsDynaToAPDL")
+set(CPACK_STRIP_FILES TRUE)
 
-  if(${CMAKE_VERSION} VERSION_GREATER "3.19.0") 
-    # add the codesign options to the package
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/deploy-osx.cmake.in" "${LsDynaToApdl_BINARY_DIR}/deploy-osx.cmake" @ONLY)
-    set(CPACK_PRE_BUILD_SCRIPTS "${LsDynaToApdl_BINARY_DIR}/deploy-osx.cmake")
-  endif()
+if(WIN32 AND NOT UNIX)
+    #--------------------------------------------------------------------------
+    # Windows specific
+    set(CPACK_GENERATOR "STGZ;ZIP")
+    message(STATUS "Package generation - Windows")
+    message(STATUS "   + STGZ                                 YES ")
+    message(STATUS "   + ZIP                                  YES ")
+
+    # NSIS windows installer
+    find_program(NSIS_PATH nsis PATH_SUFFIXES nsis)
+    if(NSIS_PATH)
+        set(CPACK_GENERATOR "${CPACK_GENERATOR};NSIS")
+        message(STATUS "   + NSIS                                 YES ")
+        # Note: There is a bug in NSI that does not handle full unix paths properly. Make
+        # sure there is at least one set of four (4) backlasshes.
+        set(CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME})
+        # Icon of the installer
+        set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\exampleApp.ico")
+        # set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.my-project-home-page.org")
+        # set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.my-personal-home-page.com")
+        set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
+        set(CPACK_NSIS_MODIFY_PATH ON)
+    else()
+        message(STATUS "   + NSIS                                 NO ")
+    endif()
+
+    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\exampleApp.png")
+
+    # Configure file with right path, place the result to PROJECT_BINARY_DIR.
+    # When ${PROJECT_BINARY_DIR}/exampleApp.icon.rc is added to an executable
+    # it will have icon specified in exampleApp.icon.in.rc
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.icon.in.rc
+        ${PROJECT_BINARY_DIR}/exampleApp.icon.rc)
+
+elseif(APPLE)
+    #--------------------------------------------------------------------------
+    # Apple specific
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_DMG_FORMAT "UDBZ")
+    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
+    set(CPACK_SYSTEM_NAME "osx")
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/")
+
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${CPACK_PACKAGE_NAME})
+    set(MACOSX_BUNDLE_BUNDLE_GUI_IDENTIFIER "com.LsDynaToAPDL.LsDynaToAPDL")
+    set(MACOSX_BUNDLE_ICON_FILE ${PROJECT_SOURCE_DIR}/shared/macos/icons/generic.icns)
+    set(MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/shared/macos/MacOSXBundleInfo.plist.in)
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+    
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/shared/icons/generic.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    
+    set(CPACK_DMG_VOLUME_NAME "LsDynaToAPDL")
+    set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/shared/macos/CMakeDMGSetup.scpt") 
+    set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/shared/macos/dmg_background.png")
+    set(CPACK_OSX_PACKAGE_VERSION "10.6") # min package version
 else()
-  set(CPACK_RESOURCE_FILE_LICENSE "${LsDynaToApdl_SOURCE_DIR}/LICENSE")
-endif()
+    #-----------------------------------------------------------------------------
+    # Linux specific
+    set(CPACK_GENERATOR "DEB;TBZ2;TXZ")
+    message(STATUS "Package generation - UNIX")
+    message(STATUS "   + DEB                                  YES ")
+    message(STATUS "   + TBZ2                                 YES ")
+    message(STATUS "   + TXZ                                  YES ")
 
-set(CPACK_PACKAGE_EXECUTABLES "LsDynaToApdl" "LSDynaToAPDL")
-set(CPACK_CREATE_DESKTOP_LINKS "LsDynaToApdl")
+    find_program(RPMBUILD_PATH rpmbuild)
+    if(RPMBUILD_PATH)
+        message(STATUS "   + RPM                                  YES ")
+        set(CPACK_GENERATOR "${CPACK_GENERATOR};RPM")
+        set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+        # set(CPACK_RPM_PACKAGE_REQUIRES "gtkmm30")
+        # exclude folders which clash with default ones
+        set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST
+            ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST}
+            /usr
+            /usr/bin
+            /usr/share
+            /usr/share/applications
+            /usr/share/doc
+            /usr/share/icons
+            /usr/share/icons/hicolor
+            /usr/share/icons/hicolor/256x256
+            /usr/share/icons/hicolor/256x256/apps
+            /usr/share/icons/gnome
+            /usr/share/icons/gnome/256x256
+            /usr/share/icons/gnome/256x256/apps)
+    else()
+        message(STATUS "   + RPM                                  NO ")
+    endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/LsdynatoApdlCPackOptions.cmake.in"
-  "${LsDynaToApdl_BINARY_DIR}/LsdynatoApdlCPackOptions.cmake" @ONLY)
-set(CPACK_PROJECT_CONFIG_FILE
-  "${LsDynaToApdl_BINARY_DIR}/LsdynatoApdlCPackOptions.cmake")
+    # TODO do this better
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_STRICT_PERMISSION TRUE)
+    set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${HOMEPAGE}")
+    # set(CPACK_DEBIAN_COMPRESSION_TYPE "xz")
+    # set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0")
 
-# Should we add extra install rules to make a self-contained bundle, this is
-# usually only required when attempting to create self-contained installers.
-if(APPLE OR WIN32)
-  set(INSTALL_BUNDLE_FILES ON)
-else()
-  option(INSTALL_BUNDLE_FILES "Add install rules to bundle files" OFF)
-endif()
-if(INSTALL_BUNDLE_FILES)
-  install(DIRECTORY "${LsDynaToApdl_LIBRARY_DIR}"
-    DESTINATION ${INSTALL_LIBRARY_DIR})
+
+
+    # Icon and app shortcut for Linux systems
+    # Note: .desktop file must have same name as executable
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.desktop
+        DESTINATION share/applications/
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+        )
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png
+        DESTINATION share/icons/hicolor/256x256/apps/
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+        )
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png
+        DESTINATION share/icons/gnome/256x256/apps/
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+        )
+    # License file
+    install(FILES ${PROJECT_SOURCE_DIR}/license.md
+        DESTINATION share/doc/${PROJECT_NAME}/
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+        RENAME copyright)
+    # set package icon
+    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png")
 endif()
 
 include(CPack)

@@ -162,8 +162,8 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
 
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -pthread -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -pthread -fpic -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral -fstack-protector-strong")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
 
 
 # -----------------------------------------------------------------------------
@@ -227,5 +227,7 @@ message(STATUS "Coverage:\t\t${COVERAGE}")
 message(STATUS "Documentation:\t${BUILD_DOC}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)
+message(STATUS "possible options: Debug Release")
+message(STATUS "set with `cmake -D CMAKE_BUILD_TYPE=Debug ..`")
 message(STATUS "Change a value with: cmake -D<Variable>=<Value> ..")
 message(STATUS)
