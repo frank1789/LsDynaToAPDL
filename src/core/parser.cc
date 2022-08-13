@@ -58,7 +58,7 @@ Parser::Parser(QWidget *parent) :
 
   QObject::connect(converter_.get(), &syntax::lsdyna::ConverterSyntax::finished, this, &Parser::writeToFile);
   QObject::connect(writer_.get(), &apdl::Writer::finished, this, [this]() {
-    qDebug() << INFOFILE << "finished";
+    qDebug().noquote() << INFOFILE << "finished";
     close();
   });
 }
@@ -143,7 +143,7 @@ void Parser::elaborateFilename(const QString &filename) {
 
   converter_->setInputFile(filemanager_->getCompleteFilename());
   writer_->setFilename(filemanager_->getOutputFile());
-  this->exec();
+  QTimer::singleShot(500, this, [this]() { this->exec(); });
 }
 
 void Parser::writeToFile() {
