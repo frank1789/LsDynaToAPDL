@@ -6,7 +6,7 @@ set(HOMEPAGE "https://github.com/frank1789/LsDynaToAPDL")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_PACKAGE_VERSION ${VERSION_SHORT})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "LsDynaToAPDL")
 set(CPACK_PACKAGE_VENDOR "https://github.com/frank1789/LsDynaToAPDL.git")
 set(CPACK_PACKAGE_DESCRIPTION "Application converts LS-Dyna script to Ansys APDL.")
@@ -60,7 +60,7 @@ elseif(APPLE)
     # Apple specific
     set(CPACK_GENERATOR "DragNDrop")
     set(CPACK_DMG_FORMAT "UDBZ")
-    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
+    set(CPACK_DMG_VOLUME_NAME "${CPACK_PACKAGE_NAME}")
     set(CPACK_SYSTEM_NAME "osx")
     set(CPACK_PACKAGING_INSTALL_PREFIX "/")
 
@@ -68,14 +68,14 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_GUI_IDENTIFIER "com.LsDynaToAPDL.LsDynaToAPDL")
     set(MACOSX_BUNDLE_ICON_FILE ${PROJECT_SOURCE_DIR}/shared/macos/icons/generic.icns)
     set(MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/shared/macos/MacOSXBundleInfo.plist.in)
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${VERSION_SHORT}")
     
     set_source_files_properties(${PROJECT_SOURCE_DIR}/shared/icons/generic.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     
     set(CPACK_DMG_VOLUME_NAME "LsDynaToAPDL")
     set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/shared/macos/CMakeDMGSetup.scpt") 
     set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/shared/macos/dmg_background.png")
-    set(CPACK_OSX_PACKAGE_VERSION "10.6") # min package version
+    set(CPACK_OSX_PACKAGE_VERSION "10.10") # min package version
 else()
     #-----------------------------------------------------------------------------
     # Linux specific
