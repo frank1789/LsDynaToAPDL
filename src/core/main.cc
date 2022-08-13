@@ -38,7 +38,6 @@ int main(int argc, char* argv[]) {
   core::About about;
   core::Parser parser;
   QObject::connect(&w, &MainWindow::showAboutInformation, &about, &core::About::open);
-  QObject::connect(&w, &MainWindow::updatePositionWidget, &parser, &core::Parser::centerDialogWindow);
   QObject::connect(&w, &MainWindow::updateProcessedFilename, &parser, [&parser, &w](const QString& infile) {
     w.setDisabled(true);  // set the main window disabled
     parser.elaborateFilename(infile);

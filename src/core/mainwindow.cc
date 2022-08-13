@@ -1,5 +1,5 @@
 /**
- * @file mainwindow.cpp
+ * @file mainwindow.cc
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief The MainWindow gui.
  * @version 0.1
@@ -15,7 +15,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QRegularExpression>
-#include <QThread>
+#include <QTimer>
 
 #include "logger_tools.h"
 #include "ui_mainwindow.h"
@@ -30,22 +30,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   ui->Nodeinfo->setText("Total number node: 0");
   setAcceptDrops(true);
   //  ui->ElemInfo->setText("Total number element shell: 0");
-
-  // instanziate classes to work Lsdyna/APDL
   process_files_.reserve(16);
-
-  indexlist = 0;
-
-  // connect slot
-  // connect(this, &MainWindow::sizeList, manager_.data(),
-  // &ManageFile::setSizelist);
-  //  connect(this, &MainWindow::updateProcessedFilename,
-  //          [this](const QString &filename) {
-  //            manager_->processedFilename(filename);
-  //          });
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+  if (ui != nullptr) {
+    delete ui;
+    ui = nullptr;
+  }
+}
 
 void MainWindow::setnameFileText(const QString &filename) {
   qDebug() << "called";
@@ -76,7 +69,7 @@ void MainWindow::on_LoadFile_clicked() {
     // activate button convert
     ui->Convert->setEnabled(true);
   } else {
-    QMessageBox::warning(this, tr("Warning"), "The document is not load.");
+    QMessageBox::warning(this, tr("Warning"), QStringLiteral("The document is not load."));
   }
 }
 
@@ -86,7 +79,7 @@ void MainWindow::on_Convert_clicked() {
     ui->lineEdit_original->setText(current_file);
     ui->lineEdit_converted->setText(manager_->getOutputFile());
     ui->dimensionfile->setText(QString::number(manager_->getFilesize()) + QStringLiteral(" byte"));
-    emit updateProcessedFilename(current_file);
+    QTimer::singleShot(500, this, [this, current_file]() { emit updateProcessedFilename(current_file); });
   }
 }
 
@@ -125,13 +118,11 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e) {
 }
 
 void MainWindow::dropEvent(QDropEvent *e) {
-  QString filename = {};
   foreach (const QUrl &url, e->mimeData()->urls()) {
-    filename = url.toLocalFile();
+    auto filename = url.toLocalFile();
     qDebug() << INFOFILE << "Dropped a file:" << filename << "(" << process_files_.size() << ")";
     process_files_.push_back(filename);
     emit sizeList(process_files_.size());
   }
   ui->Convert->setDisabled(false);
-  ui->lineEdit_original->setText(filename);
 }

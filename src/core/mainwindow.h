@@ -9,7 +9,6 @@
 #include <QMimeData>
 #include <QScopedPointer>
 #include <QString>
-#include <QVector>
 
 #include "dialog.h"
 #include "filemanager.h"
@@ -46,25 +45,16 @@ class MainWindow : public QMainWindow {
   void setPropertyFile(const QString &filename, quint64 dimension);
 
  signals:
-
   void activateParserDialog();
-  void sizeList(const int &size);
-
-  void filetoprocess(int index);
-
   void updateProcessedFilename(const QString &filename);
-
   void showAboutInformation();
 
  private:
-  Ui::MainWindow *ui;
-
   void closeEvent(QCloseEvent *event);
+
+  Ui::MainWindow *ui{nullptr};
   QScopedPointer<FileManager> manager_{nullptr};
   QList<QString> process_files_;
-  QScopedPointer<core::Dialog> dial_{nullptr};
-
-  int indexlist;
 };
 
 #endif  // MAINWINDOW_H
