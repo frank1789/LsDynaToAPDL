@@ -15,7 +15,7 @@ set(${TARGET_NAME}_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/parser.cc
 )
 

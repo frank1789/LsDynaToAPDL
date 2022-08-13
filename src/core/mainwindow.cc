@@ -122,7 +122,6 @@ void MainWindow::dropEvent(QDropEvent *e) {
     auto filename = url.toLocalFile();
     qDebug() << INFOFILE << "Dropped a file:" << filename << "(" << process_files_.size() << ")";
     process_files_.push_back(filename);
-    emit sizeList(process_files_.size());
   }
   ui->Convert->setDisabled(false);
 }
