@@ -43,6 +43,7 @@ class Parser : public QDialog {
   void writeToFile();
 
  signals:
+  void finished();
 
  protected:
   void showEvent(QShowEvent *event) override;

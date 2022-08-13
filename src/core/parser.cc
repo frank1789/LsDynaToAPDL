@@ -58,8 +58,9 @@ Parser::Parser(QWidget *parent) :
 
   QObject::connect(converter_.get(), &syntax::lsdyna::ConverterSyntax::finished, this, &Parser::writeToFile);
   QObject::connect(writer_.get(), &apdl::Writer::finished, this, [this]() {
-    qDebug().noquote() << INFOFILE << "finished";
+    qDebug().noquote() << INFOFILE << "finished, restore MainWindow";
     close();
+    emit finished();
   });
 }
 
