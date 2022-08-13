@@ -2,7 +2,7 @@
  * @file keywords.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief Useful keywords used in LS-DYNA
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-08-01
  *
  * @copyright Copyright (c) 2022

@@ -2,7 +2,7 @@
  * @file main.cc
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief The main file.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-07-10
  *
  * @copyright Copyright (c) 2022

@@ -2,7 +2,7 @@
  * @file node.cc
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief The node parser.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-08-01
  *
  * @copyright Copyright (c) 2022

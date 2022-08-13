@@ -2,7 +2,7 @@
  * @file converter.h
  * @author Francesco Argentieri (francesco.argentieri89@gmaol.com)
  * @brief The ConverterSyntax interpreter of the LS-Dyna format.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-08-08
  *
  * @copyright Copyright (c) 2022

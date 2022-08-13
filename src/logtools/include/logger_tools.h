@@ -2,7 +2,7 @@
  * @file logger_tools.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief The extend logger tools.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-08-01
  *
  * @copyright Copyright (c) 2022

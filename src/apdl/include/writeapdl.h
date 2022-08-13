@@ -2,7 +2,7 @@
  * @file writeapdl.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief Writer is a class that writes information within APDL syntax.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-08-08
  *
  * @copyright Copyright (c) 2022

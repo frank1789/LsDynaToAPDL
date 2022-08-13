@@ -2,7 +2,7 @@
  * @file about.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief The class show information regarding authors.
- * @version 0.1
+ * @version 0.4.1
  * @date 2022-07-10
  *
  * @copyright Copyright (c) 2022
