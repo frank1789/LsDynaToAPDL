@@ -1,0 +1,65 @@
+{
+  "name": "LsDynaApdl",
+  "description": "an experimental utility",
+  "version": "v0.1.0",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "author": "Francesco Argentieri",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "release": {
+    "branches": [
+      {
+        "name": "+([0-9])?(.{+([0-9]),x}).x"
+      },
+      {
+        "name": "master"
+      },
+      {
+        "name": "main"
+      },
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ]
+  },
+  "files": [
+    "CHANGELOG.md",
+    "package.json"
+  ],
+  "scripts": {
+    "cm": "cz",
+    "release": "semantic-release",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.2",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.7",
+    "@semantic-release/release-notes-generator": "^10.0.3",
+    "commitizen": "^4.2.4",
+    "conventional-changelog-conventionalcommits": "^4.6.1",
+    "git-cz": "^4.9.0",
+    "husky": "^7.0.4",
+    "pinst": "^2.0.0",
+    "semantic-release": "^22.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz",
+      "maxHeaderWidth": 50,
+      "maxLineWidth": 72
+    }
+  }
+}

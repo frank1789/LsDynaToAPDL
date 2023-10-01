@@ -1,0 +1,11 @@
+{
+    "dependencies": [
+        "boost-math",
+        "boost-smart-ptr",
+        "boost-lexical-cast",
+        "boost-algorithm",
+        "fmt",
+        "spdlog",
+        "gtest"
+    ]
+}

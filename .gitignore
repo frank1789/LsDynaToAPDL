@@ -108,3 +108,11 @@ CTestTestfile.cmake
 _deps
 
 *build*
+
+
+node_modules
+
+.idea/*
+.vscode/*
+
+vcpkg_installed
