@@ -1,0 +1,10 @@
+cc_test(
+    name = "test",
+    srcs = glob(["**/*.cc"]),
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        "//src/common",
+        "//src/lsdyna",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
