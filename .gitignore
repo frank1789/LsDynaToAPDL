@@ -107,7 +107,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-*build*
+build
 
 
 node_modules
@@ -116,3 +116,17 @@ node_modules
 .vscode/*
 
 vcpkg_installed
+
+# gitignore template for Bazel build system
+# website: https://bazel.build/
+
+# Ignore all bazel-* symlinks. There is no full list since this can change
+# based on the name of the directory bazel is cloned into.
+/bazel-*
+
+# Directories for the Bazel IntelliJ plugin containing the generated
+# IntelliJ project files and plugin configuration. Seperate directories are
+# for the IntelliJ, Android Studio and CLion versions of the plugin.
+/.ijwb/
+/.aswb/
+/.clwb/
