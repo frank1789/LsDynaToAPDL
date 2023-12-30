@@ -1,0 +1,45 @@
+workspace(name = "LsdynaToApdl")
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# http_archive(
+#    name = "rules_foreign_cc",
+#    strip_prefix = "rules_foreign_cc-master",
+#    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/master.zip",
+# )
+
+# load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
+
+# rules_foreign_cc_dependencies()
+
+git_repository(
+    name = "fmt",
+    commit = "4cbf6182eab53a7d8f48646e1ba8f015d38ebbd9",
+    patch_cmds = [
+        "mv support/bazel/.bazelversion .bazelversion",
+        "mv support/bazel/BUILD.bazel BUILD.bazel",
+        "mv support/bazel/WORKSPACE.bazel WORKSPACE.bazel",
+    ],
+    # Windows-related patch commands are only needed in the case MSYS2 is not installed.
+    # More details about the installation process of MSYS2 on Windows systems can be found here:
+    # https://docs.bazel.build/versions/main/install-windows.html#installing-compilers-and-language-runtimes
+    # Even if MSYS2 is installed the Windows related patch commands can still be used.
+    patch_cmds_win = [
+        "Move-Item -Path support/bazel/.bazelversion -Destination .bazelversion",
+        "Move-Item -Path support/bazel/BUILD.bazel -Destination BUILD.bazel",
+        "Move-Item -Path support/bazel/WORKSPACE.bazel -Destination WORKSPACE.bazel",
+    ],
+    remote = "https://github.com/fmtlib/fmt",
+)
+
+
+http_archive(
+  name = "com_google_googletest",
+  urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
+  sha256 = "755f9a39bc7205f5a0c428e920ddad092c33c8a1b46997def3f1d4a82aded6e1",
+  strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+)
+
+load("//thirdparty:third_party_repositories.bzl", "include_third_party_repositories")
+include_third_party_repositories()
