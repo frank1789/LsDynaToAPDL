@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
 set(LIBRARY_TARGET_NAME "apdl")
 
 # List of (source) library files.
@@ -24,7 +23,7 @@ endif()
 # Set two minimum target properties for the library.
 # See https://cmake.org/cmake/help/latest/command/set_target_properties.html
 # Properties are: 1) Library version number 2) list of corresponding public headers
-set_target_properties(${LIBRARY_TARGET_NAME} PROPERTIES VERSION       ${${PROJECT_NAME}_VERSION}
+set_target_properties(${LIBRARY_TARGET_NAME} PROPERTIES VERSION       ${CMAKE_PROJECT_VERSION}
                                                         PUBLIC_HEADER "${${LIBRARY_TARGET_NAME}_HDR}"
                                                         BUNDLE true
 )

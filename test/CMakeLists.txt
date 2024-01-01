@@ -3,10 +3,6 @@ set(PREFIX_TESTS "Test")
 
 
 file(GLOB_RECURSE ${PREFIX_TESTS}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/**.test.cc)
-message("${${PREFIX_TESTS}_SRCS}")
-#add_executable(log test_logger.cc)
-#add_executable(femtypes test_femtypes.cc)
-#add_executable(converter test_converter.cc)
 
 
 add_executable(${PREFIX_TESTS}FileManager ${${PREFIX_TESTS}_SRCS})

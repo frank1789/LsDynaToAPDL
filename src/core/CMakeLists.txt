@@ -1,22 +1,22 @@
-cmake_minimum_required(VERSION 3.16)
+
 set(TARGET_NAME "core")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
 
 set(${TARGET_NAME}_HEADERS
   ${CMAKE_CURRENT_SOURCE_DIR}/about.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/parser.h
+ # ${CMAKE_CURRENT_SOURCE_DIR}/dialog.h
+ # ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
+ # ${CMAKE_CURRENT_SOURCE_DIR}/version.h
+ ${CMAKE_CURRENT_SOURCE_DIR}/parser.h
 )
 
 set(${TARGET_NAME}_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
+  #${CMAKE_CURRENT_SOURCE_DIR}/about.cpp
+ # ${CMAKE_CURRENT_SOURCE_DIR}/dialog.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/parser.cc
+ # ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cc
+ ${CMAKE_CURRENT_SOURCE_DIR}/parser.cc
 )
 
 set(${TARGET_NAME}_UIFORM
@@ -25,7 +25,7 @@ set(${TARGET_NAME}_UIFORM
 )
 
 file(GLOB_RECURSE ${TARGET_NAME}_QRC ${PROJECT_SOURCE_DIR}/**/*.qrc)
-qt5_add_resources(${TARGET_NAME}_RESOURCES ${${TARGET_NAME}_QRC})
+#qt5_add_resources(${TARGET_NAME}_RESOURCES ${${TARGET_NAME}_QRC})
 
 set(ICON_RESOURCE "")
 if(WIN32) # windows icon resource file, provided from /packaging directory
@@ -36,7 +36,7 @@ endif()
 
 
 
-add_executable(${NAME_PROJECT} MACOSX_BUNDLE
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE
   ${ICON_RESOURCE}
   ${${TARGET_NAME}_SOURCES}
   ${${TARGET_NAME}_HEADERS}
@@ -44,19 +44,14 @@ add_executable(${NAME_PROJECT} MACOSX_BUNDLE
   ${${TARGET_NAME}_RESOURCES}
 )
 
-target_include_directories(${NAME_PROJECT} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries (${NAME_PROJECT} 
-  PRIVATE 
+target_link_libraries(${PROJECT_NAME} PRIVATE 
   Threads::Threads
-  Qt5::Core 
-  Qt5::Widgets 
-  Qt5::Concurrent 
-  lsdyna 
-  common 
-  apdl
+  fmt::fmt
+  spdlog::spdlog
+  ${PROJECT_NAME}::lsdyna 
+  ${PROJECT_NAME}::common 
+  #apdl
 )
-
-target_compile_options(${NAME_PROJECT} PRIVATE -c -fPIC -fstack-protector-strong)
 
 if(APPLE)
     set_target_properties(${NAME_PROJECT} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "LsDynaToAPDL")

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+
 
 # -----------------------------------------------------------------------------
 # load cmake module
@@ -24,6 +24,7 @@ install(FILES ${${LIBRARY_TARGET_NAME}_HDR}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}")
 
 target_compile_options(${LIBRARY_TARGET_NAME} INTERFACE)
+target_link_libraries(${LIBRARY_TARGET_NAME} INTERFACE spdlog::spdlog)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)

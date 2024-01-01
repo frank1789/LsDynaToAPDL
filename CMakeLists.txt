@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.27)
 project(LsDynaToApdl LANGUAGES CXX C VERSION 0.0.0)
-set(NAME_PROJECT "LsDynaToApdl")
-set(CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
+
+# append additional scripts
+list(APPEND CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
 
 include(GNUInstallDirs)
 
@@ -48,35 +49,23 @@ endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static" ON)
+option(COVERAGE "" OFF)
+
+
 # -----------------------------------------------------------------------------
 # load cmake module
 # -----------------------------------------------------------------------------
-include( GitVersion )
-include(cmake/googletest.cmake)
-set(${PROJECT_VERSION_MAJOR} "${VERSION_MAJOR}")
-set(${PROJECT_VERSION_MINOR} "${VERSION_MINOR}")
-set(${PROJECT_VERSION_PATCH} "${VERSION_PATCH}")
-
-
-# -----------------------------------------------------------------------------
-# Scripting
-# -----------------------------------------------------------------------------
-# include(cmake/sol2.cmake)
-# fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
-# find_package(Lua 5 REQUIRED)
-# include_directories(${LUA_INCLUDE_DIR})
+include(GitVersion)
+set(CMAKE_PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} CACHE STATIC "" FORCE)
 
 
 # Build test related commands
 option(BUILD_TESTING "Create tests using CMake" OFF)
-if(BUILD_TESTING)
-  # -----------------------------------------------------------------------------
-  # Google test
-  # -----------------------------------------------------------------------------
-  fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
-  
+if(BUILD_TESTING)  
   enable_testing()
-  add_definitions(-D QT_NO_DEBUG_OUTPUT)
+  find_package(GTest CONFIG REQUIRED)
+  include(GoogleTest)
 
   # -----------------------------------------------------------------------------
   # Code coverage
@@ -116,7 +105,6 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
         message(STATUS "Setting build type to 'Release' as none was specified.")
         set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE "Release")
-        add_definitions(-D QT_NO_DEBUG_OUTPUT)
     endif()
 endif()
 
@@ -133,37 +121,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
-# Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-
-# -----------------------------------------------------------------------------
-# Library and Dependecies
-# -----------------------------------------------------------------------------
-# Find the Qt library
-if(APPLE AND EXISTS /usr/local/opt/qt5)
-  list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
-endif()
-
-find_package(Qt5 COMPONENTS Core Concurrent REQUIRED)
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt5 COMPONENTS Network REQUIRED)
-
-if(${Qt5_FOUND})
-  message(STATUS "Found Qt 5")
-else(${Qt5_FOUND})
-  message(FATAL_ERROR "Could not locate Qt.")
-endif(${Qt5_FOUND})
 
 # Find PThread Library
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
+# -----------------------------------------------------------------------------
+# Additional libraries
+# -----------------------------------------------------------------------------
+find_package(spdlog CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
 
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
 
 
 # -----------------------------------------------------------------------------
@@ -197,20 +168,20 @@ endif()
 # -----------------------------------------------------------------------------
 add_subdirectory(src)
 if(BUILD_TESTING)
-    add_subdirectory(test)
+  add_subdirectory(test)
 endif()
 
 
-include(InstallBasicPackageFiles)
-install_basic_package_files(${PROJECT_NAME}
-                            VERSION ${${PROJECT_NAME}_VERSION}
-                            COMPATIBILITY AnyNewerVersion
-                            VARS_PREFIX ${PROJECT_NAME}
-                            NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+#include(InstallBasicPackageFiles)
+#install_basic_package_files(${PROJECT_NAME}
+#                            VERSION ${${PROJECT_NAME}_VERSION}
+#                            COMPATIBILITY AnyNewerVersion
+#                            VARS_PREFIX ${PROJECT_NAME}
+#                            NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 # Add the uninstall target
-include(AddUninstallTarget)
+#include(AddUninstallTarget)
 
-include(LsDynatoApdlCPack)
+#include(LsDynatoApdlCPack)
 
 # ----------------------------------------------------------------------------
 # display status message for important variables
