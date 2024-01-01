@@ -26,15 +26,22 @@ Dialog::Dialog(QWidget *parent) : QDialog(parent) {
   psm_linedt_.reset(new QLineEdit());
 
   // connect button
-  QObject::connect(ok_btn_.get(), &QPushButton::clicked, this, &Dialog::accepted);
-  QObject::connect(cancel_btn_.get(), &QPushButton::clicked, this, &Dialog::rejected);
+  QObject::connect(ok_btn_.get(), &QPushButton::clicked, this,
+                   &Dialog::accepted);
+  QObject::connect(cancel_btn_.get(), &QPushButton::clicked, this,
+                   &Dialog::rejected);
 
-  QObject::connect(add_field_btn_.get(), &QPushButton::clicked, this, &Dialog::addUserDefinedField);
+  QObject::connect(add_field_btn_.get(), &QPushButton::clicked, this,
+                   &Dialog::addUserDefinedField);
 
-  QObject::connect(mat_linedt_.get(), &QLineEdit::textChanged, this, &Dialog::onMaterialTextChanged);
-  QObject::connect(ym_linedt_.get(), &QLineEdit::textChanged, this, &Dialog::onYoungModulTextChanged);
-  QObject::connect(sh_linedt_.get(), &QLineEdit::textChanged, this, &Dialog::onShearModulTextChanged);
-  QObject::connect(psm_linedt_.get(), &QLineEdit::textChanged, this, &Dialog::onPoissonTextChanged);
+  QObject::connect(mat_linedt_.get(), &QLineEdit::textChanged, this,
+                   &Dialog::onMaterialTextChanged);
+  QObject::connect(ym_linedt_.get(), &QLineEdit::textChanged, this,
+                   &Dialog::onYoungModulTextChanged);
+  QObject::connect(sh_linedt_.get(), &QLineEdit::textChanged, this,
+                   &Dialog::onShearModulTextChanged);
+  QObject::connect(psm_linedt_.get(), &QLineEdit::textChanged, this,
+                   &Dialog::onPoissonTextChanged);
 
   addFixedField();
 
@@ -90,7 +97,8 @@ void Dialog::onShearModulTextChanged(const QString &value) {
 }
 
 void Dialog::onPoissonTextChanged(const QString &value) {
-  psm_linedt_->setValidator(setFloatNumberValidator(R"((\+?\-?[0-9]\d+\.[0-9]\d+))"));
+  psm_linedt_->setValidator(
+      setFloatNumberValidator(R"((\+?\-?[0-9]\d+\.[0-9]\d+))"));
   if (psm_linedt_->hasAcceptableInput()) {
     qDebug() << value;
   }

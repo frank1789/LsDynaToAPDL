@@ -18,7 +18,7 @@
  *  - Float Data type:
  *      - thickness.
  *
- * @tparam N: type for elments IDs
+ * @tparam N: type for elements IDs
  * @tparam EN: type for node IDs
  * @tparam T: type for element's thickness
  * @tparam size: sets the number of nodes of the element

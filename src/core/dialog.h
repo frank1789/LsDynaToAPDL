@@ -19,7 +19,8 @@ QT_END_NAMESPACE
 class UserDefinedParameters {
  public:
   explicit UserDefinedParameters() noexcept = default;
-  explicit UserDefinedParameters(const QString &name, const QString &value) : name_(name), value_(value){};
+  explicit UserDefinedParameters(const QString &name, const QString &value) :
+      name_(name), value_(value){};
 
   UserDefinedParameters(const UserDefinedParameters &o);
   UserDefinedParameters(UserDefinedParameters &&o);
@@ -58,7 +59,8 @@ class Dialog : public QDialog {
   void onPoissonTextChanged(const QString &value);
 
  protected:
-  auto setFloatNumberValidator(const QString &value_range = R"(([0-9]\d+\.[0-9]\d+))");
+  auto setFloatNumberValidator(
+      const QString &value_range = R"(([0-9]\d+\.[0-9]\d+))");
  private slots:
 
   void accepted();

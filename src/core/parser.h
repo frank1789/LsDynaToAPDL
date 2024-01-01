@@ -10,65 +10,30 @@
  *
  */
 
-#ifndef LSDYNA_TO_APDL_PARSER_H
-#define LSDYNA_TO_APDL_PARSER_H
+#ifndef LSDYNA_TO_APDL_CORE_PARSER_H
+#define LSDYNA_TO_APDL_CORE_PARSER_H
 
-#include <QDialog>
-#include <QScopedPointer>
+#include <memory>
 
 #include "converter.h"
 #include "filemanager.h"
-#include "writeapdl.h"
 
-QT_BEGIN_NAMESPACE
-class QGridLayout;
-class QProgressBar;
-class QLabel;
-class QPushButton;
-class QTime;
-class QTimer;
-QT_END_NAMESPACE
+namespace lsdynatoapdl {
 
-namespace core {
-
-class Parser : public QDialog {
-  Q_OBJECT
-
+class Parser {
  public:
-  explicit Parser(QWidget *parent = nullptr);
-  ~Parser() override;
+ explicit Parser();
+  // void elaborateFilename(const std::filesystem::path &filename);
+  // void writeToFile();
 
- public slots:
-  void elaborateFilename(const QString &filename);
-  void writeToFile();
-
- signals:
-  void finished();
-
- protected:
-  void showEvent(QShowEvent *event) override;
-  void closeEvent(QCloseEvent *event) override;
+  // void finished();
+  void elaborate();
 
  private:
-  QScopedPointer<FileManager> filemanager_{nullptr};
-  QScopedPointer<syntax::lsdyna::ConverterSyntax> converter_{nullptr};
-  QScopedPointer<apdl::Writer> writer_{nullptr};
-
-  void setupLayout();
-  QGridLayout *grid_layot_{nullptr};
-  QLabel *in_file_label_{nullptr};
-  QLabel *out_file_label_{nullptr};
-  QLabel *in_filename_label_{nullptr};
-  QLabel *out_filename_label_{nullptr};
-  QLabel *elapsedtime_label_{nullptr};
-  QLabel *time_label_{nullptr};
-  QLabel *label_{nullptr};
-  QProgressBar *pbar_{nullptr};
-  QPushButton *cancel_btn_{nullptr};
-  QTimer *timer_{nullptr};
-  QTime *elapsed_time_{nullptr};
+ std::unique_ptr<FileManager> m_filehandler{nullptr};
+  std::unique_ptr<syntax::lsdyna::ConverterSyntax> m_converter{nullptr};
 };
 
-}  // namespace core
+}  // namespace lsdynatoapdl
 
-#endif  // LSDYNA_TO_APDL_PARSER_H
+#endif  // LSDYNA_TO_APDL_CORE_PARSER_H

@@ -1,7 +1,7 @@
 /**
  * @file converter.h
- * @author Francesco Argentieri (francesco.argentieri89@gmaol.com)
- * @brief The ConverterSyntax interpreter of the LS-Dyna format.
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief The ConverterSyntax interpreter of the LsDyna format.
  * @version 0.4.1
  * @date 2022-08-08
  *
@@ -9,90 +9,88 @@
  *
  */
 
-#ifndef LSDYNA_COVERTER_SINTAX_H
-#define LSDYNA_COVERTER_SINTAX_H
+#ifndef LSDYNA_CONVERTER_SYNTAX_H
+#define LSDYNA_CONVERTER_SYNTAX_H
 
-#include <QObject>
-#include <QString>
-#include <QThread>
-#include <QVector>
+#include <string>
 
-#include "elementparser.h"
 #include "keywords.h"
 
 namespace syntax {
 namespace lsdyna {
 
 /**
- * @brief The ConverterSyntax class interpreter of the LS-Dyna format, reads the
+ * @brief The ConverterSyntax class interpreter of the LsDyna format, reads the
  * sections of the document by checking that they correspond to the parts of
  * interest, leaves the specific operation when the header in the document
  * changes.
  */
-class ConverterSyntax : public QThread {
-  Q_OBJECT
+class ConverterSyntax {
  public:
   /**
    * @brief Construct a new ConverterSyntax object
    *
    */
-  explicit ConverterSyntax(QObject *parent = nullptr);
+  explicit ConverterSyntax() = default;
 
   /**
    * @brief Destroy the ConverterSyntax object
    *
    */
-  ~ConverterSyntax() override = default;
-
-  /**
-   * @brief Checks the current string, if match with a LS-DYNA's keywords.
-   *
-   * @param line QString holds text
-   */
-  void testInputLine(const QString &line);
-
-  /**
-   * @brief Extract values from the current string.
-   *
-   * @param line QString holds text
-   */
-  void parseLine(const QString &line);
+  ~ConverterSyntax() = default;
 
   /**
    * @brief Set the Input File object
    *
-   * @param filename QString holds the entire path to file.
+   * @param filename std::string holds the entire path to file.
    */
-  void setInputFile(const QString &filename);
+  void setInputFile(const std::string &filename);
 
-  /**
-   * @brief Get the Nodes object
-   *
-   * @return QVector<PropertyNode<quint64, qreal>>
-   */
-  [[nodiscard]] QVector<PropertyNode<quint64, qreal>> getNodes() const;
+  void parse();
 
-  /**
-   * @brief Get the Elements object
-   *
-   * @return QVector<ShellFourNode>
-   */
-  [[nodiscard]] QVector<ShellFourNode> getElements() const;
-
-  void run() override;
-
- public slots:
-  void filenameChanged(const QString &filename);
+  [[nodiscard]] bool isReady() const;
 
  private:
-  KeywordDyna doc_section_{};
-  QString filename_{};
-  QVector<PropertyNode<quint64, qreal>> nodes_{};
-  QVector<ShellFourNode> elements_{};
-  QSharedPointer<ElementParser> parser_{nullptr};
+  /**
+   * @brief Checks the current string, if match with a LsDyna keywords.
+   *
+   * @param line std::string holds text
+   */
+  void testInputLine(const std::string &line);
+
+  /**
+   * @brief Extract values from the current string.
+   *
+   * @param line std::string holds text
+   */
+  void parseLine(const std::string &line);
+
+  void reader(const std::string &filename);
+
+  // /**
+  //  * @brief Get the Nodes object
+  //  *
+  //  * @return QVector<PropertyNode<uint64_t, double>>
+  //  */
+  // [[nodiscard]] QVector<PropertyNode<uint64_t, double>> getNodes() const;
+
+  // /**
+  //  * @brief Get the Elements object
+  //  *
+  //  * @return QVector<ShellFourNode>
+  //  */
+  // [[nodiscard]] QVector<ShellFourNode> getElements() const;
+
+ private:
+  KeywordDyna m_current_document_section{KeywordDyna::Header};
+  std::string m_current_file{""};
+  bool m_is_ready{false};
+  //   QVector<PropertyNode<uint64_t, double>> nodes_{};
+  //   QVector<ShellFourNode> elements_{};
+  //   QSharedPointer<ElementParser> parser_{nullptr};
 };
 
 }  // namespace lsdyna
 }  // namespace syntax
 
-#endif  // LSDYNA_COVERTER_SINTAX_H
+#endif  // LSDYNA_CONVERTER_SYNTAX_H

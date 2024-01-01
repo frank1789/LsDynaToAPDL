@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
 
   void setnameFileText(const QString &filename);
 
-  void setPropertyFile(const QString &filename, quint64 dimension);
+  void setPropertyFile(const QString &filename, uint64_t dimension);
 
  signals:
   void activateParserDialog();

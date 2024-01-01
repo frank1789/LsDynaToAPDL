@@ -4,29 +4,27 @@
 #include <initializer_list>
 #include <memory>
 
-#include <QString>
-#include <QVector>
 
 class alignas(std::max_align_t) Element {
  public:
   virtual ~Element() = 0;
 
-  virtual std::unique_ptr<Element> clone() = 0;
+//   virtual std::unique_ptr<Element> clone() = 0;
 
-  virtual void setId(quint64 id) = 0;
-  virtual void setNodes(std::initializer_list<quint64> const &li) = 0;
-  virtual void setThickness(qreal thickness) = 0;
+//   virtual void setId(uint64_t id) = 0;
+//   virtual void setNodes(std::initializer_list<uint64_t> const &li) = 0;
+//   virtual void setThickness(double thickness) = 0;
 
-  [[nodiscard]] virtual quint64 getId() const = 0;
-  [[nodiscard]] virtual qreal getThickness() const = 0;
-  [[nodiscard]] virtual QVector<quint64> getNodesId() const = 0;
+//   [[nodiscard]] virtual uint64_t getId() const = 0;
+//   [[nodiscard]] virtual double getThickness() const = 0;
+//   [[nodiscard]] virtual QVector<uint64_t> getNodesId() const = 0;
 
-  virtual void parseElement(const QString &inputline) = 0;
+//   virtual void parseElement(const QString &inputline) = 0;
 
- protected:
-  QVector<quint64> element_id_;
-  quint64 id_;
-  qreal thickness_;
+//  protected:
+//   QVector<uint64_t> element_id_;
+//   uint64_t id_;
+//   double thickness_;
 };
 
 #endif  // GENERIC_ELEMENT_H

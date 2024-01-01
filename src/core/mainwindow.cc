@@ -20,7 +20,8 @@
 #include "logger_tools.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), manager_(new FileManager()) {
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent), ui(new Ui::MainWindow), manager_(new FileManager()) {
   ui->setupUi(this);
   ui->Convert->setDisabled(true);
   ui->Preview->setDisabled(true);
@@ -50,14 +51,15 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   QApplication::quit();
 }
 
-void MainWindow::setPropertyFile(const QString &filename, quint64 dimension) {
+void MainWindow::setPropertyFile(const QString &filename, uint64_t dimension) {
   ui->information_file->setText("Process file: " + filename);
   ui->dimensionfile->setText("Dimension: " + QString::number(dimension));
 }
 
 void MainWindow::on_LoadFile_clicked() {
   qDebug() << "Open file dialog";
-  QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"), "", tr("All files (*.k *.txt)"));
+  QStringList fileNames = QFileDialog::getOpenFileNames(
+      this, tr("Open file"), "", tr("All files (*.k *.txt)"));
   if (!fileNames.isEmpty()) {
     QString fileName;
     foreach (auto file, fileNames) {
@@ -69,7 +71,8 @@ void MainWindow::on_LoadFile_clicked() {
     // activate button convert
     ui->Convert->setEnabled(true);
   } else {
-    QMessageBox::warning(this, tr("Warning"), QStringLiteral("The document is not load."));
+    QMessageBox::warning(this, tr("Warning"),
+                         QStringLiteral("The document is not load."));
   }
 }
 
@@ -78,8 +81,11 @@ void MainWindow::on_Convert_clicked() {
     manager_->setFilename(current_file);
     ui->lineEdit_original->setText(current_file);
     ui->lineEdit_converted->setText(manager_->getOutputFile());
-    ui->dimensionfile->setText(QString::number(manager_->getFilesize()) + QStringLiteral(" byte"));
-    QTimer::singleShot(500, this, [this, current_file]() { emit updateProcessedFilename(current_file); });
+    ui->dimensionfile->setText(QString::number(manager_->getFilesize()) +
+                               QStringLiteral(" byte"));
+    QTimer::singleShot(500, this, [this, current_file]() {
+      emit updateProcessedFilename(current_file);
+    });
   }
 }
 
@@ -109,7 +115,9 @@ void MainWindow::on_Exit_released() {
   QApplication::quit();
 }
 
-void MainWindow::on_actionInformazioni_triggered() { emit showAboutInformation(); }
+void MainWindow::on_actionInformazioni_triggered() {
+  emit showAboutInformation();
+}
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e) {
   if (e->mimeData()->hasUrls()) {
@@ -120,7 +128,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e) {
 void MainWindow::dropEvent(QDropEvent *e) {
   foreach (const QUrl &url, e->mimeData()->urls()) {
     auto filename = url.toLocalFile();
-    qDebug() << INFOFILE << "Dropped a file:" << filename << "(" << process_files_.size() << ")";
+    qDebug() << INFOFILE << "Dropped a file:" << filename << "("
+             << process_files_.size() << ")";
     process_files_.push_back(filename);
   }
   ui->Convert->setDisabled(false);

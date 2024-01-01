@@ -21,7 +21,8 @@ namespace apdl {
 
 Writer::Writer(QObject *parent) : QThread(parent) { wait(); }
 
-Writer::Writer(const QString &filename, QObject *parent) : QThread(parent), filename_(filename) {
+Writer::Writer(const QString &filename, QObject *parent) :
+    QThread(parent), filename_(filename) {
   wait();
   ptr_file_.reset(new QFile(filename_));
 }
@@ -43,7 +44,9 @@ void Writer::run() {
       ptr_file_->close();
     }
   } else {
-    qWarning().noquote() << INFOFILE << "invalid or empty filename, please use setFilename(const QString &filename)";
+    qWarning().noquote() << INFOFILE
+                         << "invalid or empty filename, please use "
+                            "setFilename(const QString &filename)";
     quit();
   }
 }

@@ -9,20 +9,23 @@
  *
  */
 
+#include <cstdlib>
 #include <iostream>
+#include <memory>
 
-#include <QApplication>
-
-#include "about.h"
-#include "mainwindow.h"
+// #include "logger_tools.h"
 #include "parser.h"
 #include "version.h"
 
-int main(int argc, char* argv[]) {
-  QApplication a(argc, argv);
+#include <spdlog/spdlog.h>
 
-  std::cout <<
-      R"( 
+int main(int argc, char* argv[]) {
+  try {
+    // auto logger = std::make_unique<LoggerManager>();
+    // logger->initialize();
+    spdlog::enable_backtrace(32);
+    std::cout <<
+        R"( 
    _       _____ _____                 _______                      _ _  
   | |     / ____|  __ \               |__   __|     /\             | | | 
   | |    | (___ | |  | |_   _ _ __   __ _| | ___   /  \   _ __   __| | | 
@@ -32,18 +35,20 @@ int main(int argc, char* argv[]) {
                         __/ |                           | |              
                        |___/                            |_|              
  )" << std::endl;
-  std::cout << "version " << compact_version().toStdString() << std::endl;
-  std::cout << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n\n";
-  MainWindow w;
-  core::About about;
-  core::Parser parser;
-  QObject::connect(&w, &MainWindow::showAboutInformation, &about, &core::About::open);
-  QObject::connect(&w, &MainWindow::updateProcessedFilename, &parser, [&parser, &w](const QString& infile) {
-    w.setDisabled(true);  // set the main window disabled
-    parser.elaborateFilename(infile);
-  });
-  QObject::connect(&parser, &core::Parser::finished, &w, [&w]() { w.setDisabled(false); });
-  w.show();
+    std::cout << "version " << compact_version() << "\n";
+    std::cout << "author: "
+              << "Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
 
-  return a.exec();
+    spdlog::info("hello world!");
+
+    auto parser = std::make_unique<lsdynatoapdl::Parser>();
+    // auto writer = std::make_unique<lsdynatoapdl::Writer>();
+    parser->elaborate();
+
+    // logger->shutdown();
+  } catch (const std::exception& ex) {
+    spdlog::dump_backtrace();
+    spdlog::error("{}", ex.what());
+  }
+  return EXIT_SUCCESS;
 }

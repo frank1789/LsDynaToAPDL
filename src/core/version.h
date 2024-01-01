@@ -2,7 +2,7 @@
  * @file version.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief Application version
- * @version @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@
+ * @version 0.1.0
  * @date 2021-11-13
  *
  * @copyright Copyright (c) 2021
@@ -16,10 +16,10 @@
 
 #include <string_view>
 
-inline constexpr char kVersionMajor[] = "@VERSION_MAJOR@";
-inline constexpr char kVersionMinor[] = "@VERSION_MINOR@";
-inline constexpr char kVersionPatch[] = "@VERSION_PATCH@";
-inline constexpr char kBuild[] = "@VERSION_SHA1@";
+inline constexpr char kVersionMajor[] = "0";
+inline constexpr char kVersionMinor[] = "1";
+inline constexpr char kVersionPatch[] = "0";
+inline constexpr char kBuild[] = "2084bd3";
 
 inline constexpr auto compact_version() {
   return fmt::format("{}.{}.{} build: {}", kVersionMajor, kVersionMinor, kVersionPatch, kBuild);

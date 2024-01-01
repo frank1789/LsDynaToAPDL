@@ -1,7 +1,7 @@
 /**
  * @file keywords.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
- * @brief Useful keywords used in LS-DYNA
+ * @brief Useful keywords used in LsDyna
  * @version 0.4.1
  * @date 2022-08-01
  *
@@ -9,16 +9,16 @@
  *
  */
 
-#include <QDebug>
-#include <QString>
+#ifndef LSDYNA_SYNTAX_KEYWORDS_H
+#define LSDYNA_SYNTAX_KEYWORDS_H
 
-#ifndef LSDYNA_SINTAX_KEYWORD_H
-#define LSDYNA_SINTAX_KEYWORD_H
+#include <fmt/core.h>
+#include <fmt/format.h>
 
 namespace syntax {
 namespace lsdyna {
 /**
- * @brief The KeywordDyna enum define keywords in language LS-DYNA
+ * @brief The KeywordDyna enum define keywords in language LsDyna
  * All keywords are preceded by symbol so it is possible move between
  * different mode to interpret the data.
  *
@@ -34,37 +34,45 @@ enum class KeywordDyna {
   End                 /**< end document. */
 };
 
-inline QDebug operator<<(QDebug os, const KeywordDyna &key) {
-  switch (key) {
-    case KeywordDyna::Header:
-      os << QStringLiteral("$");
-      break;
-    case KeywordDyna::KeyWord:
-      os << QStringLiteral("KEYWORD");
-      break;
-    case KeywordDyna::Node:
-      os << QStringLiteral("NODE");
-      break;
-    case KeywordDyna::ElementShell:
-      os << QStringLiteral("ELEMENTSHELL");
-      break;
-    case KeywordDyna::ElementSolid:
-      os << QStringLiteral("ELEMENTSOLID");
-      break;
-    case KeywordDyna::InitialStrainSolid:
-      os << QStringLiteral("INITIALSTRAINSOLID");
-      break;
-    case KeywordDyna::InitialStressShell:
-      os << QStringLiteral("INITIALSTRESSSHELL");
-      break;
-    case KeywordDyna::End:
-      os << QStringLiteral("END");
-      break;
-  }
-  return os;
-}
-
 }  // namespace lsdyna
 }  // namespace syntax
 
-#endif  // LSDYNA_SINTAX_KEYWORD_H
+template <>
+struct fmt::formatter<syntax::lsdyna::KeywordDyna> : formatter<string_view> {
+  // parse is inherited from formatter<string_view>.
+
+  auto format(syntax::lsdyna::KeywordDyna key,
+              format_context& ctx) const {
+    string_view name{};
+    using dyna = syntax::lsdyna::KeywordDyna;
+    switch (key) {
+      case dyna::Header:
+        name = "$";
+        break;
+      case dyna::KeyWord:
+        name = "KEYWORD";
+        break;
+      case dyna::Node:
+        name = "NODE";
+        break;
+      case dyna::ElementShell:
+        name = "ELEMENTSHELL";
+        break;
+      case dyna::ElementSolid:
+        name = "ELEMENTSOLID";
+        break;
+      case dyna::InitialStrainSolid:
+        name = "INITIALSTRAINSOLID";
+        break;
+      case dyna::InitialStressShell:
+        name = "INITIALSTRESSSHELL";
+        break;
+      case dyna::End:
+        name = "END";
+        break;
+    }
+    return formatter<string_view>::format(name, ctx);
+  }
+};
+
+#endif  // LSDYNA_SYNTAX_KEYWORDS_H
