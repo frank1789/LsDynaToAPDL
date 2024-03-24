@@ -54,7 +54,8 @@ struct LoggerManager {
 
     // or you can even set multi_sink logger as default logger
     spdlog::set_default_logger(std::make_shared<spdlog::logger>(
-        "general", spdlog::sinks_init_list({console_sink, file_sink})));
+        "default", spdlog::sinks_init_list({console_sink, file_sink})));
+        //spdlog::register_logger(spdlog::get("default"));
 
     //logger.enable_backtrace(32);
   }

@@ -19,10 +19,12 @@ set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
 )
 
-add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
+add_library(${LIBRARY_TARGET_NAME} STATIC ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
 add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
 target_link_libraries(${LIBRARY_TARGET_NAME} 
-  PRIVATE 
+  PRIVATE
+  fmt::fmt
+  spdlog::spdlog
   ${PROJECT_NAME}::common
   ${PROJECT_NAME}::logtools
 )

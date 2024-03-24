@@ -3,12 +3,13 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 cc_library(
     name = "logtools",
     hdrs = [
-        "include/logger_tools.h"
+        "include/logtools/logger_tools.h"
     ],
-    includes = ["include"],
+    includes = ["logtools/include"],
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_gabime_spdlog//:spdlog",
         "@fmt",
     ],
+    strip_include_prefix="include"
 )
