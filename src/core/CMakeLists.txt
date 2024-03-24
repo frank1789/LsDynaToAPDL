@@ -49,8 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   fmt::fmt
   spdlog::spdlog
   ${PROJECT_NAME}::lsdyna 
-  ${PROJECT_NAME}::common 
-  #apdl
+  ${PROJECT_NAME}::common
 )
 
 if(APPLE)

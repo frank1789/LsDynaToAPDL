@@ -16,7 +16,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 // #endif
 #include <spdlog/async.h>
-#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
@@ -45,13 +45,11 @@
 struct LoggerManager {
   void initialize() {
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    // console_sink->set_pattern("%^[%Y-%m-%d %H:%M:%S.%e] %v%$");
-    console_sink->set_level(spdlog::level::trace);
+    console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%P][%^%l%$] %v");
+    console_sink->set_level(spdlog::level::warn);
 
-    const std::size_t max_size = 10 * 1024 * 1024;
-    const std::size_t max_files = 10;
-    auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("/Users/francesco/Documents/Projects/LsDynaToAPDL/tmplog.txt", max_size, max_files);
-    //    file_sink->set_pattern("%^[%Y-%m-%d %H:%M:%S.%e] [%@] %v%$");
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("/Users/francesco/Documents/Projects/LsDynaToAPDL/tmplog.txt");
+    file_sink->set_pattern("%^[%Y-%m-%d %H:%M:%S.%e][%P][%l] %v");
     file_sink->set_level(spdlog::level::trace);
     spdlog::sinks_init_list sink_list = {file_sink, console_sink};
     spdlog::logger logger("multi_sink", sink_list.begin(), sink_list.end());
@@ -61,11 +59,7 @@ struct LoggerManager {
     spdlog::set_default_logger(std::make_shared<spdlog::logger>(
         "general", spdlog::sinks_init_list({console_sink, file_sink})));
 
-    // logger.flush_on(spdlog::level::off);
     logger.enable_backtrace(32);
-
-    logger.dump_backtrace();
-    spdlog::info("hello");
   }
 
   void shutdown() { spdlog::shutdown(); }

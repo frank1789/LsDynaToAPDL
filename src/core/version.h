@@ -19,7 +19,7 @@
 inline constexpr char kVersionMajor[] = "0";
 inline constexpr char kVersionMinor[] = "1";
 inline constexpr char kVersionPatch[] = "0";
-inline constexpr char kBuild[] = "2084bd3";
+inline constexpr char kBuild[] = "9bb698e";
 
 inline constexpr auto compact_version() {
   return fmt::format("{}.{}.{} build: {}", kVersionMajor, kVersionMinor, kVersionPatch, kBuild);

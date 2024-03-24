@@ -17,6 +17,7 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         ":core",
+        "//src/logtools",
         "@fmt",
     ],
 )

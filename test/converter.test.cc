@@ -27,7 +27,7 @@ protected:
 
 TEST_F(ConverterSyntaxFixtureTests, CheckReadiness) {
   EXPECT_FALSE(converter.isReady());
-  converter.setInputFile("bin/example.k");
+  converter.setInputFile("/Users/francesco/Documents/Projects/LsDynaToAPDL/test/example.k");
   EXPECT_TRUE(converter.isReady());
 }
 

@@ -7,35 +7,46 @@
     },
     "configurePresets": [
         {
-            "name": "default",
+            "name": "ninja-default",
             "hidden": true,
-            "displayName": "Default Config",
-            "description": "Default build using Ninja generator",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_TARGET_ARCHITECTURE": "x64",
-                "VCPKG_CRT_LINKAGE": "dynamic",
-                "VCPKG_LIBRARY_LINKAGE": "dynamic",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
             }
         },
         {
-            "name": "ninja-multi",
-            "inherits": "default",
-            "displayName": "Ninja Multi-Config",
-            "description": "Default build using Ninja Multi-Config generator",
-            "generator": "Ninja Multi-Config"
+            "name": "xcode-default",
+            "hidden": true,
+            "generator": "Xcode",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "VCPKG_TARGET_ARCHITECTURE": "x64",
+                "VCPKG_CRT_LINKAGE": "dynamic",
+                "VCPKG_LIBRARY_LINKAGE":"dynamic"
+            },
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            }
         },
         {
             "name": "x64-windows-debug",
-            "inherits": "default",
-            "displayName": "Windows debug configuration",
-            "description": "This build is only available on Windows",
+            "inherits": "ninja-default",
+            "displayName": "Windows x64 debug configuration",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTING": "ON"
             },
             "condition": {
                 "type": "equals",
@@ -44,12 +55,12 @@
             }
         },
         {
-            "name": "x64-windows-reldebinfo",
-            "inherits": "default",
-            "displayName": "Windows release with debug info configuration",
-            "description": "This build is only available on Windows",
+            "name": "x64-windows-release--with-debug-info",
+            "inherits": "ninja-default",
+            "displayName": "Windows x64 release with debug info configuration",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "BUILD_TESTING": "ON"
             },
             "condition": {
                 "type": "equals",
@@ -59,7 +70,7 @@
         },
         {
             "name": "x64-windows-release",
-            "inherits": "default",
+            "inherits": "ninja-default",
             "displayName": "Windows release configuration",
             "description": "This build is only available on Windows",
             "cacheVariables": {
@@ -73,60 +84,9 @@
             }
         },
         {
-            "name": "xcode-debug",
-            "inherits": "default",
-            "displayName": "Xcode Debug",
-            "description": "Xcode debug",
-            "generator": "Xcode",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "BUILD_TESTING": "ON",
-                "VCPKG_TARGET_TRIPLET": "x64-osx-dynamic"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-release",
-            "inherits": "default",
-            "displayName": "Xcode Release",
-            "description": "",
-            "generator": "Xcode",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "VCPKG_TARGET_TRIPLET": "x64-osx"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-release-debug-info",
-            "inherits": "default",
-            "displayName": "Xcode Release Debug Info",
-            "description": "",
-            "generator": "Xcode",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "VCPKG_TARGET_TRIPLET": "x64-osx"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "ninja-debug",
-            "inherits": "default",
-            "displayName": "Ninja Debug",
-            "description": "Ninja debug",
-            "generator": "Ninja",
+            "name": "ninja-macos-debug",
+            "inherits": "ninja-default",
+            "displayName": "MacOS ninja Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "ON",
@@ -139,28 +99,9 @@
             }
         },
         {
-            "name": "ninja-release",
-            "inherits": "default",
-            "displayName": "Ninja Release",
-            "description": "",
-            "generator": "Ninja",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "BUILD_TESTING": "ON",
-                "VCPKG_TARGET_TRIPLET": "x64-osx-dynamic"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "ninja-release-debug-info",
-            "inherits": "default",
-            "displayName": "Ninja Release Debug Info",
-            "description": "",
-            "generator": "Ninja",
+            "name": "ninja-macos-release-with-debug-info",
+            "inherits": "ninja-default",
+            "displayName": "MacOS ninja Release with Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "BUILD_TESTING": "ON",
@@ -173,10 +114,14 @@
             }
         },
         {
-            "name": "gcc-macos",
-            "inherits": "default",
-            "displayName": "MacOS configuration",
-            "description": "This build is only available on Windows",
+            "name": "ninja-macos-release",
+            "inherits": "ninja-default",
+            "displayName": "MacOS ninja Release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_TESTING": "ON",
+                "VCPKG_TARGET_TRIPLET": "x64-osx"
+            },
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -184,10 +129,9 @@
             }
         },
         {
-            "name": "gcc-linux-debug",
-            "inherits": "default",
-            "displayName": "Linux Debug configuration",
-            "description": "This build is only available on Linux",
+            "name": "xcode-macos-debug",
+            "inherits": "xcode-default",
+            "displayName": "MacOS Xcode Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "ON",
@@ -196,14 +140,13 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "linux"
+                "rhs": "Darwin"
             }
         },
         {
-            "name": "gcc-linux-reldebinfo",
-            "inherits": "default",
-            "displayName": "Linux Release With Debug Info configuration",
-            "description": "This build is only available on Linux",
+            "name": "xcode-macos-release-with-debug-info",
+            "inherits": "xcode-default",
+            "displayName": "MacOS Xcode Release with Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "BUILD_TESTING": "ON",
@@ -212,14 +155,13 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "linux"
+                "rhs": "Darwin"
             }
         },
         {
-            "name": "gcc-linux-release",
-            "inherits": "default",
-            "displayName": "Linux release configuration",
-            "description": "This build is only available on Linux",
+            "name": "xcode-macos-release",
+            "inherits": "xcode-default",
+            "displayName": "MacOS Xcode Release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "BUILD_TESTING": "ON",
@@ -228,34 +170,53 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "linux"
+                "rhs": "Darwin"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "LsDynaToApdl-Debug",
-            "description": "",
+            "name": "xcode-lsdynatoapld-debug",
             "displayName": "LsDynaToApdl Debug",
-            "configurePreset": "xcode-debug"
+            "configurePreset": "xcode-macos-debug"
         },
         {
-            "name": "LsDynaToApdl-Release",
-            "description": "",
+            "name": "xcode-lsdynatoapld-release-with-debug-info",
+            "displayName": "LsDynaToApdl Release With Debug Info",
+            "configurePreset": "xcode-macos-release-with-debug-info"
+        },
+        {
+            "name": "xcode-lsdynatoapld-release",
             "displayName": "LsDynaToApdl Release",
-            "configurePreset": "xcode-release"
+            "configurePreset": "xcode-macos-release"
+        },
+        {
+            "name": "ninja-lsdynatoapld-debug",
+            "displayName": "LsDynaToApdl Debug",
+            "configurePreset": "ninja-macos-debug"
+        },
+        {
+            "name": "ninja-lsdynatoapld-release-with-debug-info",
+            "displayName": "LsDynaToApdl Release With Debug Info",
+            "configurePreset": "ninja-macos-release-with-debug-info"
+        },
+        {
+            "name": "ninja-lsdynatoapld-release",
+            "displayName": "LsDynaToApdl Release",
+            "configurePreset": "ninja-macos-release"
         }
     ],
     "testPresets": [
         {
             "name": "default",
-            "configurePreset": "default",
+            "hidden": true,
             "output": {
                 "outputOnFailure": true
             },
             "execution": {
                 "noTestsAction": "error",
-                "stopOnFailure": true
+                "stopOnFailure": true,
+                "scheduleRandom": true
             }
         }
     ]

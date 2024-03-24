@@ -9,20 +9,20 @@
  *
  */
 
+#include <spdlog/spdlog.h>
+
 #include <cstdlib>
 #include <iostream>
 #include <memory>
 
-// #include "logger_tools.h"
+#include "logger_tools.h"
 #include "parser.h"
 #include "version.h"
 
-#include <spdlog/spdlog.h>
-
 int main(int argc, char* argv[]) {
   try {
-    // auto logger = std::make_unique<LoggerManager>();
-    // logger->initialize();
+    auto logger = std::make_unique<LoggerManager>();
+    logger->initialize();
     spdlog::enable_backtrace(32);
     std::cout <<
         R"( 
@@ -39,16 +39,17 @@ int main(int argc, char* argv[]) {
     std::cout << "author: "
               << "Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
 
-    spdlog::info("hello world!");
+    spdlog::debug("hello world!");
 
     auto parser = std::make_unique<lsdynatoapdl::Parser>();
     // auto writer = std::make_unique<lsdynatoapdl::Writer>();
     parser->elaborate();
 
-    // logger->shutdown();
+    logger->shutdown();
   } catch (const std::exception& ex) {
     spdlog::dump_backtrace();
     spdlog::error("{}", ex.what());
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
