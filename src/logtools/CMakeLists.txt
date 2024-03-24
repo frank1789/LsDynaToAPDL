@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # load cmake module
 # -----------------------------------------------------------------------------
-set(LIBRARY_TARGET_NAME "logger")
+set(LIBRARY_TARGET_NAME "logtools")
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR

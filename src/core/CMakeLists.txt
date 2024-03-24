@@ -50,6 +50,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   spdlog::spdlog
   ${PROJECT_NAME}::lsdyna 
   ${PROJECT_NAME}::common
+  ${PROJECT_NAME}::logtools
 )
 
 if(APPLE)

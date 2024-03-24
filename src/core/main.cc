@@ -21,9 +21,7 @@
 
 int main(int argc, char* argv[]) {
   try {
-    auto logger = std::make_unique<LoggerManager>();
-    logger->initialize();
-    spdlog::enable_backtrace(32);
+    LoggerManager::initialize();
     std::cout <<
         R"( 
    _       _____ _____                 _______                      _ _  
@@ -39,16 +37,14 @@ int main(int argc, char* argv[]) {
     std::cout << "author: "
               << "Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
 
-    spdlog::debug("hello world!");
-
     auto parser = std::make_unique<lsdynatoapdl::Parser>();
     // auto writer = std::make_unique<lsdynatoapdl::Writer>();
     parser->elaborate();
-
-    logger->shutdown();
+    LoggerManager::shutdown();
   } catch (const std::exception& ex) {
     spdlog::dump_backtrace();
     spdlog::error("{}", ex.what());
+    LoggerManager::shutdown();
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

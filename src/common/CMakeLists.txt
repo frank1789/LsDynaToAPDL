@@ -18,7 +18,12 @@ set(${LIBRARY_TARGET_NAME}_HDR
 
 add_library(${LIBRARY_TARGET_NAME} SHARED ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
 add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
-target_link_libraries(${LIBRARY_TARGET_NAME} PRIVATE spdlog::spdlog fmt::fmt ${PROJECT_NAME}::logger)
+target_link_libraries(${LIBRARY_TARGET_NAME} 
+  PRIVATE 
+  fmt::fmt 
+  ${PROJECT_NAME}::logtools
+)
+
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   if(COVERAGE)
     target_link_libraries(${LIBRARY_TARGET_NAME} coverage)

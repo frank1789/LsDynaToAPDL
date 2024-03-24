@@ -3,27 +3,28 @@ set(LIBRARY_TARGET_NAME "lsdyna")
 
 # List of (source) library files.
 set(${LIBRARY_TARGET_NAME}_SRC
- ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
-${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
- ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc
- ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
 )
 
 # List of (header) library files.
 set(${LIBRARY_TARGET_NAME}_HDR
   ${CMAKE_CURRENT_SOURCE_DIR}/include/node.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/elementfactory.h
- ${CMAKE_CURRENT_SOURCE_DIR}/include/elementparser.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementparser.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
 )
 
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
 add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
-target_link_libraries(${LIBRARY_TARGET_NAME} PRIVATE 
-  spdlog::spdlog 
+target_link_libraries(${LIBRARY_TARGET_NAME} 
+  PRIVATE 
   ${PROJECT_NAME}::common
+  ${PROJECT_NAME}::logtools
 )
 
 # Set two minimum target properties for the library.
