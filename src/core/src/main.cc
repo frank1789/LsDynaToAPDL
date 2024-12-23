@@ -16,8 +16,8 @@
 #include <memory>
 
 #include "apdl/writeapdl.h"
-#include "logtools/logger_tools.h"
 #include "core/parser.h"
+#include "logtools/logger_tools.h"
 
 int main(int argc, char* argv[]) {
   try {
@@ -33,7 +33,8 @@ int main(int argc, char* argv[]) {
                         __/ |                           | |              
                        |___/                            |_|              
  )" << std::endl;
-    std::cout << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
+    std::cout
+        << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
 
     auto parser = std::make_unique<lsdynatoapdl::Parser>();
     // auto writer = std::make_unique<lsdynatoapdl::Writer>();

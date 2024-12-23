@@ -33,7 +33,7 @@ Workbench.
 At present, the software only recognizes and manages nodes and shell-type
 elements both in read from Lsdyna format and in write in APDL format. It is
 also noted that the *shell* writing elements are of the type: **SHELL181**
-is hardcoded. The other sections are currently ignored.
+is hard-coded. The other sections are currently ignored.
 
 ## Conttibuting
 

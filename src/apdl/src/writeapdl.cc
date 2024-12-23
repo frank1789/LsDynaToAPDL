@@ -1,4 +1,4 @@
-/**
+/*
  * @file writeapdl.cc
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
  * @brief Writer is a class that writes information within APDL syntax.
@@ -10,6 +10,8 @@
  */
 
 #include "apdl/writeapdl.h"
+
+#include <spdlog/spdlog.h>
 
 namespace lsdynatoapdl {
 namespace apdl {

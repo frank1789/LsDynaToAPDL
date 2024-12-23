@@ -1,8 +1,8 @@
-#include "filemanager.h"
-
 #include <gtest/gtest.h>
 
 #include <filesystem>
+
+#include "common/file_manager.hh"
 
 #ifdef TEST_FILE_PATH
 const auto BasePath = std::filesystem::path{TEST_FILE_PATH};
@@ -66,7 +66,8 @@ TEST_F(FileMangerFixtureTests, VerifyExistFileStaticMethod) {
 }
 
 TEST_F(FileMangerFixtureTests, VerifyExitFileDoesNotExist) {
-  EXPECT_EXIT(filemanager.setInputFilename("death.txt"), testing::ExitedWithCode(2), "");
+  EXPECT_EXIT(filemanager.setInputFilename("death.txt"),
+              testing::ExitedWithCode(2), "");
 }
 
 // TEST(FileManager, VerifySetNewFilename) {
@@ -85,5 +86,7 @@ TEST_F(FileMangerFixtureTests, GetTheFileSize) {
 }
 
 TEST_F(FileMangerFixtureTests, GetOutputFilename) {
-  EXPECT_EQ(filemanager.getOutputFilename(), std::string("example_converted.txt")) << filemanager;
+  EXPECT_EQ(filemanager.getOutputFilename(),
+            std::string("example_converted.txt"))
+      << filemanager;
 }

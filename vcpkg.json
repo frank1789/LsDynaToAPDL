@@ -2,7 +2,6 @@
     "dependencies": [
         "fmt",
         "spdlog",
-        "xsimd",
         "gtest",
         "gflags"
     ]

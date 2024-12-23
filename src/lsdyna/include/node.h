@@ -28,14 +28,12 @@ struct Node : public AbstractGeometricEntity, public GeometricEntity<Node> {
   double z{};
 };
 
-
-
 std::ostream& operator<<(std::ostream& os, const Node& node);
 
 std::istream& operator>>(std::istream& is, Node& node);
 
 }  // namespace lsdyna
-}  // namespace syntax 
+}  // namespace syntax
 
 template <>
 struct fmt::formatter<syntax::lsdyna::Node> : ostream_formatter {};

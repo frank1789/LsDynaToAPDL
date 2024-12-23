@@ -6,7 +6,6 @@
 
 #define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
-
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -43,13 +42,13 @@ static void InitializeLogger() {
 
   std::vector<spdlog::sink_ptr> sinks{file_sink, console_sink};
   // register loggers
-  //auto apdl_logger = apdl::setup_logger(sinks);
+  // auto apdl_logger = apdl::setup_logger(sinks);
   auto logger = lsdyna::setup_logger(sinks);
-    spdlog::flush_on(spdlog::level::trace);
+  spdlog::flush_on(spdlog::level::trace);
 
-  //spdlog::register_logger(apdl_logger);
-  //spdlog::register_logger(dyna_logger);
-    spdlog::set_default_logger(logger);
+  // spdlog::register_logger(apdl_logger);
+  // spdlog::register_logger(dyna_logger);
+  spdlog::set_default_logger(logger);
 }
 
 auto main_app(int argc, char** argv) -> int {
@@ -71,7 +70,7 @@ auto main_app(int argc, char** argv) -> int {
         << "author: Francesco Argentieri (francesco.argentieri89@gmail.com)\n";
 
     auto parser = std::make_unique<lsdynatoapdl::Parser>();
-    
+
     parser->elaborate(FLAGS_infile);
     // LoggerManager::shutdown();
     gflags::SetUsageMessage("some usage message");

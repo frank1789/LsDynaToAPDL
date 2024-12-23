@@ -1,16 +1,14 @@
 set(TEST_TARGET_NAME LsDynaToApdlTests)
 
-
 file(GLOB_RECURSE ${TEST_TARGET_NAME}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/**.test.cc)
-
 
 add_executable(${TEST_TARGET_NAME} ${${TEST_TARGET_NAME}_SRCS})
 
-target_link_libraries(${TEST_TARGET_NAME} 
-  PRIVATE 
-  GTest::gtest 
-  GTest::gtest_main 
-  GTest::gmock 
+target_link_libraries(${TEST_TARGET_NAME}
+  PRIVATE
+  GTest::gtest
+  GTest::gtest_main
+  GTest::gmock
   GTest::gmock_main
   fmt::fmt
   ${PROJECT_NAME}::common

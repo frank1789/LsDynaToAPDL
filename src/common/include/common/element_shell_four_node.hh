@@ -1,16 +1,29 @@
-#ifndef ELEMENT_SHELL_FOUR_NODE_H
-#define ELEMENT_SHELL_FOUR_NODE_H
+/**
+ * @file element_shell_four_node.hh
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief
+ * @version 0.1.0
+ * @date 2024-12-21
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 
-#include <iomanip>
+#ifndef LSDYNA_TO_APDL_COMMON_ELEMENT_SHELL_FOUR_NODE_HH
+#define LSDYNA_TO_APDL_COMMON_ELEMENT_SHELL_FOUR_NODE_HH
+
 #include <ostream>
 
 #include "common/element_shell.hh"
 
 inline constexpr int kFourNode{4};
 
-class ShellFourNode : public AbstractElement {
+class ShellFourNode : public Shell<ShellFourNode> {
+  friend class Element<Shell<ShellFourNode>>;
  public:
   explicit ShellFourNode() noexcept;
+
+  void parse_element(std::string_view &input_line);
 
   //   /**
   //    * @brief Destroy the Shell Four Node object
@@ -25,22 +38,12 @@ class ShellFourNode : public AbstractElement {
   //    */
   //   std::unique_ptr<Element> clone() override;
 
-  /**
-   * @brief Implementation to import the information of the
-   * shell elements from the source string where it is saved on two lines.
-   *
-   * @details For this reason, the function extracts information regarding the
-   * unique identifier of the element number and the nodes with which it is
-   * created, in this specific application there is a 4-node element.
-   * If the extraction is successful, the flag on nodes assumes true Boolean
-   * value. Thus the information of the shell shell replicate thickness is
-   * extracted if constant. A second flag assumes true value, so everything is
-   * saved in class
-   *
-   * @param[in] inputline: line from origin file.
-   *
-   */
-  void parse_element(std::string_view &input_line) override;
+  //   /**
+  //    * @brief parseElement method filter data about element line by line
+  //    *
+  //    * @param[in] inputline stream that contains node
+  //    */
+  //   void parseElement(const QString &inputline) override;
 
   //   /**
   //    * @brief Set the Id object
@@ -93,4 +96,6 @@ class ShellFourNode : public AbstractElement {
 
 // QDebug &operator<<(QDebug &os, const ShellFourNode &s);
 
-#endif  // ELEMENT_SHELL_FOUR_NODE_H
+using ElementShell181 = ShellFourNode;
+
+#endif  // LSDYNA_TO_APDL_COMMON_ELEMENT_SHELL_FOUR_NODE_HH

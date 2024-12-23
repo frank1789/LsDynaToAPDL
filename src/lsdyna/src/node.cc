@@ -11,14 +11,14 @@
 
 #include "node.h"
 
+#include <spdlog/spdlog.h>
+
 #include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <regex>
 #include <string>
 #include <vector>
-
-#include <spdlog/spdlog.h>
 
 namespace syntax {
 namespace lsdyna {

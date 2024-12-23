@@ -1,12 +1,12 @@
 /**
  * @file core.h
  * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
- * @brief 
+ * @brief
  * @version 0.1.0
  * @date 2024-08-15
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef LSDYNA_TO_APDL_CORE_H_
@@ -16,7 +16,7 @@
 
 namespace lsdynatoapdl {
 
-static constexpr const char * kLoggerName{"core"};
+static constexpr const char* kLoggerName{"core"};
 
 auto main_app(int argc, char** argv) -> int;
 

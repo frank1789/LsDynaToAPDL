@@ -16,7 +16,7 @@
 #include <memory>
 
 #include "converter.h"
-#include "filemanager.h"
+#include "common/file_manager.hh"
 
 namespace lsdynatoapdl {
 class Parser {

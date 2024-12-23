@@ -16,6 +16,6 @@ http_archive(
 
 http_archive(
     name = "com_github_gabime_spdlog",
-    strip_prefix = "spdlog-1.14.1",
-    urls = ["https://github.com/gabime/spdlog/archive/refs/tags/v1.14.1.tar.gz"],
+    strip_prefix = "spdlog-1.15.0",
+    urls = ["https://github.com/gabime/spdlog/archive/refs/tags/v1.15.0.tar.gz"],
 )

@@ -1,0 +1,16 @@
+# [Choice] Ubuntu version (use ubuntu-22.04 or ubuntu-18.04 on local arm64/Apple Silicon): ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
+ARG VARIANT=ubuntu-24.04
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
+
+# [Optional] Uncomment this section to install additional OS packages.
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
+    && apt-get -y install --no-install-recommends git build-essential libmpfr-dev libgmp3-dev libmpc-dev ca-certificates gpg wget software-properties-common gdb cppcheck zip unzip
+
+RUN test -f /usr/share/doc/kitware-archive-keyring/copyright || wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+RUN echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null \
+    && apt-add-repository ppa:ubuntu-toolchain-r/test \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get -y install --no-install-recommends cmake lua5.3 gcc-13 g++-13 pkg-config ninja-build \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/x86_64-linux-gnu-g++-13 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/x86_64-linux-gnu-gcc-13 100

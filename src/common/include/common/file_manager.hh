@@ -1,12 +1,23 @@
-#ifndef LSDYNA_TO_APDL_FILE_MANAGER_H
-#define LSDYNA_TO_APDL_FILE_MANAGER_H
+/**
+ * @file file_manager.hh
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief
+ * @version 0.1.0
+ * @date 2024-12-21
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 
-#include <fmt/format.h>
+#ifndef LSDYNA_TO_APDL_COMMON_FILE_MANAGER_HH
+#define LSDYNA_TO_APDL_COMMON_FILE_MANAGER_HH
 
 #include <cstddef>
 #include <filesystem>
 #include <string>
 #include <string_view>
+
+#include "fmt/format.h"
 
 /**
  * @brief The FileManager class manages incoming files.
@@ -70,8 +81,8 @@ class FileManager {
 
   /**
    * @brief Get the File Size expressed in bytes.
-   * 
-   * @return std::size_t 
+   *
+   * @return std::size_t
    */
   [[nodiscard]] auto getFileSize() const noexcept -> std::size_t;
 
@@ -102,4 +113,4 @@ inline std::ostream& operator<<(std::ostream& os, const FileManager& fm) {
                            fm.getCompleteInputFilename(), fm.getFileSize());
 }
 
-#endif  // LSDYNA_TO_APDL_FILE_MANAGER_H
+#endif  // LSDYNA_TO_APDL_COMMON_FILE_MANAGER_HH

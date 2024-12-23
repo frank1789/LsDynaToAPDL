@@ -17,36 +17,39 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-#include <memory>
 #include <filesystem>
+#include <memory>
 
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || \
     (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
-#define CLIENT_FUNC_SIG __PRETTY_FUNCTION__
+#  define CLIENT_FUNC_SIG __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
-#define CLIENT_FUNC_SIG __PRETTY_FUNCTION__
+#  define CLIENT_FUNC_SIG __PRETTY_FUNCTION__
 #elif defined(__FUNCSIG__)
-#define CLIENT_FUNC_SIG __FUNCSIG__
-#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
-#define CLIENT_FUNC_SIG __FUNCTION__
+#  define CLIENT_FUNC_SIG __FUNCSIG__
+#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || \
+    (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+#  define CLIENT_FUNC_SIG __FUNCTION__
 #elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
-#define CLIENT_FUNC_SIG __FUNC__
+#  define CLIENT_FUNC_SIG __FUNC__
 #elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#define CLIENT_FUNC_SIG __func__
+#  define CLIENT_FUNC_SIG __func__
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
-#define CLIENT_FUNC_SIG __func__
+#  define CLIENT_FUNC_SIG __func__
 #else
-#define CLIENT_FUNC_SIG "FUNC_SIG unknown!"
+#  define CLIENT_FUNC_SIG "FUNC_SIG unknown!"
 #endif
 
 struct LoggerManager {
   static void initialize() {
-    // const auto kFileLog = (std::filesystem::current_path() / "lsdynatoapdl.log").string();
-    // auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    // const auto kFileLog = (std::filesystem::current_path() /
+    // "lsdynatoapdl.log").string(); auto console_sink =
+    // std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     // console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%P][%^%l%$] %v");
     // console_sink->set_level(spdlog::level::info);
 
-    // auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(kFileLog, true);
+    // auto file_sink =
+    // std::make_shared<spdlog::sinks::basic_file_sink_mt>(kFileLog, true);
     // file_sink->set_pattern("%^[%Y-%m-%d %H:%M:%S.%e][%P][%l] %v");
     // file_sink->set_level(spdlog::level::trace);
     // spdlog::logger logger("multi_sink", {file_sink, console_sink});

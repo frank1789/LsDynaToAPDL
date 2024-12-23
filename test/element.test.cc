@@ -3,12 +3,12 @@
 #include <string_view>
 #include <vector>
 
-#include "common/element_shell.h"
+#include "common/element_shell_four_node.hh"
 
 class ElementTests
     : public ::testing::TestWithParam<std::vector<std::string_view>> {
  protected:
-  lsdynatoapdl::ElementShell181 shells;
+  ElementShell181 shells;
 };
 
 TEST_P(ElementTests, ConstructElementShell181) {
