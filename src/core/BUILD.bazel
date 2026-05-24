@@ -9,7 +9,7 @@ cc_library(
         "//src/common",
         "//src/logtools",
         "//src/lsdyna",
-        "@com_github_gabime_spdlog//:spdlog",
+        "@spdlog//:spdlog",
         "@fmt",
         "@gflags"
     ],
@@ -21,5 +21,7 @@ cc_binary(
     deps = [
         ":core",
         "@fmt",
+        "@spdlog",
+        "@gflags"
     ],
 )

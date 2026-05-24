@@ -1,26 +1,40 @@
 common --enable_bzlmod
-build --enable_platform_specific_config
+common --enable_platform_specific_config
+common --incompatible_enable_cc_toolchain_resolution
 
+#build --repo_env=CC=clang
+#build --repo_env=CXX=clang++
+#build --repo_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
-build:linux --incompatible_enable_cc_toolchain_resolution
-build:linux --cxxopt=-std=c++20
-build:linux --cxxopt=-O3
+# Linux - specific flags
+build:linux --copt=-Wall
+build:linux --copt=-Wextra
+build:linux --copt=-Wpedantic
+build:linux --copt=-march=native
+build:linux --copt=-mtune=native
+build:linux --cxxopt=-std=c++23
 
-build:macos --incompatible_enable_cc_toolchain_resolution
-build:macos --cxxopt=-std=c++20
-build:macos --cxxopt=-O3
-# Fixes symbols when debugging on mac.
-build:macos --features=oso_prefix_is_pwd
+build:linux --linkopt=-flto=thin
+build:linux --linkopt=-fuse-ld=gold
+build:linux --linkopt=-Wl,-O1
+build:linux --linkopt=-Wl,--as-needed
 
+# MacOS - specific flags
+build:macos --copt=-Wall
+build:macos --copt=-Wextra
+build:macos --copt=-Wpedantic
+build:macos --copt=-march=native
+build:macos --copt=-mtune=native
+build:macos --cxxopt=-std=c++2b
+build:macos --cxxopt=-stdlib=libc++
 
-build:windows --cxxopt=/std:c++20
+build:macos --features=oso_prefix_is_pwd # Fixes symbols when debugging on mac.
+
+# Windows - specific flags
+build:windows --cxxopt=/std:c++23
 build:windows --cxxopt=/utf-8
-
-# Also add "-lm" flag to avoid linker errors like "undefined reference to nan" for absl
-#build:with-absl --action_env=BAZEL_LINKLIBS=-lm
-#build:with-absl --define absl=1
-
-#build --config=c++20 --config=with-absl
+build:windows --cxxopt=/O2
+build:windows --cxxopt=/EHsc
 
 # Coverage builds
 coverage --config=coverage
@@ -30,3 +44,8 @@ build:coverage --action_env=BAZEL_LLVM_COV=llvm-cov
 build:coverage --experimental_generate_llvm_lcov
 build:coverage --collect_code_coverage
 build:coverage --combined_report=lcov
+
+# Test configurations
+test --test_output=streamed
+test --test_summary=terse
+

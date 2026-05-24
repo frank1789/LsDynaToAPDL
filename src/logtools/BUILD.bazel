@@ -8,7 +8,7 @@ cc_library(
     includes = ["logtools/include"],
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_gabime_spdlog//:spdlog",
+        "@spdlog//:spdlog",
         "@fmt",
     ],
     strip_include_prefix="include"

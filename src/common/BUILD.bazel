@@ -4,7 +4,8 @@ cc_library(
     name = "common",
     srcs = [
         "src/file_manager.cc",
-        "src/elementproperty.cc"
+        "src/elementproperty.cc",
+        "src/element_shell_four_node.cc",
     ],
     hdrs = [
         "include/common/file_manager.hh",
@@ -19,7 +20,7 @@ cc_library(
     includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_gabime_spdlog//:spdlog",
+        "@spdlog//:spdlog",
         "@fmt",
     ],
 )

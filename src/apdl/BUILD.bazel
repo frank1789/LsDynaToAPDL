@@ -14,7 +14,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/common",
-        "@com_github_gabime_spdlog//:spdlog",
+        "@spdlog//:spdlog",
         "@fmt",
     ],
 )

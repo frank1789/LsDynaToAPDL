@@ -12,7 +12,10 @@ cc_library(
         "include/converter.h",
         "include/keywords.h",
         "include/node.h",
-        "include/lsdyna/lsdyna.h"
+        "include/lsdyna/lsdyna.hh",
+        "include/lsdyna/parser_element.hh",
+        "include/lsdyna/parser_node.hh",
+        "include/lsdyna/parser.hh"
     ],
     includes = ["include"],
     visibility = ["//visibility:public"],
@@ -20,7 +23,7 @@ cc_library(
         "//src/common",
         "//src/logtools",
         "//src/apdl",
-        "@com_github_gabime_spdlog//:spdlog",
+        "@spdlog//:spdlog",
         "@fmt",
     ],
 )
