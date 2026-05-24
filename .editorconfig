@@ -17,7 +17,3 @@ indent_size = 4
 
 [*.{c, cpp, cc, cxx, h, hpp, hh, hxx}]
 indent_size = 2
-
-# Matches the exact files either package.json or .travis.yml
-[package.json]
-indent_size = 2

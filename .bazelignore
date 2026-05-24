@@ -1,1 +1,8 @@
+# exclude C, C++, CMake
 vcpkg/
+out/
+build/
+cmake/
+
+# exclude dev-container
+.devcontainer
