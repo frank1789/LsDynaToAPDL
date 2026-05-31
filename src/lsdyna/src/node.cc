@@ -11,8 +11,6 @@
 
 #include "node.h"
 
-#include <spdlog/spdlog.h>
-
 #include <iomanip>
 #include <iostream>
 #include <iterator>
@@ -20,10 +18,12 @@
 #include <string>
 #include <vector>
 
+#include "spdlog/spdlog.h"
+
 namespace syntax {
 namespace lsdyna {
 
-Node::Node(std::string_view input) { parse(input); }
+Node::Node(std::string_view input) : Node() { parse(input); }
 
 Node::Node(uint64_t t_id, double t_x, double t_y, double t_z) noexcept :
     id(t_id), x(t_x), y(t_y), z(t_z) {}

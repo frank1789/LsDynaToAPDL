@@ -16,7 +16,9 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <fstream>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace lsdynatoapdl {
@@ -65,6 +67,37 @@ std::shared_ptr<spdlog::logger> setup_logger(
 //   QString filename_;
 //   QScopedPointer<QFile> ptr_file_{nullptr};
 // };
+
+class Writer {
+ public:
+  // void writeNode(const Node& node);
+  // void writeElement(const Element& element);
+  // void writeKeypoint(const Keypoint& keypoint);
+
+  void set_filename(const std::string& filename) {
+    m_filename = filename;
+    spdlog::debug("set output filename: {}", m_filename);
+  }
+
+  void write_to_file(const std::string& content) {
+    if (m_filename.empty()) {
+      spdlog::error("Filename is not set, cannot write to file");
+      return;
+    }
+    std::ofstream ofs(m_filename, std::ios::out | std::ios::trunc);
+    if (!ofs) {
+      spdlog::error("Failed to open file: {}", m_filename);
+      return;
+    }
+    ofs << content << '\n';
+    ofs.close();
+    spdlog::info("Written to file: {}", m_filename);
+  }
+
+ private:
+  std::string m_filename;
+  // std::shared_ptr<spdlog::logger> m_logger{nullptr};
+};
 
 }  // namespace apdl
 }  // namespace lsdynatoapdl

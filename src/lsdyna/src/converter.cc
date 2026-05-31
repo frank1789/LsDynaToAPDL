@@ -11,30 +11,49 @@
 
 #include "converter.h"
 
-// #include "elementfactory.h"
-// #include "elementproperty.h"
-// #include "logger_tools.h"
-// #include "node.h"
+#include <fmt/std.h>
 
-#include "fmt/std.h"
-
+#include <future>
+#include <stdexcept>
 #include <string>
-#include <thread>
 
 #include "common/file_manager.hh"
-#include "lsdyna/lsdyna.h"
+#include "lsdyna/lsdyna.hh"
+#include "lsdyna/parser_element.hh"
+#include "lsdyna/parser_node.hh"
 
 namespace syntax {
 namespace lsdyna {
 
-void reader_fun(const std::string &filename);
+class ConverterSyntax::Context {
+ public:
+  constexpr Context() noexcept = default;
+
+  void set_strategy(std::unique_ptr<Parser> &&parser) {
+    m_parser = std::move(parser);
+  }
+
+  void parse(const std::string &line) const {
+    if (m_parser) {
+      m_parser->parse(line);
+    }
+  }
+
+ private:
+  std::unique_ptr<Parser> m_parser{nullptr};
+};
 
 ConverterSyntax::ConverterSyntax() :
-    m_logger(spdlog::get(lsdynatoapdl::lsdyna::logger_name.data())) {
-  if (m_logger) {
-    m_logger->debug("initialize converter syntax");
+    // m_logger(spdlog::get(lsdynatoapdl::lsdyna::logger_name)),
+    m_context(std::make_unique<Context>()) {
+  {
+    // if (!m_logger) {
+    //   throw std::runtime_error("logger is not initialized");
+    // }
   }
 }
+
+ConverterSyntax::~ConverterSyntax() noexcept = default;
 
 /**
  * @brief ConverterSyntax::setInputLine
@@ -47,38 +66,44 @@ ConverterSyntax::ConverterSyntax() :
  *
  * @param[in] line_text: line of the document to be analyzed.
  */
-void ConverterSyntax::testInputLine(const std::string &line_text) {
+void ConverterSyntax::test_input_line(const std::string &line_text) {
   if (line_text.starts_with("$")) {
     m_current_document_section = KeywordDyna::Header;
   }
+
   if (line_text.starts_with("*KEYWORD")) {
     m_current_document_section = KeywordDyna::KeyWord;
   }
+
   if (line_text.starts_with("*NODE")) {
     m_current_document_section = KeywordDyna::Node;
+    m_context->set_strategy(std::make_unique<ParserNode>());
   }
+
   if (line_text.starts_with("*ELEMENT_SHELL_THICKNESS")) {
     m_current_document_section = KeywordDyna::ElementShell;
+    m_context->set_strategy(std::make_unique<ParserElement>());
   }
+
   if (line_text.starts_with("*ELEMENT_SOLID")) {
     m_current_document_section = KeywordDyna::ElementSolid;
   }
+
   if (line_text.starts_with("*INITIAL_STRAIN_SOLID")) {
     m_current_document_section = KeywordDyna::InitialStrainSolid;
   }
+
   if (line_text.starts_with("*INITIAL_STRESS_SHELL")) {
     m_current_document_section = KeywordDyna::InitialStressShell;
   }
+
   if (line_text.starts_with("*END")) {
     m_current_document_section = KeywordDyna::End;
   }
-  if (m_logger) {
-    m_logger->debug("parse section \"{}\"", m_current_document_section);
-  }
 }
 
-void ConverterSyntax::parseLine(const std::string &line) {
-  testInputLine(line);
+void ConverterSyntax::parse_line(const std::string &input_line) {
+  test_input_line(input_line);
   switch (m_current_document_section) {
     case KeywordDyna::Header:
       break;
@@ -87,14 +112,11 @@ void ConverterSyntax::parseLine(const std::string &line) {
       break;
 
     case KeywordDyna::Node: {
-      // auto node = Node::parseNode(line);
-      // nodes_.push_back(node);
+      m_context->parse(input_line);
     } break;
 
     case KeywordDyna::ElementShell: {
-      // parser_->createParser(ShellType::FourNode);
-      // auto shell_four = parser_->parseElement<ShellFourNode>(line);
-      // elements_.push_back(shell_four);
+      m_context->parse(input_line);
     } break;
 
     case KeywordDyna::ElementSolid:
@@ -113,61 +135,36 @@ void ConverterSyntax::parseLine(const std::string &line) {
 
 void ConverterSyntax::parse() {
   if (!m_is_ready) {
-    if (m_logger) {
-      m_logger->error(
-          "LsDyna parser is not ready or the input file is not valid");
-    }
-    std::exit(1002);
+    spdlog::error("LsDyna parser is not ready or the input file is not valid");
   }
-
-  std::thread reader(&ConverterSyntax::reader, this, m_current_file);
-  if (m_logger) {
-    m_logger->debug("create reader thread {}", reader.get_id());
-  }
-  if (reader.joinable()) {
-    reader.join();
-  }
+  [[maybe_unused]] auto result = std::async(
+      std::launch::async, &ConverterSyntax::reader, this, m_current_file);
   m_is_ready = false;
-  if (m_logger) {
-    m_logger->debug("thread has finished and reset the ready flag");
-  }
+  spdlog::debug("thread finished");
 }
 
 void ConverterSyntax::reader(const std::string &filename) {
   if (std::ifstream ifs(filename.data()); ifs) {
     std::string line;
-    // read all lines and put them in the set:
     while (std::getline(ifs, line)) {
-      parseLine(line);
+      parse_line(line);
     }
   } else {
     const auto msg = fmt::format("{}: {}", filename, std::strerror(errno));
-    if (m_logger) {
-      m_logger->error(msg);
-    }
+    spdlog::error(msg);
     throw std::runtime_error(msg);
   }
 }
 
 bool ConverterSyntax::isReady() const { return m_is_ready; }
 
-void ConverterSyntax::setInputFile(const std::string &filename) {
+void ConverterSyntax::set_input_file(const std::string &filename) {
   if (filename != m_current_file) {
     m_current_file = filename;
   }
-  m_is_ready = !m_current_file.empty() && FileManager::isValidFile(filename);
-  if (m_logger) {
-    m_logger->debug("analyze current file: \"{}\"", filename);
-  }
+  m_is_ready = !m_current_file.empty();  // isValidFile(filename);
+  spdlog::debug("analyze current file: \"{}\"", filename);
 }
-
-// QVector<PropertyNode<uint64_t, double>> ConverterSyntax::getNodes() const {
-//   return nodes_;
-// }
-
-// QVector<ShellFourNode> ConverterSyntax::getElements() const {
-//   return elements_;
-// }
 
 }  // namespace lsdyna
 }  // namespace syntax

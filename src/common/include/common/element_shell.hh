@@ -12,8 +12,7 @@
 #ifndef LSDYNA_TO_APDL_COMMON_SHELL_ELEMENT_HH
 #define LSDYNA_TO_APDL_COMMON_SHELL_ELEMENT_HH
 
-#include "common/abstract_element_shell.hh"
-#include "common/base_element_shell.hh"
+#include "common/abstract_element.hh"
 
 // /**
 //  * @brief The propelem struct defines the general appearance of the
@@ -47,50 +46,33 @@
 // //   T thickness_; /**< thickness of the element. */
 // // };
 
-template <typename T>
-class Shell : public T, public AbstractElementShell {
+class Shell : public AbstractElement {
  public:
-  //   friend class Element<Shell>;
+  virtual ~Shell() noexcept override = default;
 
-  //  public:
-  //   explicit Shell() = default;
+  Shell(const Shell&) = delete;
+  Shell(Shell&&) noexcept = delete;
+  auto operator=(const Shell&) -> Shell& = delete;
+  auto operator=(Shell&&) noexcept -> Shell& = delete;
 
-  //   Shell(std::uint64_t id, std::vector<std::uint64_t> nodes, double
-  //   thickness) {}
-
-  //   ~Shell() noexcept = default;
-
-  //   //   virtual void setId(uint64_t id) = 0;
-  //   //   virtual void setNodes(std::initializer_list<uint64_t> const &li) =
-  //   0;
-  //   //   virtual void setThickness(double thickness) = 0;
+  virtual void parse_element(std::string_view input_line) = 0;
 
   /**
    * @brief Get the id object
    *
    * @return std::uint64_t
    */
-  [[nodiscard]] constexpr auto get_id() const -> std::uint64_t {
-    return T::get_id();
-  }
+  [[nodiscard]] virtual constexpr auto get_id() const -> std::uint64_t = 0;
 
   /**
    * @brief Get the thickness object
    *
    * @return double
    */
-  [[nodiscard]] constexpr auto get_thickness() const -> double {
-    return T::get_tickness();
-  }
+  [[nodiscard]] virtual constexpr auto get_thickness() const -> double = 0;
 
-  //     return m_thickness;
-  //   }
-  //   // [[nodiscard]] virtual auto getNodesId() const = 0;
-
-  //   private:
-  //   std::uint64_t m_id{};
-  //   std::vector<std::uint64_t> m_nodes{};
-  //   double m_thickness{};
+ protected:
+  constexpr Shell() noexcept = default;
 };
 
 #endif  // LSDYNA_TO_APDL_COMMON_SHELL_ELEMENT_HH

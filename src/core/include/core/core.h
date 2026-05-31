@@ -16,7 +16,7 @@
 
 namespace lsdynatoapdl {
 
-static constexpr const char* kLoggerName{"core"};
+constexpr std::string_view LoggerName{"core"};
 
 auto main_app(int argc, char** argv) -> int;
 

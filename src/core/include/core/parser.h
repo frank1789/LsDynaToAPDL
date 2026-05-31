@@ -15,10 +15,12 @@
 
 #include <memory>
 
-#include "converter.h"
+#include "apdl/writeapdl.h"
 #include "common/file_manager.hh"
+#include "converter.h"
 
 namespace lsdynatoapdl {
+
 class Parser {
  public:
   explicit Parser();
@@ -31,6 +33,7 @@ class Parser {
  private:
   std::unique_ptr<FileManager> m_file_handler{nullptr};
   std::unique_ptr<syntax::lsdyna::ConverterSyntax> m_converter{nullptr};
+  std::unique_ptr<apdl::Writer> m_writer{nullptr};
 };
 
 }  // namespace lsdynatoapdl

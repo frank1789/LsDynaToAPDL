@@ -12,9 +12,11 @@ namespace lsdyna {
 
 struct Node : public AbstractGeometricEntity, public GeometricEntity<Node> {
  public:
-  explicit Node() noexcept = default;
+  constexpr Node() noexcept = default;
+
   explicit Node(std::string_view input);
-  Node(uint64_t id, double x, double y, double z) noexcept;
+
+  Node(std::uint64_t id, double x, double y, double z) noexcept;
 
   void parse(std::string_view input);
 
@@ -22,7 +24,7 @@ struct Node : public AbstractGeometricEntity, public GeometricEntity<Node> {
 
   friend std::istream& operator>>(std::istream& is, Node& node);
 
-  uint64_t id{};
+  std::uint64_t id{};
   double x{};
   double y{};
   double z{};

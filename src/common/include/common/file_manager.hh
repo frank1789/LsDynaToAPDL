@@ -94,8 +94,8 @@ class FileManager {
    * @return true
    * @return false
    */
-  [[nodiscard]] static auto isValidFile(const std::filesystem::path& filename)
-      -> bool;
+  [[nodiscard]] auto isValidFile(
+      const std::filesystem::path& filename) const noexcept -> bool;
 
   friend std::ostream& operator<<(std::ostream& os, const FileManager& fm);
 

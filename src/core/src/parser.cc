@@ -11,14 +11,15 @@
 
 #include "core/parser.h"
 
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 
 namespace lsdynatoapdl {
 
 Parser::Parser() :
     m_file_handler(std::make_unique<FileManager>()),
-    m_converter(std::make_unique<syntax::lsdyna::ConverterSyntax>()) {
-  spdlog::info("initialize parser");
+    m_converter(std::make_unique<syntax::lsdyna::ConverterSyntax>()),
+    m_writer(std::make_unique<apdl::Writer>()) {
+  spdlog::info("Parser initialized");
   //   QDialog(parent),
   //   filemanager_(new FileManager),
   //   converter_(new syntax::lsdyna::ConverterSyntax),
@@ -52,11 +53,17 @@ Parser::Parser() :
 }
 
 void Parser::elaborate(const std::string& input_file) {
-  m_converter->setInputFile(
+  const auto t =
       "/Users/francesco/Documents/Projects/LsDynaToAPDL/"
-      "dynain-trav_nomesh_mod.k");
+      "dynain-trav_nomesh_mod.k";
+  m_file_handler->setInputFilename(t);
+  m_file_handler->setOutputFilename();
+  m_converter->set_input_file(m_file_handler->getCompleteInputFilename());
+  m_writer->set_filename(m_file_handler->getOutputFilename());
   if (m_converter->isReady()) {
+    spdlog::info("converter is ready, start parsing");
     m_converter->parse();
+    m_writer->write_to_file("Example content to write to file");
   } else {
     spdlog::warn("converter is not ready");
   }

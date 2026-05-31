@@ -15,9 +15,9 @@
 #include <string_view>
 
 template <typename Derived>
-class Element: public AbstractElement {
+class Element : public AbstractElement {
  public:
-  void parse_element(std::string_view &input_line) {
+  void parse_element(std::string_view input_line) {
     const auto impl = static_cast<const Derived &>(*this);
     impl.parse_element(input_line);
   }

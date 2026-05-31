@@ -36,12 +36,14 @@ class ConverterSyntax {
    */
   explicit ConverterSyntax();
 
+  ~ConverterSyntax() noexcept;
+
   /**
    * @brief Set the Input File object
    *
    * @param filename std::string holds the entire path to file.
    */
-  void setInputFile(const std::string &filename);
+  void set_input_file(const std::string &filename);
 
   void parse();
 
@@ -53,14 +55,14 @@ class ConverterSyntax {
    *
    * @param line std::string holds text
    */
-  void testInputLine(const std::string &line);
+  void test_input_line(const std::string &line);
 
   /**
    * @brief Extract values from the current string.
    *
    * @param line std::string holds text
    */
-  void parseLine(const std::string &line);
+  void parse_line(const std::string &line);
 
   void reader(const std::string &filename);
 
@@ -80,12 +82,13 @@ class ConverterSyntax {
 
  private:
   std::shared_ptr<spdlog::logger> m_logger{nullptr};
-  std::string m_current_file{""};
+
+  class Context;
+  std::unique_ptr<Context> m_context{nullptr};
+
+  std::string m_current_file{};
   KeywordDyna m_current_document_section{KeywordDyna::Header};
   bool m_is_ready{false};
-  //   QVector<PropertyNode<uint64_t, double>> nodes_{};
-  //   QVector<ShellFourNode> elements_{};
-  //   QSharedPointer<ElementParser> parser_{nullptr};
 };
 
 }  // namespace lsdyna

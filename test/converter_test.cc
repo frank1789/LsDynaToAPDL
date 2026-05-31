@@ -19,7 +19,7 @@ class ConverterSyntaxFixtureTests : public ::testing::Test {
 TEST_F(ConverterSyntaxFixtureTests, CheckReadiness) {
   const auto infile = (BasePath / "example.k").string();
   EXPECT_FALSE(converter.isReady());
-  converter.setInputFile(infile);
+  converter.set_input_file(infile);
   EXPECT_TRUE(converter.isReady())
       << fmt::format("the expect file is not valid: \"{}\"", infile);
 }

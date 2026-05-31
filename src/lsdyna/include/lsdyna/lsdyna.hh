@@ -9,20 +9,20 @@
  *
  */
 
-#ifndef LSDYNA_TO_APDL_LSDYNA_H_
-#define LSDYNA_TO_APDL_LSDYNA_H_
-
-#include <spdlog/logger.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/spdlog.h>
+#ifndef LSDYNA_TO_APDL_LSDYNA_HH
+#define LSDYNA_TO_APDL_LSDYNA_HH
 
 #include <memory>
 #include <vector>
 
+#include "spdlog/logger.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/spdlog.h"
+
 namespace lsdynatoapdl {
 namespace lsdyna {
 
-static constexpr std::string_view logger_name{"lsdyna"};
+static constexpr auto* logger_name{"lsdyna"};
 
 std::shared_ptr<spdlog::logger> setup_logger(
     std::vector<spdlog::sink_ptr> sinks);
@@ -30,4 +30,4 @@ std::shared_ptr<spdlog::logger> setup_logger(
 }  // namespace lsdyna
 }  // namespace lsdynatoapdl
 
-#endif  // LSDYNA_TO_APDL_LSDYNA_H_
+#endif  // LSDYNA_TO_APDL_LSDYNA_HH

@@ -16,82 +16,30 @@
 
 #include "common/element_shell.hh"
 
-inline constexpr int kFourNode{4};
-
-class ShellFourNode : public Shell<ShellFourNode> {
-  friend class Element<Shell<ShellFourNode>>;
+class ShellFourNode : public Shell {
  public:
-  explicit ShellFourNode() noexcept;
+  /**
+   * @brief
+   *
+   * @param input_line
+   */
+  void parse_element(std::string_view input_line) override;
 
-  void parse_element(std::string_view &input_line);
+  [[nodiscard]] constexpr std::uint64_t get_id() const override { return m_id; }
 
-  //   /**
-  //    * @brief Destroy the Shell Four Node object
-  //    *
-  //    */
-  //   ~ShellFourNode() override = default;
-
-  //   /**
-  //    * @brief clone method get a clone of an Element Shell Four Node Object
-  //    *
-  //    * @return std::unique_ptr<Element>
-  //    */
-  //   std::unique_ptr<Element> clone() override;
-
-  //   /**
-  //    * @brief parseElement method filter data about element line by line
-  //    *
-  //    * @param[in] inputline stream that contains node
-  //    */
-  //   void parseElement(const QString &inputline) override;
-
-  //   /**
-  //    * @brief Set the Id object
-  //    *
-  //    * @param id number that identify the number of the element
-  //    */
-  //   void setId(uint64_t id) override;
-
-  //   /**
-  //    * @brief Set the Nodes object
-  //    *
-  //    * @param li numbers that identify the nodes that compose the element
-  //    */
-  //   void setNodes(std::initializer_list<uint64_t> const &li) override;
-
-  //   /**
-  //    * @brief Set the Thickness object
-  //    *
-  //    * @param thickness number that specify the thickness'element
-  //    */
-  //   void setThickness(double thickness) override;
-
-  //   /**
-  //    * @brief Get the Id object
-  //    *
-  //    * @return uint64_t
-  //    */
-  //   [[nodiscard]] uint64_t getId() const override;
-
-  //   /**
-  //    * @brief Get the Thickness object
-  //    *
-  //    * @return double
-  //    */
-  //   [[nodiscard]] double getThickness() const override;
-
-  //   /**
-  //    * @brief Get the Nodes Id object
-  //    *
-  //    * @return QVector<uint64_t>
-  //    */
-  //   [[nodiscard]] QVector<uint64_t> getNodesId() const override;
-
-  //   friend QDebug &operator<<(QDebug &os, const ShellFourNode &s);
+  [[nodiscard]] constexpr double get_thickness() const override {
+    return m_thickness;
+  }
 
  private:
-  bool node_flag_;      /**< confirm extraction of node's connection. */
-  bool thickness_flag_; /**< confirm extraction shell's thickness. */
+  void extract_node(const std::string& input_line);
+  void extract_thickness(const std::string& input_line);
+
+  std::uint64_t m_id{}; /**< ID of the element. */
+  double m_thickness{}; /**< thickness of the element. */
+
+  bool m_node_flag{false};      /**< confirm extraction of node's connection. */
+  bool m_thickness_flag{false}; /**< confirm extraction shell's thickness. */
 };
 
 // QDebug &operator<<(QDebug &os, const ShellFourNode &s);

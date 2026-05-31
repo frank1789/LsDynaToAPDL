@@ -16,7 +16,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 
 
-# set human names to exetuables
+# set human names to executables
 set(CPACK_PACKAGE_EXECUTABLES "LsDynaToAPDL" "LsDynaToAPDL")
 set(CPACK_CREATE_DESKTOP_LINKS "LsDynaToAPDL")
 set(CPACK_STRIP_FILES TRUE)
@@ -69,11 +69,11 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE ${PROJECT_SOURCE_DIR}/shared/macos/icons/generic.icns)
     set(MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/shared/macos/MacOSXBundleInfo.plist.in)
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${VERSION_SHORT}")
-    
+
     set_source_files_properties(${PROJECT_SOURCE_DIR}/shared/icons/generic.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    
+
     set(CPACK_DMG_VOLUME_NAME "LsDynaToAPDL")
-    set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/shared/macos/CMakeDMGSetup.scpt") 
+    set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/shared/macos/CMakeDMGSetup.scpt")
     set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/shared/macos/dmg_background.png")
     set(CPACK_OSX_PACKAGE_VERSION "10.10") # min package version
 else()

@@ -13,7 +13,6 @@
 #define LSDYNA_TO_APDL_COMMON_ABSTRACT_ELEMENT_HH
 
 #include <cstdint>
-#include <string_view>
 
 class AbstractElement {
  public:

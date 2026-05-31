@@ -62,7 +62,7 @@ class FileMangerFixtureTests : public ::testing::Test {
 
 TEST_F(FileMangerFixtureTests, VerifyExistFileStaticMethod) {
   EXPECT_FALSE(
-      FileManager::isValidFile(std::filesystem::path("../bin/example2.k")));
+      filemanager.isValidFile(std::filesystem::path("../bin/example2.k")));
 }
 
 TEST_F(FileMangerFixtureTests, VerifyExitFileDoesNotExist) {
@@ -82,11 +82,9 @@ TEST_F(FileMangerFixtureTests, VerifyExitFileDoesNotExist) {
 // }
 
 TEST_F(FileMangerFixtureTests, GetTheFileSize) {
-  EXPECT_EQ(filemanager.getFileSize(), 5016) << filemanager;
+  EXPECT_EQ(filemanager.getFileSize(), 5016ull) << filemanager;
 }
 
 TEST_F(FileMangerFixtureTests, GetOutputFilename) {
-  EXPECT_EQ(filemanager.getOutputFilename(),
-            std::string("example_converted.txt"))
-      << filemanager;
+  EXPECT_EQ(filemanager.getOutputFilename(), std::string("example_converted.txt")) << filemanager;
 }

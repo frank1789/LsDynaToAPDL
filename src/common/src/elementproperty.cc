@@ -1,4 +1,3 @@
-//#include "elementproperty.h"
+// #include "elementproperty.h"
 
-//AbstractElement::~AbstractElement() noexcept = default;
-
+// AbstractElement::~AbstractElement() noexcept = default;
