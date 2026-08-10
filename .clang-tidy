@@ -1,0 +1,140 @@
+# clang-tidy configuration for LsDynaToAPDL.
+#
+# The naming rules below are not invented here: they are the conventions the
+# code already follows, written down so they are enforced instead of merely
+# described. clang-format handles layout; this handles everything layout cannot
+# see — naming, modernisation, and the bug patterns a compiler stays quiet
+# about.
+#
+# Run with:  cmake --preset x64-linux-debug -DLSDYNATOAPDL_ENABLE_CLANG_TIDY=ON
+---
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -cert-err58-cpp,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-vararg,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-avoid-c-arrays,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -readability-magic-numbers
+
+# Reasons for the exclusions above, so they are not cargo-culted:
+#   easily-swappable-parameters  coordinates really are three adjacent doubles
+#   avoid-c-arrays / vararg      required by the C API boundary
+#   magic-numbers                APDL command fields are literal by nature
+#   include-cleaner              too noisy against fmt and spdlog headers
+#   use-trailing-return-type     the codebase already uses them where it wants
+#   identifier-length            x, y, z are the clearest possible names here
+#   avoid-unchecked-container-access
+#                                indexing a std::array<T,4> with a literal is
+#                                provably in range; the check has no way to see it
+
+WarningsAsErrors: ""
+
+# Third-party code is never analysed.
+#
+# The build passes an absolute --header-filter (see cmake/ClangTidy.cmake); the
+# patterns here are the fallback for running clang-tidy by hand. They are
+# deliberately not "src/.*": that is unanchored, so it also matches
+# vcpkg/buildtrees/fmt/src/.../format.h and googletest/googletest/src/... —
+# exactly the headers this is meant to keep out.
+# Matching the project's own layout — src/<module>/include/... — rather than
+# any path containing "src/" is what keeps /usr/src/spdlog/include/spdlog.h and
+# googletest/googletest/src/... out.
+HeaderFilterRegex: "(^|/)src/(apdl|capi|common|core|logtools|lsdyna)/include/.*\\.(hh|h)$"
+ExcludeHeaderFilterRegex: "(^|/)(vcpkg|vcpkg_installed|out|build|_deps|third_party|external|googletest|gtest|gmock|benchmark)/|^/(usr|opt|Library|Applications)/"
+
+# Dependencies arrive as IMPORTED targets, so CMake includes them with
+# -isystem and this keeps clang-tidy out of them. Stated explicitly because it
+# is the first line of defence, not an accident.
+SystemHeaders: false
+
+FormatStyle: file
+
+CheckOptions:
+  # Types
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypeAliasCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypedefCase
+    value: CamelCase
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+
+  # Functions and variables
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key: readability-identifier-naming.MethodCase
+    value: lower_case
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+
+  # Private members carry the m_ prefix used throughout the project.
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: m_
+  - key: readability-identifier-naming.ProtectedMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.ProtectedMemberPrefix
+    value: m_
+
+  # Compile-time constants are kCamelCase (kShell181NodeCount, kCommentPrefix).
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprVariablePrefix
+    value: k
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalConstantPrefix
+    value: k
+  - key: readability-identifier-naming.ClassConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.ClassConstantPrefix
+    value: k
+  - key: readability-identifier-naming.StaticConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.StaticConstantPrefix
+    value: k
+
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+
+  # Style details that match the existing sources.
+  - key: modernize-use-default-member-init.UseAssignment
+    value: "false"
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: "0"
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: "std::filesystem::path"

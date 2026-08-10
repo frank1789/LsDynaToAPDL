@@ -25,13 +25,15 @@ build:macos --copt=-Wextra
 build:macos --copt=-Wpedantic
 build:macos --copt=-march=native
 build:macos --copt=-mtune=native
-build:macos --cxxopt=-std=c++2b
+build:macos --cxxopt=-std=c++23
 build:macos --cxxopt=-stdlib=libc++
 
 build:macos --features=oso_prefix_is_pwd # Fixes symbols when debugging on mac.
 
 # Windows - specific flags
-build:windows --cxxopt=/std:c++23
+# MSVC has no /std:c++23 switch; /std:c++latest is the C++23 setting and is what
+# CMake selects for CMAKE_CXX_STANDARD 23 on MSVC.
+build:windows --cxxopt=/std:c++latest
 build:windows --cxxopt=/utf-8
 build:windows --cxxopt=/O2
 build:windows --cxxopt=/EHsc
@@ -48,4 +50,3 @@ build:coverage --combined_report=lcov
 # Test configurations
 test --test_output=streamed
 test --test_summary=terse
-
