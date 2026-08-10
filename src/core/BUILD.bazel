@@ -2,8 +2,8 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
     name = "core",
-    srcs = ["src/parser.cc", "src/core.cc"],
-    hdrs = ["include/core/parser.h", "include/core/core.h"],
+    srcs = ["src/parser.cc"],
+    hdrs = ["include/core/parser.hh"],
     includes = ["include"],
     deps = [
         "//src/common",

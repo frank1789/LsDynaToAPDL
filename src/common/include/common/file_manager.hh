@@ -30,8 +30,6 @@ class FileManager {
  public:
   /**
    * @brief Construct a new File Manager object.
-   *
-   * @param parent QObject pointer to parent
    */
   explicit FileManager() noexcept = default;
 
@@ -48,69 +46,77 @@ class FileManager {
    */
   ~FileManager() noexcept = default;
 
+  FileManager(const FileManager&) = default;
+  FileManager(FileManager&&) noexcept = default;
+  auto operator=(const FileManager&) -> FileManager& = default;
+  auto operator=(FileManager&&) noexcept -> FileManager& = default;
+
   /**
    * @brief Set the Filename object.
    *
    * @param filename stream holds the complete filename.
    */
-  void setInputFilename(const std::filesystem::path& filename);
+  void set_input_filename(const std::filesystem::path& filename);
 
-  void setOutputFilename();
+  void set_output_filename();
 
   /**
    * @brief Get the only filename stream.
    *
-   * @return QString
+   * @return const std::string&
    */
-  [[nodiscard]] auto getFilename() const -> const std::string&;
+  [[nodiscard]] auto get_filename() const -> const std::string&;
 
   /**
    * @brief Get the complete Filename stream.
    *
-   * @return QString
+   * @return const std::string&
    */
-  [[nodiscard]] auto getCompleteInputFilename() const -> const std::string&;
+  [[nodiscard]] auto get_complete_input_filename() const -> const std::string&;
 
   /**
    * @brief Get the new filename.
    * It holds the original filename within the postfix "_converted.txt"
    *
-   * @return QString
+   * @return const std::string&
    */
-  [[nodiscard]] auto getOutputFilename() const -> const std::string&;
+  [[nodiscard]] auto get_output_filename() const -> const std::string&;
 
   /**
    * @brief Get the File Size expressed in bytes.
    *
    * @return std::size_t
    */
-  [[nodiscard]] auto getFileSize() const noexcept -> std::size_t;
+  [[nodiscard]] auto get_file_size() const noexcept -> std::size_t;
 
   /**
-   * @brief The isValidFile method checks is file exists and ensures is regular
-   * file.
+   * @brief The is_valid_file method checks is file exists and ensures is
+   * regular file.
    *
    * @param filename stream holds the complete filename.
    * @return true
    * @return false
    */
-  [[nodiscard]] auto isValidFile(
-      const std::filesystem::path& filename) const noexcept -> bool;
+  [[nodiscard]] static auto is_valid_file(
+      const std::filesystem::path& filename) noexcept -> bool;
 
   friend std::ostream& operator<<(std::ostream& os, const FileManager& fm);
 
  private:
-  auto reflect() const { return std::tie(m_complete_filename, m_file_size); }
+  [[nodiscard]] auto reflect() const {
+    return std::tie(m_complete_filename, m_file_size);
+  }
 
-  std::string m_complete_filename{""};
-  std::string m_filename{""};
-  std::string m_out_filename{""};
+  std::string m_complete_filename;
+  std::string m_filename;
+  std::string m_out_filename;
   std::size_t m_file_size{0};
 };
 
 inline std::ostream& operator<<(std::ostream& os, const FileManager& fm) {
   return os << fmt::format("FileManager: {} {:>d} bytes",
-                           fm.getCompleteInputFilename(), fm.getFileSize());
+                           fm.get_complete_input_filename(),
+                           fm.get_file_size());
 }
 
 #endif  // LSDYNA_TO_APDL_COMMON_FILE_MANAGER_HH

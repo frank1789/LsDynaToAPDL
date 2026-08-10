@@ -4,23 +4,15 @@ cc_library(
     name = "common",
     srcs = [
         "src/file_manager.cc",
-        "src/elementproperty.cc",
-        "src/element_shell_four_node.cc",
     ],
     hdrs = [
         "include/common/file_manager.hh",
-        #"include/elementproperty.h",
-        "include/finite_element_types.h",
-        "include/common/abstract_element_shell.hh",
-        "include/common/abstract_element.hh",
-        "include/common/base_element_shell.hh",
-        "include/common/element_shell_four_node.hh",
-        "include/common/element_shell.hh"
     ],
     includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [
-        "@spdlog//:spdlog",
+        "//src/logtools",
         "@fmt",
+        "@spdlog//:spdlog",
     ],
 )

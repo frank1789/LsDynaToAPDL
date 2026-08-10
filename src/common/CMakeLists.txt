@@ -1,40 +1,31 @@
-set(LIBRARY_TARGET_NAME "common")
+set(LIBRARY_TARGET_NAME common)
 
-# List of (source) library files.
-set(${LIBRARY_TARGET_NAME}_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/file_manager.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/element_shell_four_node.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/elementproperty.cc)
-
-# List of (header) library files.
-set(${LIBRARY_TARGET_NAME}_HDR
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/finite_element_types.h
-    # ${CMAKE_CURRENT_SOURCE_DIR}/include/elementproperty.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/node_type_impl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/common/file_manager.hh
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/element_shell_four_node.h)
-
-add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC}
-                                   ${${LIBRARY_TARGET_NAME}_HDR})
+add_library(${LIBRARY_TARGET_NAME})
 add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS
             ${LIBRARY_TARGET_NAME})
 
-target_link_libraries(${LIBRARY_TARGET_NAME} PRIVATE fmt::fmt
-                                                     )
+target_sources(
+  ${LIBRARY_TARGET_NAME}
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/file_manager.cc
+  PUBLIC FILE_SET
+         HEADERS
+         BASE_DIRS
+         "${CMAKE_CURRENT_SOURCE_DIR}/include"
+         FILES
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/common/file_manager.hh)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug" AND COVERAGE)
-  target_link_libraries(${LIBRARY_TARGET_NAME} coverage)
-endif()
+# fmt is PUBLIC because it appears in file_manager.hh; spdlog is used only in
+# the implementation, so it stays out of the interface consumers inherit.
+target_link_libraries(
+  ${LIBRARY_TARGET_NAME}
+  PUBLIC fmt::fmt
+  PRIVATE spdlog::spdlog ${PROJECT_NAME}::logtools)
+
+lsdynatoapdl_configure_target(${LIBRARY_TARGET_NAME})
 
 set_target_properties(
   ${LIBRARY_TARGET_NAME}
-  PROPERTIES VERSION ${CMAKE_PROJECT_VERSION} PUBLIC_HEADER
-                                              "${${LIBRARY_TARGET_NAME}_HDR}")
-
-target_include_directories(
-  ${LIBRARY_TARGET_NAME}
-  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+  PROPERTIES VERSION ${CMAKE_PROJECT_VERSION} OUTPUT_NAME lsdynatoapdl_common)
 
 install(
   TARGETS ${LIBRARY_TARGET_NAME}
@@ -42,10 +33,7 @@ install(
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
-  PUBLIC_HEADER
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}"
-    COMPONENT dev
-    FILE_SET HEADERS)
+  FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" COMPONENT dev)
 
 message(
   STATUS "Created target ${LIBRARY_TARGET_NAME} for export ${PROJECT_NAME}.")

@@ -4,26 +4,22 @@ cc_library(
     name = "lsdyna",
     srcs = [
         "src/converter.cc",
-        "src/keywords.cc",
-        "src/node.cc",
-        "src/lsdyna.cc"
+        "src/parser_element.cc",
+        "src/parser_node.cc",
     ],
     hdrs = [
-        "include/converter.h",
-        "include/keywords.h",
-        "include/node.h",
-        "include/lsdyna/lsdyna.hh",
+        "include/lsdyna/converter.hh",
+        "include/lsdyna/fields.hh",
+        "include/lsdyna/keywords.hh",
+        "include/lsdyna/parser.hh",
         "include/lsdyna/parser_element.hh",
         "include/lsdyna/parser_node.hh",
-        "include/lsdyna/parser.hh"
     ],
     includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/common",
-        "//src/logtools",
         "//src/apdl",
-        "@spdlog//:spdlog",
         "@fmt",
+        "@spdlog//:spdlog",
     ],
 )

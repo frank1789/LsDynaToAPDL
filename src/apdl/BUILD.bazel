@@ -3,18 +3,22 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 cc_library(
     name = "apdl",
     srcs = [
-        "src/writeapdl.cc",
+        "src/deck_writer.cc",
     ],
     hdrs = [
-        "include/apdl/keypoint.h",
-        "include/apdl/node.h",
-        "include/apdl/writeapdl.h"
+        "include/apdl/apdl_entity.hh",
+        "include/apdl/deck_writer.hh",
+        "include/apdl/keypoint.hh",
+        "include/apdl/material.hh",
+        "include/apdl/model.hh",
+        "include/apdl/node.hh",
+        "include/apdl/section.hh",
+        "include/apdl/shell181.hh",
     ],
     includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/common",
-        "@spdlog//:spdlog",
         "@fmt",
+        "@spdlog//:spdlog",
     ],
 )

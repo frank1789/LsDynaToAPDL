@@ -1,0 +1,14 @@
+# The C API deliberately follows C conventions — lsdynatoapdl_model_create,
+# LSDYNATOAPDL_OK, lsdynatoapdl_status — because that is what a C, Python-ctypes
+# or Rust caller expects to see. Applying the project's C++ naming rules here
+# would ask for CamelCase enum constants in a C header, so naming is inherited
+# from the root configuration with the identifier rules switched off.
+#
+# enum class, `using` and a sized enum base are C++ constructs; a header that
+# has to compile as C cannot use any of them.
+InheritParentConfig: true
+Checks: >
+  -readability-identifier-naming,
+  -cppcoreguidelines-use-enum-class,
+  -modernize-use-using,
+  -performance-enum-size

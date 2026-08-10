@@ -7,27 +7,38 @@ add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS
 target_sources(
   ${LIBRARY_TARGET_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/keywords.cc
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/lsdyna.cc
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/parser_element.cc
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/parser_node.cc
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
          "${CMAKE_CURRENT_SOURCE_DIR}/include"
          FILES
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/node.h
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/lsdyna.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/converter.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/fields.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/keywords.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser.hh
          ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser_element.hh
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser_node.hh
-         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser.hh)
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser_node.hh)
 
-target_link_libraries(${LIBRARY_TARGET_NAME} PUBLIC fmt::fmt spdlog::spdlog
-                                                    ${PROJECT_NAME}::common)
+# apdl and fmt are part of the interface (converter.hh exposes apdl::Model,
+# keywords.hh formats through fmt); spdlog is an implementation detail.
+target_link_libraries(
+  ${LIBRARY_TARGET_NAME}
+  PUBLIC fmt::fmt ${PROJECT_NAME}::apdl
+  PRIVATE spdlog::spdlog)
 
-set_target_properties(${LIBRARY_TARGET_NAME}
-                      PROPERTIES VERSION ${CMAKE_PROJECT_VERSION} BUNDLE true)
+# fields.hh selects its double parser from this; consumers of the installed
+# headers need the same verdict, so it travels with the interface.
+target_compile_definitions(
+  ${LIBRARY_TARGET_NAME}
+  PUBLIC LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS})
+
+lsdynatoapdl_configure_target(${LIBRARY_TARGET_NAME})
+
+set_target_properties(
+  ${LIBRARY_TARGET_NAME}
+  PROPERTIES VERSION ${CMAKE_PROJECT_VERSION} OUTPUT_NAME lsdynatoapdl_lsdyna)
 
 install(
   TARGETS ${LIBRARY_TARGET_NAME}

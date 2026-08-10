@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "capi",
+    srcs = ["src/c_api.cc"],
+    hdrs = [
+        "include/lsdynatoapdl/export.h",
+        "include/lsdynatoapdl/lsdynatoapdl.h",
+    ],
+    defines = [
+        "LSDYNATOAPDL_STATIC_DEFINE",
+        'LSDYNATOAPDL_VERSION=\\"0.1.0\\"',
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/apdl",
+        "//src/lsdyna",
+    ],
+)
