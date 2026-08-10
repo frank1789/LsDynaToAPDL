@@ -16,9 +16,9 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 
 
-# set human names to executables
-set(CPACK_PACKAGE_EXECUTABLES "LsDynaToAPDL" "LsDynaToAPDL")
-set(CPACK_CREATE_DESKTOP_LINKS "LsDynaToAPDL")
+# LsDynaToAPDL is a command line converter: it has no GUI, so it deliberately
+# declares no CPACK_PACKAGE_EXECUTABLES / CPACK_CREATE_DESKTOP_LINKS. Those
+# would add a start menu or desktop shortcut that launches nothing useful.
 set(CPACK_STRIP_FILES TRUE)
 
 if(WIN32 AND NOT UNIX)
@@ -37,8 +37,8 @@ if(WIN32 AND NOT UNIX)
         # Note: There is a bug in NSI that does not handle full unix paths properly. Make
         # sure there is at least one set of four (4) backlasshes.
         set(CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME})
-        # Icon of the installer
-        set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\exampleApp.ico")
+        # No CPACK_NSIS_MUI_ICON: the repository ships no .ico, and NSIS fails
+        # outright when the icon it is told to embed does not exist.
         # set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.my-project-home-page.org")
         # set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.my-personal-home-page.com")
         set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
@@ -46,14 +46,6 @@ if(WIN32 AND NOT UNIX)
     else()
         message(STATUS "   + NSIS                                 NO ")
     endif()
-
-    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\exampleApp.png")
-
-    # Configure file with right path, place the result to PROJECT_BINARY_DIR.
-    # When ${PROJECT_BINARY_DIR}/exampleApp.icon.rc is added to an executable
-    # it will have icon specified in exampleApp.icon.in.rc
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.icon.in.rc
-        ${PROJECT_BINARY_DIR}/exampleApp.icon.rc)
 
 elseif(APPLE)
     #--------------------------------------------------------------------------
@@ -66,7 +58,9 @@ elseif(APPLE)
 
     set(MACOSX_BUNDLE_BUNDLE_NAME ${CPACK_PACKAGE_NAME})
     set(MACOSX_BUNDLE_BUNDLE_GUI_IDENTIFIER "com.LsDynaToAPDL.LsDynaToAPDL")
-    set(MACOSX_BUNDLE_ICON_FILE ${PROJECT_SOURCE_DIR}/shared/macos/icons/generic.icns)
+    # MACOSX_BUNDLE_ICON_FILE names the file inside Contents/Resources, so it
+    # must stay a bare filename; an absolute path yields a bundle with no icon.
+    set(MACOSX_BUNDLE_ICON_FILE "generic.icns")
     set(MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/shared/macos/MacOSXBundleInfo.plist.in)
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${VERSION_SHORT}")
 
@@ -74,7 +68,7 @@ elseif(APPLE)
 
     set(CPACK_DMG_VOLUME_NAME "LsDynaToAPDL")
     set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/shared/macos/CMakeDMGSetup.scpt")
-    set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/shared/macos/dmg_background.png")
+    # No CPACK_DMG_BACKGROUND_IMAGE: shared/macos ships no background artwork.
     set(CPACK_OSX_PACKAGE_VERSION "10.10") # min package version
 else()
     #-----------------------------------------------------------------------------
@@ -97,15 +91,7 @@ else()
             /usr
             /usr/bin
             /usr/share
-            /usr/share/applications
-            /usr/share/doc
-            /usr/share/icons
-            /usr/share/icons/hicolor
-            /usr/share/icons/hicolor/256x256
-            /usr/share/icons/hicolor/256x256/apps
-            /usr/share/icons/gnome
-            /usr/share/icons/gnome/256x256
-            /usr/share/icons/gnome/256x256/apps)
+            /usr/share/doc)
     else()
         message(STATUS "   + RPM                                  NO ")
     endif()
@@ -119,27 +105,14 @@ else()
 
 
 
-    # Icon and app shortcut for Linux systems
-    # Note: .desktop file must have same name as executable
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.desktop
-        DESTINATION share/applications/
-        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-        )
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png
-        DESTINATION share/icons/hicolor/256x256/apps/
-        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-        )
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png
-        DESTINATION share/icons/gnome/256x256/apps/
-        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-        )
+    # No .desktop entry or hicolor/gnome icon: this is a terminal-only
+    # converter, so a launcher would place a dead entry in the application
+    # menu.
     # License file
-    install(FILES ${PROJECT_SOURCE_DIR}/license.md
+    install(FILES ${PROJECT_SOURCE_DIR}/LICENSE
         DESTINATION share/doc/${PROJECT_NAME}/
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
         RENAME copyright)
-    # set package icon
-    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/exampleApp.png")
 endif()
 
 include(CPack)
