@@ -1,0 +1,156 @@
+name: CI
+
+# One workflow instead of two, with the cheap checks gating the expensive ones.
+# A push that fails formatting or a Linux build no longer keeps three runners
+# busy for the full matrix.
+on:
+  push:
+    branches: [master, main, "feature/**"]
+  pull_request:
+  workflow_dispatch:
+
+# A new push to the same branch cancels the run still in flight, which is where
+# most of the wall-clock time on an active branch used to go.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Reuse binaries across runs instead of rebuilding fmt, spdlog, gtest and
+  # gflags from source every time; this is the single biggest saving.
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_DISABLE_METRICS: "1"
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - uses: pre-commit/action@v3.0.1
+      - name: Build files list every source
+        run: ./scripts/check-build-sync.sh
+
+  build:
+    name: ${{ matrix.name }}
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: x64-linux-gcc, os: ubuntu-latest, preset: x64-linux-release }
+          - { name: arm64-linux-gcc, os: ubuntu-24.04-arm, preset: arm64-linux-release }
+          - { name: arm64-macos-clang, os: macos-latest, preset: arm64-macos-release }
+          - { name: x64-windows-msvc, os: windows-latest, preset: x64-windows-release }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      - uses: lukka/get-cmake@latest
+
+      # Ninja on Windows otherwise picks up MinGW gcc from PATH, which cannot
+      # link the MSVC-built vcpkg dependencies.
+      - if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure, build, test
+        run: |
+          cmake --preset ${{ matrix.preset }}
+          cmake --build --preset ${{ matrix.preset }}
+          ctest --preset ${{ matrix.preset }}
+
+  sanitizers:
+    name: ${{ matrix.sanitizer }} sanitizer
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address, undefined, thread]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - uses: lukka/get-cmake@latest
+      - name: Configure, build, test
+        run: |
+          cmake --preset x64-linux-${{ matrix.sanitizer }}
+          cmake --build --preset x64-linux-${{ matrix.sanitizer }}
+          ctest --preset x64-linux-${{ matrix.sanitizer }}
+
+  # Every CI runner has floating-point std::from_chars, so the fallback used on
+  # older Apple toolchains would never be compiled here unless it is forced.
+  portability:
+    name: from_chars fallback
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - uses: lukka/get-cmake@latest
+      - name: Configure, build, test
+        run: |
+          cmake --preset x64-linux-release -DLSDYNATOAPDL_FORCE_FROM_CHARS_FALLBACK=ON
+          cmake --build --preset x64-linux-release
+          ctest --preset x64-linux-release
+
+  coverage:
+    name: coverage
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - uses: lukka/get-cmake@latest
+      - run: pipx install gcovr
+      - name: Build and report
+        run: |
+          cmake --preset x64-linux-coverage
+          cmake --build --preset x64-linux-coverage
+          cmake --build out/build/x64-linux-coverage --target coverage-report
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: out/build/x64-linux-coverage/coverage/
+          retention-days: 7
+
+  bazel:
+    name: bazel
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bazel-contrib/setup-bazel@0.9.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - run: bazel test //... -c opt --test_output=errors

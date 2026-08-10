@@ -1,0 +1,10 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "semver"
+# Versions come from git tags, the same source cmake/GitVersion.cmake reads via
+# `git describe --tags`. Nothing hard-codes a version in a tracked file.
+version_provider = "scm"
+major_version_zero = true
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"

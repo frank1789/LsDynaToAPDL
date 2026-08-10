@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+# Markdown files should be treated as text and use the markdown diff driver
+*.md            text diff=markdown
+
+# Windows batch files should be treated as text and use the batch diff driver
+*.bat           text diff=batch eol=crlf
+*.ps1           text diff=powershell eol=crlf
+
+# images should be treated as binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary

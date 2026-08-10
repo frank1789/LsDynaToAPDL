@@ -1,0 +1,92 @@
+# Quality gate for LsDynaToAPDL. See CLAUDE.md §7.
+#
+#   pre-commit install --install-hooks
+#   pre-commit install --hook-type commit-msg
+#   pre-commit run --all-files
+
+# Vendored, generated, or byte-exact fixture files must never be rewritten.
+# LS-DYNA decks (*.k) are column-oriented: stripping trailing whitespace from
+# them can silently change what the parser is asked to parse.
+exclude: |
+  (?x)^(
+      vcpkg/.*
+    | .*\.k
+    | MODULE\.bazel\.lock
+    | package-lock\.json
+    | CHANGELOG\.md
+    | LICENSE
+    | src/Resources/.*
+    | shared/icons/.*
+  )$
+
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-added-large-files
+        args: [--maxkb=512]
+      - id: check-yaml
+      - id: check-json
+        # .devcontainer/devcontainer.json is JSONC (comments), not strict JSON.
+        exclude: ^\.devcontainer/
+
+  # Pinned to match the .clang-format in this repository. The pinned hook is
+  # authoritative, not the clang-format on your PATH.
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v22.1.8
+    hooks:
+      - id: clang-format
+        types_or: [c, c++]
+        files: \.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
+
+  # CMake and Bazel each enumerate their files by hand, so a new source has to
+  # be added to two lists. Missing the Bazel one is invisible without bazel
+  # installed and only shows up in CI.
+  - repo: local
+    hooks:
+      - id: build-files-in-sync
+        name: build files list every source
+        entry: scripts/check-build-sync.sh
+        language: script
+        pass_filenames: false
+        files: '(^src/.*\.(cc|hh|h)$|BUILD\.bazel$|CMakeLists\.txt$)'
+
+  # Enforces the Conventional Commits format required by CLAUDE.md §8.
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.17.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+# Disabled until their prerequisites exist — re-enable deliberately:
+#
+# .clang-tidy is populated now, but clang-tidy still needs a
+# compile_commands.json, which is gitignored and only exists after a CMake
+# configure — a hook cannot rely on one being present. Run it through the build
+# instead, where the flags and the third-party exclusions are already right:
+#
+#   cmake --preset x64-linux-debug -DLSDYNATOAPDL_ENABLE_CLANG_TIDY=ON
+#   cmake --build out/build/x64-linux-debug
+# - repo: https://github.com/pocc/pre-commit-hooks
+#   rev: v1.3.5
+#   hooks:
+#     - id: clang-tidy
+#       args: [--config-file=.clang-tidy]
+#
+# cmake-format/cmake-lint would reformat cmake/ third-party modules on first
+# run; land that as its own style: commit before enabling the hook.
+# - repo: https://github.com/cheshirekow/cmake-format-precommit
+#   rev: v0.6.13
+#   hooks:
+#     - id: cmake-format
+#     - id: cmake-lint

@@ -1,0 +1,27 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "core",
+    srcs = ["src/parser.cc"],
+    hdrs = ["include/core/parser.hh"],
+    includes = ["include"],
+    deps = [
+        "//src/common",
+        "//src/logtools",
+        "//src/lsdyna",
+        "@spdlog//:spdlog",
+        "@fmt",
+        "@gflags"
+    ],
+)
+
+cc_binary(
+    name = "lsdynatoapdl",
+    srcs = ["src/main.cc"],
+    deps = [
+        ":core",
+        "@fmt",
+        "@spdlog",
+        "@gflags"
+    ],
+)

@@ -1,0 +1,23 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+filegroup(
+    name = "resources",
+    srcs = glob(["**/*.k"]),
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "LsDynaToApdlTests",
+    srcs = glob(["**/*.cc"]),
+    copts = ["-Iexternal/gtest/include"],
+    data = [":resources"],
+    deps = [
+        "//src/apdl",
+        "//src/capi",
+        "//src/common",
+        "//src/lsdyna",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "@fmt",
+    ],
+)

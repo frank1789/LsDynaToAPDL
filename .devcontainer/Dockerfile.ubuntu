@@ -1,0 +1,73 @@
+FROM ubuntu:24.04 AS base
+
+# [Optional] Uncomment this section to install additional OS packages.
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get update -y \
+    && apt-get upgrade -y \
+    && apt-get -y install --no-install-recommends git build-essential \
+    libmpfr-dev \
+    libgmp3-dev \
+    libmpc-dev \
+    ca-certificates \
+    gpg \
+    wget \
+    software-properties-common \
+    gdb \
+    cppcheck \
+    zip \
+    unzip \
+    curl \
+    git \
+    default-jdk
+
+FROM base AS tools
+
+RUN test -f /usr/share/doc/kitware-archive-keyring/copyright || wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+RUN echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null \
+    && apt-add-repository ppa:ubuntu-toolchain-r/test \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get -y install --no-install-recommends cmake lua5.3 pkg-config ninja-build valgrind
+
+ARG BAZEL_VERSION=8.4.2
+RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    && chmod +x bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    && ./bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh
+
+RUN wget https://apt.llvm.org/llvm.sh \
+    && chmod +x llvm.sh \
+    && ./llvm.sh 21 \
+    && rm llvm.sh
+
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100 \
+    && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100 \
+    && update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-21 100 \
+    && update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-21 100 \
+    && update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-21 100 \
+    && update-alternatives --install /usr/bin/llvm-objdump llvm-objdump /usr/bin/llvm-objdump-21 100 \
+    && update-alternatives --install /usr/bin/llvm-strip llvm-strip /usr/bin/llvm-strip-21 100 \
+    && update-alternatives --install /usr/bin/llvm-objcopy llvm-objcopy /usr/bin/llvm-objcopy-21 100 \
+    && update-alternatives --set clang /usr/bin/clang-21 \
+    && update-alternatives --set clang++ /usr/bin/clang++-21 \
+    && update-alternatives --set llvm-ar /usr/bin/llvm-ar-21 \
+    && update-alternatives --set llvm-ranlib /usr/bin/llvm-ranlib-21 \
+    && update-alternatives --set llvm-nm /usr/bin/llvm-nm-21 \
+    && update-alternatives --set llvm-objdump /usr/bin/llvm-objdump-21 \
+    && update-alternatives --set llvm-strip /usr/bin/llvm-strip-21 \
+    && update-alternatives --set llvm-objcopy /usr/bin/llvm-objcopy-21
+
+FROM tools AS environment
+
+ARG USERNAME=user
+ARG USER_UID=1001
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+USER $USERNAME
+
+CMD ["/bin/bash"]

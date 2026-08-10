@@ -1,0 +1,18 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "common",
+    srcs = [
+        "src/file_manager.cc",
+    ],
+    hdrs = [
+        "include/common/file_manager.hh",
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/logtools",
+        "@fmt",
+        "@spdlog//:spdlog",
+    ],
+)

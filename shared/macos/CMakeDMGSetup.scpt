@@ -55,4 +55,3 @@ on run argv
   delay 1
 end tell
 end run
-

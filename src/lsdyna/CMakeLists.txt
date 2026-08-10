@@ -1,68 +1,52 @@
-cmake_minimum_required(VERSION 3.16)
-set(LIBRARY_TARGET_NAME "lsdyna")
+set(LIBRARY_TARGET_NAME lsdyna)
 
-# List of (source) library files.
-set(${LIBRARY_TARGET_NAME}_SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/node.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementfactory.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/elementparser.cc
-)
+add_library(${LIBRARY_TARGET_NAME})
+add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS
+            ${LIBRARY_TARGET_NAME})
 
-# List of (header) library files.
-set(${LIBRARY_TARGET_NAME}_HDR
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/node.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementfactory.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/elementparser.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/converter.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/keywords.h
-)
+target_sources(
+  ${LIBRARY_TARGET_NAME}
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/converter.cc
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/parser_element.cc
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/parser_node.cc
+  PUBLIC FILE_SET
+         HEADERS
+         BASE_DIRS
+         "${CMAKE_CURRENT_SOURCE_DIR}/include"
+         FILES
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/converter.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/fields.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/keywords.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser_element.hh
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/lsdyna/parser_node.hh)
 
-add_library(${LIBRARY_TARGET_NAME} STATIC ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
-add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
-target_link_libraries(${LIBRARY_TARGET_NAME} Qt5::Core Qt5::Widgets common)
+# apdl and fmt are part of the interface (converter.hh exposes apdl::Model,
+# keywords.hh formats through fmt); spdlog is an implementation detail.
+target_link_libraries(
+  ${LIBRARY_TARGET_NAME}
+  PUBLIC fmt::fmt ${PROJECT_NAME}::apdl
+  PRIVATE spdlog::spdlog)
 
-# Set two minimum target properties for the library.
-# See https://cmake.org/cmake/help/latest/command/set_target_properties.html
-# Properties are: 1) Library version number 2) list of corresponding public headers
-set_target_properties(${LIBRARY_TARGET_NAME} PROPERTIES VERSION       ${${PROJECT_NAME}_VERSION}
-                                                        PUBLIC_HEADER "${${LIBRARY_TARGET_NAME}_HDR}"
-                                                        BUNDLE true
-)
+# fields.hh selects its double parser from this; consumers of the installed
+# headers need the same verdict, so it travels with the interface.
+target_compile_definitions(
+  ${LIBRARY_TARGET_NAME}
+  PUBLIC LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS})
 
-# Specify include directories for both compilation and installation process.
-# The $<INSTALL_PREFIX> generator expression is useful to ensure to create
-# relocatable configuration files, see https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#creating-relocatable-packages
-target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-                                                         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+lsdynatoapdl_configure_target(${LIBRARY_TARGET_NAME})
 
-target_compile_options(${LIBRARY_TARGET_NAME}
-  PRIVATE -c -fPIC -fstack-protector-strong
-)
+set_target_properties(
+  ${LIBRARY_TARGET_NAME}
+  PROPERTIES VERSION ${CMAKE_PROJECT_VERSION} OUTPUT_NAME lsdynatoapdl_lsdyna)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-  if(COVERAGE)
-    target_link_libraries(${LIBRARY_TARGET_NAME} coverage)
-  endif()
-endif()
+install(
+  TARGETS ${LIBRARY_TARGET_NAME}
+  EXPORT ${PROJECT_NAME}
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
+  FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" COMPONENT dev)
 
-# Specify installation targets, typology and destination folders.
-if(APPLE)
-  install(TARGETS ${LIBRARY_TARGET_NAME}
-          BUNDLE # DLLs are treated as RUNTIME, .so's are treated as LIBRARY, and .a and .lib as ARCHIVE, MacOSX bundles as BUNDLE
-          LIBRARY       DESTINATION "${INSTALL_LIBRARY_DIR}"                                  COMPONENT shlib
-          ARCHIVE       DESTINATION "${INSTALL_LIBRARY_DIR}"                                  COMPONENT lib
-          RUNTIME       DESTINATION "${INSTALL_BINDIR}"                                       COMPONENT bin
-          PUBLIC_HEADER DESTINATION "${prefix}/${INSTALL_INCLUDE_DIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev
-        )
-elseif(UNIX AND NOT APPLE) #Linux
-  install(TARGETS ${LIBRARY_TARGET_NAME}
-        EXPORT  ${PROJECT_NAME}
-        LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT shlib
-        ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT lib
-        RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}"                            COMPONENT bin
-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev
-      )
-endif()
-
-message(STATUS "Created target ${LIBRARY_TARGET_NAME} for export ${PROJECT_NAME}.")
+message(
+  STATUS "Created target ${LIBRARY_TARGET_NAME} for export ${PROJECT_NAME}.")

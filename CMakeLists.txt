@@ -1,29 +1,47 @@
-cmake_minimum_required(VERSION 3.18)
-project(LsDynaToApdl LANGUAGES CXX C VERSION 0.0.0)
-set(NAME_PROJECT "LsDynaToApdl")
-set(CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
+cmake_minimum_required(VERSION 3.30...4.3 FATAL_ERROR)
 
-include(GNUInstallDirs)
+set(CMAKE_POLICY_DEFAULT_CMP0091 NEW)
+
+# -----------------------------------------------------------------------------
+# vcpkg
+# -----------------------------------------------------------------------------
+# Every third-party dependency comes from vcpkg, in manifest mode, driven by
+# vcpkg.json. The toolchain file has to be selected before project(), so pick up
+# the in-tree submodule unless the caller supplied a toolchain of their own —
+# which the presets, and any distribution packager, do.
+set(LSDYNATOAPDL_VCPKG_TOOLCHAIN
+    "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND EXISTS "${LSDYNATOAPDL_VCPKG_TOOLCHAIN}")
+    set(CMAKE_TOOLCHAIN_FILE
+        "${LSDYNATOAPDL_VCPKG_TOOLCHAIN}"
+        CACHE FILEPATH "vcpkg toolchain file")
+    message(STATUS "Using the vcpkg submodule: ${CMAKE_TOOLCHAIN_FILE}")
+elseif(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    message(
+        FATAL_ERROR
+            "No toolchain file and no vcpkg submodule.\n"
+            "  Run: git submodule update --init --recursive\n"
+            "  or configure with -DCMAKE_TOOLCHAIN_FILE=<your vcpkg>/scripts/buildsystems/vcpkg.cmake"
+    )
+endif()
+
+project(
+  LsDynaToApdl
+  LANGUAGES CXX
+  VERSION 0.0.0
+)
+
+# append additional scripts
+list(APPEND CMAKE_MODULE_PATH ${LsDynaToApdl_SOURCE_DIR}/cmake)
 
 # Control where libraries and executables are placed during the build.
+include(GNUInstallDirs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
-if(APPLE)
-  set(MACOSX_BUNDLE_NAME "LsDynaToAPDL")
-  set(prefix "${MACOSX_BUNDLE_NAME}.app/Contents")
-  set(INSTALL_INCLUDE_DIR "${prefix}/${INSTALL_INCLUDE_DIR}")
-  set(INSTALL_RUNTIME_DIR "${prefix}/MacOS")
-  set(INSTALL_LIBRARY_DIR "${prefix}/${INSTALL_LIBRARY_DIR}")
-  set(INSTALL_ARCHIVE_DIR "${prefix}/${INSTALL_ARCHIVE_DIR}")
-  set(INSTALL_DATA_DIR    "${prefix}/${INSTALL_DATA_DIR}")
-  set(INSTALL_DOC_DIR     "${prefix}/${INSTALL_DOC_DIR}")
-  set(INSTALL_CMAKE_DIR   "${prefix}/Resources")
-endif()
-
-
-# To build shared libraries in Windows, we set CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS to TRUE.
+# To build shared libraries in Windows, we set CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
+# to TRUE.
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Under MSVC, we set CMAKE_DEBUG_POSTFIX to "d" to add a trailing "d" to library
@@ -34,179 +52,199 @@ if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
-# Build position independent code.
-# Position Independent Code (PIC) is commonly used for shared libraries so that
-# the same shared library code can be loaded in each program address space in a
-# location where it will not overlap with any other uses of such memory.
-# In particular, this option avoids problems occurring when a process wants to
-# load more than one shared library at the same virtual address.
-# Since shared libraries cannot predict where other shared libraries could be
-# loaded, this is an unavoidable problem with the traditional shared library
-# concept.
-# Generating position-independent code is often the default behavior for most
-# modern compilers.
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static" OFF)
+option(BUILD_TESTING "Create tests using CMake" ON)
+option(BUILD_DOCUMENTATION "Build the documentation using Doxygen" OFF)
 
 # -----------------------------------------------------------------------------
 # load cmake module
 # -----------------------------------------------------------------------------
-include( GitVersion )
-include(cmake/googletest.cmake)
-set(${PROJECT_VERSION_MAJOR} "${VERSION_MAJOR}")
-set(${PROJECT_VERSION_MINOR} "${VERSION_MINOR}")
-set(${PROJECT_VERSION_PATCH} "${VERSION_PATCH}")
-
+include(GitVersion)
+set(CMAKE_PROJECT_VERSION
+    ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}
+    CACHE STATIC "" FORCE)
 
 # -----------------------------------------------------------------------------
-# Scripting
+# C/C++ standard
 # -----------------------------------------------------------------------------
-# include(cmake/sol2.cmake)
-# fetch_sol2(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/sol2)
-# find_package(Lua 5 REQUIRED)
-# include_directories(${LUA_INCLUDE_DIR})
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
+# No C++20 modules are used. Scanning for them adds a pass to every build and
+# feeds clang-tidy GCC-only flags (-fmodules-ts, -fdeps-format) that it rejects.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
-# Build test related commands
-option(BUILD_TESTING "Create tests using CMake" OFF)
+# -----------------------------------------------------------------------------
+# Third-party dependencies and architecture handling
+# -----------------------------------------------------------------------------
+include(ArchitectureFlags)
+include(CxxFeatures)
+
+# Resolved by vcpkg from vcpkg.json. Keep that manifest and MODULE.bazel in
+# step when a dependency is added or removed.
+set(GFLAGS_USE_TARGET_NAMESPACE ON)
+find_package(fmt CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(gflags CONFIG REQUIRED)
 if(BUILD_TESTING)
-  # -----------------------------------------------------------------------------
-  # Google test
-  # -----------------------------------------------------------------------------
-  fetch_googletest(${PROJECT_SOURCE_DIR}/cmake ${PROJECT_BINARY_DIR}/googletest)
-  
-  enable_testing()
-  add_definitions(-D QT_NO_DEBUG_OUTPUT)
-
-  # -----------------------------------------------------------------------------
-  # Code coverage
-  # -----------------------------------------------------------------------------
-  if(COVERAGE)
-  set(COVERAGE_CHECK "ON")
-  add_library(coverage INTERFACE)
-  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(
-      coverage
-      INTERFACE -O0 # no optimization
-                -g # generate debug info
-                -ftest-coverage -fprofile-arcs # sets all required flags
-    )
-    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-      target_link_options(coverage INTERFACE --coverage)
-    else()
-      target_link_libraries(coverage INTERFACE --coverage)
-    endif()
-  endif()
-  endif()
+    find_package(GTest CONFIG REQUIRED)
 endif()
 
+# Build test related commands
+if(BUILD_TESTING)
+    enable_testing()
+    include(GoogleTest)
+endif()
 
 # -----------------------------------------------------------------------------
 # check build type
 # -----------------------------------------------------------------------------
 # Enable RPATH support for installed binaries and libraries
 include(AddInstallRPATHSupport)
-add_install_rpath_support(BIN_DIRS "${CMAKE_INSTALL_FULL_BINDIR}"
-                          LIB_DIRS "${CMAKE_INSTALL_FULL_LIBDIR}"
-                          INSTALL_NAME_DIR "${CMAKE_INSTALL_FULL_LIBDIR}"
-                          USE_LINK_PATH)
+add_install_rpath_support(
+    BIN_DIRS            "${CMAKE_INSTALL_FULL_BINDIR}"
+    LIB_DIRS            "${CMAKE_INSTALL_FULL_LIBDIR}"
+    INSTALL_NAME_DIR    "${CMAKE_INSTALL_FULL_LIBDIR}"
+    USE_LINK_PATH
+)
 
-# Encourage user to specify a build type (e.g. Release, Debug, etc.), otherwise set it to Release.
+# Encourage user to specify a build type (e.g. Release, Debug, etc.), otherwise
+# set it to Release.
 if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
         message(STATUS "Setting build type to 'Release' as none was specified.")
         set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE "Release")
-        add_definitions(-D QT_NO_DEBUG_OUTPUT)
     endif()
 endif()
 
-
-# -----------------------------------------------------------------------------
-# C/C++ standard extensions
-# -----------------------------------------------------------------------------
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
-# Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-
-# -----------------------------------------------------------------------------
-# Library and Dependecies
-# -----------------------------------------------------------------------------
-# Find the Qt library
-if(APPLE AND EXISTS /usr/local/opt/qt5)
-  list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
-endif()
-
-find_package(Qt5 COMPONENTS Core Concurrent REQUIRED)
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt5 COMPONENTS Network REQUIRED)
-
-if(${Qt5_FOUND})
-  message(STATUS "Found Qt 5")
-else(${Qt5_FOUND})
-  message(FATAL_ERROR "Could not locate Qt.")
-endif(${Qt5_FOUND})
 
 # Find PThread Library
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
-
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral")
-
+# -----------------------------------------------------------------------------
+# Per-target settings: warnings, coverage, sanitizers
+# -----------------------------------------------------------------------------
+include(ProjectTarget)
+include(ClangTidy)
 
 # -----------------------------------------------------------------------------
 # Build Documentation
 # -----------------------------------------------------------------------------
-option(BUILD_DOC "Build documentation" OFF)
-if(BUILD_DOC)
-  find_package(Doxygen)
-  if(DOXYGEN_FOUND)
-    # set input and output files
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-    # request to configure the file
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    message(STATUS "Doxygen build started")
-    # note the option ALL which allows to build the docs together with the
-    # application
-    add_custom_target(
+if(BUILD_DOCUMENTATION)
+    find_package(Doxygen)
+    if(DOXYGEN_FOUND)
+        # set input and output files
+        set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
+        set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+        # request to configure the file
+        configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+        message(STATUS "Doxygen build started")
+        # note the option ALL which allows to build the docs together with the
+        # application
+        add_custom_target(
       doc_doxygen ALL
       COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
       COMMENT "Generating API documentation with Doxygen"
       VERBATIM)
-  else(DOXYGEN_FOUND)
-    message(STATUS "Doxygen need to be installed to generate the doxygen documentation")
-  endif(DOXYGEN_FOUND)
+    else()
+        message(
+      STATUS "Doxygen need to be installed to generate the doxygen documentation")
+    endif()
 endif()
 
 # -----------------------------------------------------------------------------
-# Local library and dependecies
+# Local library and dependencies
 # -----------------------------------------------------------------------------
 add_subdirectory(src)
 if(BUILD_TESTING)
     add_subdirectory(test)
+    lsdynatoapdl_add_coverage_report_target()
 endif()
 
+# -----------------------------------------------------------------------------
+# Installed package files
+# -----------------------------------------------------------------------------
+# A single target consumers can link against instead of picking modules by
+# hand. It also gives the generated config file the LsDynaToApdl::LsDynaToApdl
+# target its compatibility block expects — without it find_package() failed
+# with "get_property could not find TARGET LsDynaToApdl::LsDynaToApdl".
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(
+    ${PROJECT_NAME}
+    INTERFACE ${PROJECT_NAME}::apdl ${PROJECT_NAME}::capi
+              ${PROJECT_NAME}::common ${PROJECT_NAME}::logtools
+              ${PROJECT_NAME}::lsdyna)
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME})
 
 include(InstallBasicPackageFiles)
+# DEPENDENCIES becomes find_dependency() in the generated config. Without it a
+# consumer's find_package(LsDynaToApdl) fails on the imported fmt::fmt and
+# spdlog::spdlog targets the exported ones refer to.
 install_basic_package_files(${PROJECT_NAME}
-                            VERSION ${${PROJECT_NAME}_VERSION}
-                            COMPATIBILITY AnyNewerVersion
-                            VARS_PREFIX ${PROJECT_NAME}
-                            NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+    VERSION   ${CMAKE_PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    VARS_PREFIX   ${PROJECT_NAME}
+    DEPENDENCIES  "fmt"
+    PRIVATE_DEPENDENCIES "spdlog"
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+# -----------------------------------------------------------------------------
+# pkg-config
+# -----------------------------------------------------------------------------
+# For consumers that are not CMake projects — the C API is the whole point of
+# having one. A static build has to advertise every archive and the
+# LSDYNATOAPDL_STATIC_DEFINE macro, otherwise the export header decorates the
+# symbols with dllimport.
+set(LSDYNATOAPDL_PC_LIBS "-llsdynatoapdl_c")
+
+# Requires.private is left empty on purpose. fmt and spdlog reach this build
+# from vcpkg, the distro or FetchContent, and only some of those routes ship a
+# .pc file; naming them here makes pkg-config fail the *entire* query — even
+# --cflags — whenever fmt.pc is not on PKG_CONFIG_PATH. The private link line
+# carries the same information without that failure mode. A distribution
+# packager who knows the dependencies are pkg-config visible can override this.
+set(LSDYNATOAPDL_PC_REQUIRES_PRIVATE
+    ""
+    CACHE STRING "Value of Requires.private in the generated .pc file")
+
+if(BUILD_SHARED_LIBS)
+    set(LSDYNATOAPDL_PC_LIBS_PRIVATE "")
+    set(LSDYNATOAPDL_PC_CFLAGS
+        "-DLSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS}")
+else()
+    # A static consumer links the whole graph itself, and needs the export
+    # macros to resolve to nothing rather than to dllimport.
+    set(LSDYNATOAPDL_PC_LIBS_PRIVATE
+        "-llsdynatoapdl_lsdyna -llsdynatoapdl_apdl -llsdynatoapdl_common -lspdlog -lfmt"
+    )
+    set(LSDYNATOAPDL_PC_CFLAGS
+        "-DLSDYNATOAPDL_STATIC_DEFINE -DLSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS}"
+    )
+endif()
+
+# Walk back from <prefix>/<libdir>/pkgconfig to <prefix>; the depth varies
+# between lib, lib64 and lib/<triplet>, so compute it rather than assume it.
+file(RELATIVE_PATH LSDYNATOAPDL_PC_PREFIX_RELATIVE
+     "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig" "${CMAKE_INSTALL_PREFIX}")
+string(REGEX REPLACE "/$" "" LSDYNATOAPDL_PC_PREFIX_RELATIVE
+                     "${LSDYNATOAPDL_PC_PREFIX_RELATIVE}")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/lsdynatoapdl.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/lsdynatoapdl.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lsdynatoapdl.pc
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+        COMPONENT dev)
+
 # Add the uninstall target
 include(AddUninstallTarget)
 
@@ -224,7 +262,9 @@ message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
 message(STATUS "C++ flags (Debug): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "Coverage:\t\t${COVERAGE}")
-message(STATUS "Documentation:\t${BUILD_DOC}")
+message(STATUS "Sanitizers:\t${LSDYNATOAPDL_SANITIZER}")
+message(STATUS "Architecture:\t${LSDYNATOAPDL_ARCHITECTURE}")
+message(STATUS "Documentation:\t${BUILD_DOCUMENTATION}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)
 message(STATUS "possible options: Debug Release")

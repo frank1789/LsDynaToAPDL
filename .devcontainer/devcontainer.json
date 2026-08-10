@@ -1,0 +1,27 @@
+{
+    "name": "Ubuntu",
+    "build": {
+        "dockerfile": "Dockerfile.ubuntu",
+        "args": {
+            "USERNAME": "${localEnv:USER}"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "mutantdino.resourcemonitor",
+                "streetsidesoftware.code-spell-checker",
+                "EditorConfig.EditorConfig",
+                "mhutchie.git-graph",
+                "BazelBuild.vscode-bazel",
+                "vscode-icons-team.vscode-icons"
+            ]
+        }
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+    }
+}

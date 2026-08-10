@@ -1,0 +1,25 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "lsdyna",
+    srcs = [
+        "src/converter.cc",
+        "src/parser_element.cc",
+        "src/parser_node.cc",
+    ],
+    hdrs = [
+        "include/lsdyna/converter.hh",
+        "include/lsdyna/fields.hh",
+        "include/lsdyna/keywords.hh",
+        "include/lsdyna/parser.hh",
+        "include/lsdyna/parser_element.hh",
+        "include/lsdyna/parser_node.hh",
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/apdl",
+        "@fmt",
+        "@spdlog//:spdlog",
+    ],
+)

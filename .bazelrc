@@ -1,0 +1,52 @@
+common --enable_bzlmod
+common --enable_platform_specific_config
+common --incompatible_enable_cc_toolchain_resolution
+
+#build --repo_env=CC=clang
+#build --repo_env=CXX=clang++
+#build --repo_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
+
+# Linux - specific flags
+build:linux --copt=-Wall
+build:linux --copt=-Wextra
+build:linux --copt=-Wpedantic
+build:linux --copt=-march=native
+build:linux --copt=-mtune=native
+build:linux --cxxopt=-std=c++23
+
+build:linux --linkopt=-flto=thin
+build:linux --linkopt=-fuse-ld=gold
+build:linux --linkopt=-Wl,-O1
+build:linux --linkopt=-Wl,--as-needed
+
+# MacOS - specific flags
+build:macos --copt=-Wall
+build:macos --copt=-Wextra
+build:macos --copt=-Wpedantic
+build:macos --copt=-march=native
+build:macos --copt=-mtune=native
+build:macos --cxxopt=-std=c++23
+build:macos --cxxopt=-stdlib=libc++
+
+build:macos --features=oso_prefix_is_pwd # Fixes symbols when debugging on mac.
+
+# Windows - specific flags
+# MSVC has no /std:c++23 switch; /std:c++latest is the C++23 setting and is what
+# CMake selects for CMAKE_CXX_STANDARD 23 on MSVC.
+build:windows --cxxopt=/std:c++latest
+build:windows --cxxopt=/utf-8
+build:windows --cxxopt=/O2
+build:windows --cxxopt=/EHsc
+
+# Coverage builds
+coverage --config=coverage
+build:coverage --action_env=BAZEL_USE_LLVM_NATIVE_COVERAGE=1
+build:coverage --action_env=GCOV=llvm-profdata
+build:coverage --action_env=BAZEL_LLVM_COV=llvm-cov
+build:coverage --experimental_generate_llvm_lcov
+build:coverage --collect_code_coverage
+build:coverage --combined_report=lcov
+
+# Test configurations
+test --test_output=streamed
+test --test_summary=terse
