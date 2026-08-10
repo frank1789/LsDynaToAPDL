@@ -1,0 +1,8 @@
+# GoogleTest fixtures share state with their tests through protected members;
+# that is the framework's design, not an encapsulation slip. The TEST macros
+# also expand into one large function, so the cognitive-complexity metric
+# measures the macro rather than the test.
+InheritParentConfig: true
+Checks: >
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -readability-function-cognitive-complexity

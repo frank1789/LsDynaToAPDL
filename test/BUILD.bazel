@@ -13,6 +13,7 @@ cc_test(
     data = [":resources"],
     deps = [
         "//src/apdl",
+        "//src/capi",
         "//src/common",
         "//src/lsdyna",
         "@googletest//:gtest",

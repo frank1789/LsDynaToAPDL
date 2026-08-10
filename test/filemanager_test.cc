@@ -4,21 +4,28 @@
 
 #include "common/file_manager.hh"
 
+namespace {
+
+/// Directory holding the test fixtures.
+auto base_path() -> std::filesystem::path {
 #ifdef TEST_FILE_PATH
-const auto BasePath = std::filesystem::path{TEST_FILE_PATH};
+  return std::filesystem::path{TEST_FILE_PATH};
 #else
-const auto BasePath = std::filesystem::path{"test"};
+  return std::filesystem::path{"test"};
 #endif
+}
 
 class FileMangerFixtureTests : public ::testing::Test {
  protected:
   void SetUp() override {
-    filemanager.setInputFilename(BasePath / "example.k");
-    filemanager.setOutputFilename();
+    m_filemanager.set_input_filename(base_path() / "example.k");
+    m_filemanager.set_output_filename();
   }
 
-  FileManager filemanager;
+  FileManager m_filemanager;
 };
+
+}  // namespace
 
 // class FileManagerMultipleParametersTests
 //     : public ::testing::TestWithParam<std::tuple<
@@ -53,38 +60,29 @@ class FileMangerFixtureTests : public ::testing::Test {
 
 // TEST_P(FileManagerMultipleParametersTests, ChecksInputFiles) {
 //   auto [test_value, expected_name, expected_path, expected_size] =
-//   GetParam(); file_manager.setInputFilename(test_value);
-//   EXPECT_TRUE(FileManager::isValidFile(test_value));
-//   EXPECT_EQ(file_manager.getFilename(), expected_name);
-//   //EXPECT_EQ(file_manager.getCompleteInputFilename(), expected_path);
-//   EXPECT_EQ(file_manager.getFileSize(), expected_size);
+//   GetParam(); file_manager.set_input_filename(test_value);
+//   EXPECT_TRUE(FileManager::is_valid_file(test_value));
+//   EXPECT_EQ(file_manager.get_filename(), expected_name);
+//   //EXPECT_EQ(file_manager.get_complete_input_filename(), expected_path);
+//   EXPECT_EQ(file_manager.get_file_size(), expected_size);
 // }
 
 TEST_F(FileMangerFixtureTests, VerifyExistFileStaticMethod) {
   EXPECT_FALSE(
-      filemanager.isValidFile(std::filesystem::path("../bin/example2.k")));
+      m_filemanager.is_valid_file(std::filesystem::path("../bin/example2.k")));
 }
 
 TEST_F(FileMangerFixtureTests, VerifyExitFileDoesNotExist) {
-  EXPECT_EXIT(filemanager.setInputFilename("death.txt"),
+  EXPECT_EXIT(m_filemanager.set_input_filename("death.txt"),
               testing::ExitedWithCode(2), "");
 }
 
-// TEST(FileManager, VerifySetNewFilename) {
-//   auto file_manager = FileManager();
-//   file_manager.setInputFilename(kExampleFile);
-//   EXPECT_EQ(s_manager.getFilename(), "example.k");
-//   EXPECT_EQ(s_manager.getCompleteInputFilename(),
-//   std::filesystem::current_path() / "example.k");
-//   EXPECT_EQ(s_manager.getFilename(), QStringLiteral("example.k"));
-//   EXPECT_EQ(s_manager.getFilesize(), 5016);
-//   // EXPECT_EQ(s_manager.getCompleteFilename(), QString(kExampleFile));
-// }
-
 TEST_F(FileMangerFixtureTests, GetTheFileSize) {
-  EXPECT_EQ(filemanager.getFileSize(), 5016ull) << filemanager;
+  EXPECT_EQ(m_filemanager.get_file_size(), 5016ULL) << m_filemanager;
 }
 
 TEST_F(FileMangerFixtureTests, GetOutputFilename) {
-  EXPECT_EQ(filemanager.getOutputFilename(), std::string("example_converted.txt")) << filemanager;
+  EXPECT_EQ(m_filemanager.get_output_filename(),
+            std::string("example_converted.txt"))
+      << m_filemanager;
 }

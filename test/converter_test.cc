@@ -1,125 +1,272 @@
-#include "converter.h"
+/**
+ * @file converter_test.cc
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief Tests for the LS-DYNA deck converter and the *NODE parser.
+ * @version 0.1.0
+ * @date 2026-08-10
+ *
+ * @copyright Copyright (c) 2026
+ *
+ */
+
+#include "lsdyna/converter.hh"
 
 #include <fmt/core.h>
 #include <gtest/gtest.h>
 
+#include <clocale>
 #include <filesystem>
+#include <string>
+#include <string_view>
+#include <tuple>
+#include <vector>
 
+#include "apdl/model.hh"
+#include "lsdyna/fields.hh"
+#include "lsdyna/parser_node.hh"
+
+namespace {
+
+using lsdynatoapdl::apdl::Model;
+using lsdynatoapdl::lsdyna::ConverterSyntax;
+using lsdynatoapdl::lsdyna::KeywordDyna;
+using lsdynatoapdl::lsdyna::ParserNode;
+
+/// Directory holding the test fixtures.
+auto base_path() -> std::filesystem::path {
 #ifdef TEST_FILE_PATH
-const auto BasePath = std::filesystem::path{TEST_FILE_PATH};
+  return std::filesystem::path{TEST_FILE_PATH};
 #else
-const auto BasePath = std::filesystem::path{"test"};
+  return std::filesystem::path{"test"};
 #endif
+}
 
 class ConverterSyntaxFixtureTests : public ::testing::Test {
  protected:
-  syntax::lsdyna::ConverterSyntax converter;
+  ConverterSyntax m_converter;
 };
 
-TEST_F(ConverterSyntaxFixtureTests, CheckReadiness) {
-  const auto infile = (BasePath / "example.k").string();
-  EXPECT_FALSE(converter.isReady());
-  converter.set_input_file(infile);
-  EXPECT_TRUE(converter.isReady())
-      << fmt::format("the expect file is not valid: \"{}\"", infile);
+}  // namespace
+
+// ---------------------------------------------------------------------------
+// Field splitting
+// ---------------------------------------------------------------------------
+
+TEST(LsDynaFields, SplitsOnRunsOfWhitespace) {
+  const auto fields = lsdynatoapdl::lsdyna::split_fields(
+      " 1162886     -25.5204048      320.880554     -161.429962     0.0  0.0");
+
+  ASSERT_EQ(fields.size(), 6U);
+  EXPECT_EQ(fields[0], "1162886");
+  EXPECT_EQ(fields[3], "-161.429962");
 }
 
-// TEST_F(ConverterSyntaxFixtureTests, CheckNodeParsing) {
-//   // clang-format off
-//   const std::vector<std::string_view> text_lines {
-//     {"*NODE"},
-//     {"1230742     -240.277832      281.437195     -55.9616051     0.0 0.0"},
-//     {"1234655     -235.380905      275.594604     -55.9579811     0.0 0.0"},
-//     {"1234656     -230.403625      269.777252     -55.9557076     0.0 0.0"},
-//     {"1234657     -225.310608      264.010559     -55.9570045     0.0 0.0"},
-//     {"1234658     -220.083725      258.302856      -55.962204     0.0 0.0"},
-//     {"1234659     -214.703293      252.664764     -55.9718208     0.0 0.0"},
-//     {"1234660     -209.125793      247.141937     -55.9833794     0.0 0.0"},
-//     {"1234661     -203.310471       241.73819     -55.9988022     0.0 0.0"},
-//     {"1234662     -197.182404       236.49971     -56.0206261     0.0 0.0"},
-//     {"1234663     -190.721664      231.478012     -56.0332222     0.0 0.0"},
-//     {"1234664     -183.784882      226.769455     -56.0512581     0.0 0.0"},
-//     {"1234665     -176.271988      222.129166     -56.0907173     0.0 0.0"},
-//     {"1234666     -168.043533      217.748306     -56.1747513     0.0 0.0"},
-//     {"1234667     -159.033813      213.209732     -55.8686371     0.0 0.0"},
-//     {"1234668     -149.447205      209.166138     -54.1208305     0.0 0.0"},
-//     {"1234669     -139.990265      206.428635      -51.151062     0.0 0.0"},
-//     {"1234670     -130.918671      204.598434     -47.8448601     0.0 0.0"},
-//     {"1234671     -122.424721      203.881912     -44.4719505     0.0 0.0"},
-//     {"1234672     -114.244431      203.336288      -41.326828     0.0 0.0"},
-//     {"1234673     -106.203102      202.838013     -38.4156265     0.0 0.0"},
-//     {"1234674     -98.3009644      202.229294     -35.7500458     0.0 0.0"},
-//     {"1234675     -90.5665207      201.833069     -33.2940636     0.0 0.0"},
-//     {"1234676     -82.9492569      201.396851     -31.0835438     0.0 0.0"}
-//   };
-//   // clang-format on
-//   for (const auto &line : text_lines) {
-//     //converter.parseLine(line);
-//   }
-//   //auto nodes = converter.getNodes();
-//   //auto list_size = text_lines.size();
-//   //EXPECT_EQ(nodes.size(), list_size);
-// }
+TEST(LsDynaFields, AlsoAcceptsCommaSeparatedDecks) {
+  const auto fields = lsdynatoapdl::lsdyna::split_fields("1,2.0,3.0,4.0");
 
-// TEST(ConverterSyntax, Shell) {
-//   // clang-format off
-//   const std::vector<std::string_view> text_lines {
-//     {"*ELEMENT_SHELL_THICKNESS"},
-//     {"1282666       4 1248032 1248085 1248031 1248031\n \
-//       3.9554682       3.9554682       3.9554682       3.955468"},
-//     {"1269511       4 1234762 1234763 1235160 1235159\n \
-//       4.2463937       4.2463937       4.2463937       4.2463937"},
-//     {"1269512       4 1235160 1234763 1234764 1235161\n \
-//       4.2409911       4.2409911       4.2409911       4.2409911"},
-//     {"1269513       4 1235161 1234764 1234765 1235162\n \
-//       4.2597589       4.2597589       4.2597589       4.2597589"},
-//     {"1269514       4 1235162 1234765 1234766 1235163\n \
-//       4.2895956       4.2895956       4.2895956       4.2895956"},
-//     {"1269515       4 1235163 1234766 1234767 1235164\n \
-//       4.3085828       4.3085828       4.3085828       4.3085828"},
-//     {"1269516       4 1235164 1234767 1234768 1235165\n \
-//       4.3343463       4.3343463       4.3343463       4.3343463"},
-//     {"1269517       4 1235165 1234768 1234769 1235166\n \
-//       4.3755336       4.3755336       4.3755336       4.3755336"},
-//     {"1269518       4 1235166 1234769 1234770 1235167\n \
-//       4.4232969       4.4232969       4.4232969       4.4232969"},
-//     {"1269519       4 1235167 1234770 1234771 1235168\n \
-//       4.4810367       4.4810367       4.4810367       4.4810367"},
-//     {"1269520       4 1235168 1234771 1234772 1235169\n \
-//       4.5926056       4.5926056       4.5926056       4.5926056"},
-//     {"1269521       4 1235169 1234772 1234773 1235170\n \
-//       4.635829        4.635829        4.635829        4.635829 "},
-//     {"1269522       4 1235170 1234773 1234774 1235171\n \
-//       4.7214451       4.7214451       4.7214451       4.7214451"},
-//     {"1269523       4 1235171 1234774 1234775 1235172\n \
-//       4.8307734       4.8307734       4.8307734       4.8307734"},
-//     {"1269524       4 1235172 1234775 1234776 1235173\n \
-//       4.8929996       4.8929996       4.8929996       4.8929996"},
-//     {"1269525       4 1235173 1234776 1234777 1235174\n \
-//       4.9955544       4.9955544       4.9955544       4.9955544"},
-//     {"1269526       4 1235174 1234777 1234778 1235175\n \
-//       5.0506873       5.0506873       5.0506873       5.0506873"},
-//     {"1269527       4 1235175 1234778 1234779 1235176\n \
-//       5.0340815       5.0340815       5.0340815       5.0340815"},
-//     {"1269528       4 1235176 1234779 1234780 1235177\n \
-//       4.9517922       4.9517922       4.9517922       4.9517922"},
-//     {"1269529       4 1235177 1234780 1234781 1235178\n \
-//       4.7522588       4.7522588       4.7522588       4.7522588"},
-//     {"1269530       4 1235178 1234781 1234782 1235179\n \
-//       4.6475468       4.6475468       4.6475468       4.6475468"},
-//     {"1269531       4 1235179 1234782 1234783 1235180\n \
-//       4.5665641       4.5665641       4.5665641       4.5665641"},
-//     {"1269532       4 1235180 1234783 1234784 1235181\n \
-//       4.5115733       4.5115733       4.5115733       4.5115733"},
-//     {"1269533       4 1235181 1234784 1234785 1235182\n \
-//       4.4648633       4.4648633       4.4648633       4.4648633"},
-//   };
-//   // clang-format on
-//   // auto converter = syntax::lsdyna::ConverterSyntax();
-//   // for (const auto &line : text_lines) {
-//   //   converter.parseLine(line);
-//   // }
-//   // auto elems = converter.getElements();
-//   // auto list_size = text_lines.size();
-//   // EXPECT_EQ(elems.size(), list_size);
-// }
+  ASSERT_EQ(fields.size(), 4U);
+  EXPECT_EQ(fields[1], "2.0");
+}
+
+TEST(LsDynaFields, RejectsPartiallyNumericFields) {
+  EXPECT_FALSE(lsdynatoapdl::lsdyna::to_uint("12ab").has_value());
+  EXPECT_FALSE(lsdynatoapdl::lsdyna::to_double("1.0x").has_value());
+  EXPECT_EQ(lsdynatoapdl::lsdyna::to_uint("42").value_or(0), 42U);
+}
+
+// to_double has two implementations: std::from_chars where the standard
+// library provides it for doubles, and a strtod_l fallback for toolchains that
+// do not — Apple Clang below the macOS version that made it available. These
+// tests fix the behaviour both have to show, so the two cannot drift apart.
+TEST(LsDynaFields, ParsesTheNumbersFoundInDecks) {
+  using lsdynatoapdl::lsdyna::to_double;
+
+  // value_or keeps each line a single expression; a wrong parse shows up as a
+  // mismatch rather than as an exception from value().
+  EXPECT_DOUBLE_EQ(to_double("-25.5204048").value_or(0.0), -25.5204048);
+  EXPECT_DOUBLE_EQ(to_double("320.880554").value_or(0.0), 320.880554);
+  EXPECT_DOUBLE_EQ(to_double("0.0").value_or(1.0), 0.0);
+  EXPECT_DOUBLE_EQ(to_double("3.9788582").value_or(0.0), 3.9788582);
+  EXPECT_DOUBLE_EQ(to_double("1e3").value_or(0.0), 1000.0);
+  EXPECT_DOUBLE_EQ(to_double("-1.5E-3").value_or(0.0), -0.0015);
+  EXPECT_DOUBLE_EQ(to_double("5").value_or(0.0), 5.0);
+}
+
+TEST(LsDynaFields, AcceptsOnlyPlainDecimalNumbers) {
+  using lsdynatoapdl::lsdyna::to_double;
+
+  // The two parsers disagree left to themselves: from_chars in the general
+  // format accepts inf and nan, strtod accepts those plus a leading '+',
+  // leading whitespace and hex floats. None of them is a coordinate, so a
+  // shared guard refuses them before either parser runs.
+  EXPECT_FALSE(to_double(" 1.0").has_value());
+  EXPECT_FALSE(to_double("+1.0").has_value());
+  EXPECT_FALSE(to_double("0x1p3").has_value());
+  EXPECT_FALSE(to_double("inf").has_value());
+  EXPECT_FALSE(to_double("nan").has_value());
+  EXPECT_FALSE(to_double("").has_value());
+  EXPECT_FALSE(to_double("-").has_value());
+  EXPECT_FALSE(to_double("abc").has_value());
+  EXPECT_FALSE(to_double("1.0 ").has_value());
+}
+
+TEST(LsDynaFields, DoesNotDependOnTheGlobalLocale) {
+  // A European locale renders the decimal separator as a comma; a locale-aware
+  // parser would stop at the dot and silently truncate every coordinate.
+  const char* const previous = std::setlocale(LC_NUMERIC, nullptr);
+  const std::string saved = previous != nullptr ? previous : "C";
+
+  if (std::setlocale(LC_NUMERIC, "de_DE.UTF-8") == nullptr &&
+      std::setlocale(LC_NUMERIC, "it_IT.UTF-8") == nullptr) {  // NOLINT
+    GTEST_SKIP() << "no comma-decimal locale installed on this machine";
+  }
+
+  EXPECT_DOUBLE_EQ(lsdynatoapdl::lsdyna::to_double("-25.5204048").value_or(0.0),
+                   -25.5204048);
+
+  static_cast<void>(std::setlocale(LC_NUMERIC, saved.c_str()));
+}
+
+// ---------------------------------------------------------------------------
+// Node parsing
+// ---------------------------------------------------------------------------
+
+namespace {
+
+class ParserNodeParametersTests
+    : public ::testing::TestWithParam<
+          std::tuple<std::string_view, std::uint64_t, double, double, double>> {
+ protected:
+  Model m_model;
+  ParserNode m_parser{m_model};
+};
+
+}  // namespace
+
+TEST_P(ParserNodeParametersTests, ReadsOneNodeCard) {
+  const auto [line, id, x, y, z] = GetParam();
+
+  m_parser.parse(line);
+
+  ASSERT_EQ(m_model.nodes().size(), 1U);
+  const auto& node = m_model.nodes().front();
+  EXPECT_EQ(node.id(), id);
+  EXPECT_DOUBLE_EQ(node.x(), x);
+  EXPECT_DOUBLE_EQ(node.y(), y);
+  EXPECT_DOUBLE_EQ(node.z(), z);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    NodeCards, ParserNodeParametersTests,
+    ::testing::Values(
+        // clang-format off
+      std::tuple("1230742     -240.277832      281.437195     -55.9616051     0.0     0.0", 1230742U, -240.277832, 281.437195, -55.9616051),
+      std::tuple("1234655     -235.380905      275.594604     -55.9579811     0.0     0.0", 1234655U, -235.380905, 275.594604, -55.9579811),
+      std::tuple("1234662     -197.182404       236.49971     -56.0206261     0.0     0.0", 1234662U, -197.182404, 236.49971, -56.0206261),
+      std::tuple("1234670     -130.918671      204.598434     -47.8448601     0.0     0.0", 1234670U, -130.918671, 204.598434, -47.8448601),
+      std::tuple("1234676     -82.9492569      201.396851     -31.0835438     0.0     0.0", 1234676U, -82.9492569, 201.396851, -31.0835438)
+        // clang-format on
+        ));
+
+TEST(ParserNode, SkipsKeywordsAndComments) {
+  Model model;
+  ParserNode parser{model};
+
+  parser.parse("*NODE");
+  parser.parse("$ a comment");
+  parser.parse("");
+
+  EXPECT_TRUE(model.nodes().empty());
+  EXPECT_EQ(parser.rejected(), 0U) << "structural lines are not malformed data";
+}
+
+TEST(ParserNode, RejectsATruncatedCard) {
+  Model model;
+  ParserNode parser{model};
+
+  parser.parse("1230742     -240.277832");
+
+  EXPECT_TRUE(model.nodes().empty());
+  EXPECT_EQ(parser.rejected(), 1U);
+}
+
+// ---------------------------------------------------------------------------
+// Converter
+// ---------------------------------------------------------------------------
+
+TEST_F(ConverterSyntaxFixtureTests, CheckReadiness) {
+  const auto infile = base_path() / "example.k";
+  EXPECT_FALSE(m_converter.is_ready());
+  m_converter.set_input_file(infile);
+  EXPECT_TRUE(m_converter.is_ready())
+      << fmt::format("the expected file is not valid: \"{}\"", infile.string());
+}
+
+TEST_F(ConverterSyntaxFixtureTests, RejectsAMissingFile) {
+  m_converter.set_input_file(base_path() / "does_not_exist.k");
+  EXPECT_FALSE(m_converter.is_ready());
+  EXPECT_FALSE(m_converter.parse());
+}
+
+TEST_F(ConverterSyntaxFixtureTests, TracksTheActiveSection) {
+  m_converter.parse_line("*KEYWORD");
+  EXPECT_EQ(m_converter.current_section(), KeywordDyna::KeyWord);
+
+  m_converter.parse_line("*NODE");
+  EXPECT_EQ(m_converter.current_section(), KeywordDyna::Node);
+
+  m_converter.parse_line("*ELEMENT_SHELL_THICKNESS");
+  EXPECT_EQ(m_converter.current_section(), KeywordDyna::ElementShell);
+
+  m_converter.parse_line("*END");
+  EXPECT_EQ(m_converter.current_section(), KeywordDyna::End);
+}
+
+TEST_F(ConverterSyntaxFixtureTests, ReadsNodesAndShellsOfADeck) {
+  // clang-format off
+  const std::vector<std::string_view> deck{
+      {"$ HM_OUTPUT_DECK created by a pre-processor"},
+      {"*KEYWORD"},
+      {"*NODE"},
+      {" 1162886     -25.5204048      320.880554     -161.429962     0.0     0.0"},
+      {" 1188851     -19.4350681      316.302582     -161.181335     0.0     0.0"},
+      {" 1188852     -12.6946602      312.501923     -160.988754     0.0     0.0"},
+      {"*ELEMENT_SHELL_THICKNESS"},
+      {" 1229174       4 1189339 1162886 1189341 1189340"},
+      {"       3.9788582       3.9788582       3.9788582       3.9788582"},
+      {" 1229175       4 1189341 1162886 1188851 1189342"},
+      {"       3.9804893       3.9804893       3.9804893       3.9804893"},
+      {"*END"},
+  };
+  // clang-format on
+
+  for (const auto& line : deck) {
+    m_converter.parse_line(line);
+  }
+
+  EXPECT_EQ(m_converter.model().nodes().size(), 3U);
+  EXPECT_EQ(m_converter.model().shells().size(), 2U);
+  EXPECT_EQ(m_converter.model().nodes().front().id(), 1162886U);
+  EXPECT_EQ(m_converter.model().shells().front().id(), 1229174U);
+}
+
+TEST_F(ConverterSyntaxFixtureTests, DiscardsSectionsWithoutAnApdlCounterpart) {
+  // clang-format off
+  const std::vector<std::string_view> deck{
+      {"*NODE"},
+      {" 1162886     -25.5204048      320.880554     -161.429962     0.0     0.0"},
+      {"*INITIAL_STRESS_SHELL"},
+      {" 1229174       1       0       1       0"},
+      {"       1.0       2.0       3.0       4.0       5.0       6.0"},
+      {"*END"},
+  };
+  // clang-format on
+
+  for (const auto& line : deck) {
+    m_converter.parse_line(line);
+  }
+
+  // Without clearing the strategy on an unhandled keyword, the stress rows
+  // would keep feeding the node parser and invent nodes.
+  EXPECT_EQ(m_converter.model().nodes().size(), 1U);
+}

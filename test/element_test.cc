@@ -1,76 +1,115 @@
+/**
+ * @file element_test.cc
+ * @author Francesco Argentieri (francesco.argentieri89@gmail.com)
+ * @brief Tests for the *ELEMENT_SHELL_THICKNESS m_parser.
+ * @version 0.1.0
+ * @date 2026-08-10
+ *
+ * @copyright Copyright (c) 2026
+ *
+ */
+
 #include <gtest/gtest.h>
 
 #include <string_view>
 #include <vector>
 
-#include "common/element_shell_four_node.hh"
+#include "apdl/model.hh"
+#include "lsdyna/parser_element.hh"
 
-class ElementTests
-    : public ::testing::TestWithParam<std::vector<std::string_view>> {
+namespace {
+
+using lsdynatoapdl::apdl::Model;
+using lsdynatoapdl::lsdyna::ParserElement;
+
+/// A shell element is spread over two consecutive card lines.
+constexpr std::string_view kConnectivity{
+    "1282666       4 1248032 1248085 1248031 1248031"};
+constexpr std::string_view kThickness{
+    "       3.9554682       3.9554682       3.9554682       3.9554682"};
+
+class ParserElementTests : public ::testing::Test {
  protected:
-  void SetUp() override {
-    // code here will execute just before the test ensues
-  }
-
-  ElementShell181 shells;
+  Model m_model;
+  ParserElement m_parser{m_model};
 };
 
-TEST_P(ElementTests, ConstructElementShell181) {
-  for (const auto& val : GetParam()) {
-    shells.parse_element(val);
-  }
+}  // namespace
+
+TEST_F(ParserElementTests, ReadsAnElementFromItsTwoLines) {
+  m_parser.parse(kConnectivity);
+  EXPECT_TRUE(m_parser.awaiting_thickness());
+  EXPECT_EQ(m_model.shells().size(), 0U)
+      << "the element must not be committed before its thickness is known";
+
+  m_parser.parse(kThickness);
+  EXPECT_FALSE(m_parser.awaiting_thickness());
+  ASSERT_EQ(m_model.shells().size(), 1U);
+
+  const auto& shell = m_model.shells().front();
+  EXPECT_EQ(shell.id(), 1282666U);
+  EXPECT_EQ(shell.nodes(), (lsdynatoapdl::apdl::Shell181::NodeIds{
+                               1248032, 1248085, 1248031, 1248031}));
+  EXPECT_DOUBLE_EQ(shell.thickness(), 3.9554682);
+  EXPECT_TRUE(shell.is_degenerate()) << "last two nodes coincide";
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    ParseElementShellFromVector, ElementTests,
-    ::testing::Values(std::vector<std::string_view>{
-        {"*ELEMENT_SHELL_THICKNESS"},
-        {"1282666       4 1248032 1248085 1248031 1248031"},
-      {"3.9554682       3.9554682       3.9554682       3.955468"},
-        {"1269511       4 1234762 1234763 1235160 1235159"},
-      {"4.2463937       4.2463937       4.2463937       4.2463937"},
-        {"1269512       4 1235160 1234763 1234764 1235161"},
-      {"4.2409911       4.2409911       4.2409911       4.2409911"},
-        {"1269513       4 1235161 1234764 1234765 1235162"},
-      {"4.2597589       4.2597589       4.2597589       4.2597589"},
-        {"1269514       4 1235162 1234765 1234766 1235163"},
-      {"4.2895956       4.2895956       4.2895956       4.2895956"},
-        {"1269515       4 1235163 1234766 1234767 1235164"},
-      {"4.3085828       4.3085828       4.3085828       4.3085828"},
-        {"1269516       4 1235164 1234767 1234768 1235165"},
-      {"4.3343463       4.3343463       4.3343463       4.3343463"},
-        {"1269517       4 1235165 1234768 1234769 1235166"},
-      {"4.3755336       4.3755336       4.3755336       4.3755336"},
-        {"1269518       4 1235166 1234769 1234770 1235167"},
-      {"4.4232969       4.4232969       4.4232969       4.4232969"},
-        {"1269519       4 1235167 1234770 1234771 1235168"},
-      {"4.4810367       4.4810367       4.4810367       4.4810367"},
-        {"1269520       4 1235168 1234771 1234772 1235169"},
-      {"4.5926056       4.5926056       4.5926056       4.5926056"},
-        {"1269521       4 1235169 1234772 1234773 1235170"},
-      {"4.635829        4.635829        4.635829        4.635829 "},
-        {"1269522       4 1235170 1234773 1234774 1235171"},
-      {"4.7214451       4.7214451       4.7214451       4.7214451"},
-        {"1269523       4 1235171 1234774 1234775 1235172"},
-      {"4.8307734       4.8307734       4.8307734       4.8307734"},
-        {"1269524       4 1235172 1234775 1234776 1235173"},
-      {"4.8929996       4.8929996       4.8929996       4.8929996"},
-        {"1269525       4 1235173 1234776 1234777 1235174"},
-      {"4.9955544       4.9955544       4.9955544       4.9955544"},
-        {"1269526       4 1235174 1234777 1234778 1235175"},
-      {"5.0506873       5.0506873       5.0506873       5.0506873"},
-        {"1269527       4 1235175 1234778 1234779 1235176"},
-      {"5.0340815       5.0340815       5.0340815       5.0340815"},
-        {"1269528       4 1235176 1234779 1234780 1235177"},
-      {"4.9517922       4.9517922       4.9517922       4.9517922"},
-        {"1269529       4 1235177 1234780 1234781 1235178"},
-      {"4.7522588       4.7522588       4.7522588       4.7522588"},
-        {"1269530       4 1235178 1234781 1234782 1235179"},
-      {"4.6475468       4.6475468       4.6475468       4.6475468"},
-        {"1269531       4 1235179 1234782 1234783 1235180"},
-      {"4.5665641       4.5665641       4.5665641       4.5665641"},
-        {"1269532       4 1235180 1234783 1234784 1235181"},
-      {"4.5115733       4.5115733       4.5115733       4.5115733"},
-        {"1269533       4 1235181 1234784 1234785 1235182"},
-      {"4.4648633       4.4648633       4.4648633       4.4648633"},
-    }));
+TEST_F(ParserElementTests, IgnoresTheKeywordLine) {
+  m_parser.parse("*ELEMENT_SHELL_THICKNESS");
+  EXPECT_FALSE(m_parser.awaiting_thickness());
+  EXPECT_EQ(m_parser.accepted(), 0U);
+}
+
+TEST_F(ParserElementTests, ReadsAWholeSection) {
+  // clang-format off
+  const std::vector<std::string_view> lines{
+      {"*ELEMENT_SHELL_THICKNESS"},
+      {"1269511       4 1234762 1234763 1235160 1235159"},
+      {"       4.2463937       4.2463937       4.2463937       4.2463937"},
+      {"1269512       4 1235160 1234763 1234764 1235161"},
+      {"       4.2409911       4.2409911       4.2409911       4.2409911"},
+      {"1269513       4 1235161 1234764 1234765 1235162"},
+      {"       4.2597589       4.2597589       4.2597589       4.2597589"},
+  };
+  // clang-format on
+
+  for (const auto& line : lines) {
+    m_parser.parse(line);
+  }
+
+  EXPECT_EQ(m_parser.accepted(), 3U);
+  EXPECT_EQ(m_parser.rejected(), 0U);
+  ASSERT_EQ(m_model.shells().size(), 3U);
+  EXPECT_EQ(m_model.shells().back().id(), 1269513U);
+  // Three distinct thicknesses means three sections.
+  EXPECT_EQ(m_model.sections().size(), 3U);
+}
+
+TEST_F(ParserElementTests, AveragesTheFourNodalThicknesses) {
+  m_parser.parse("1 4 10 11 12 13");
+  m_parser.parse("1.0 2.0 3.0 4.0");
+
+  ASSERT_EQ(m_model.shells().size(), 1U);
+  EXPECT_DOUBLE_EQ(m_model.shells().front().thickness(), 2.5);
+}
+
+TEST_F(ParserElementTests, RejectsATruncatedConnectivityCard) {
+  m_parser.parse("1269511       4 1234762");
+
+  EXPECT_FALSE(m_parser.awaiting_thickness());
+  EXPECT_EQ(m_parser.rejected(), 1U);
+  EXPECT_TRUE(m_model.shells().empty());
+}
+
+TEST_F(ParserElementTests, StaysInSyncAfterABadThicknessCard) {
+  m_parser.parse("1 4 10 11 12 13");
+  m_parser.parse("not a number here at all");
+  // The bad element is dropped, but the next pair must still be read: leaving
+  // the state machine waiting would consume the following connectivity card.
+  m_parser.parse("2 4 20 21 22 23");
+  m_parser.parse("1.0 1.0 1.0 1.0");
+
+  EXPECT_EQ(m_parser.accepted(), 1U);
+  ASSERT_EQ(m_model.shells().size(), 1U);
+  EXPECT_EQ(m_model.shells().front().id(), 2U);
+}

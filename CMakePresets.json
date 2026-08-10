@@ -1,447 +1,1200 @@
 {
-    "version": 6,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 25,
-        "patch": 0
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 30,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "BUILD_TESTING": "ON"
+      }
     },
-    "configurePresets": [
-        {
-            "name": "ninja-default",
-            "hidden": true,
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": {
-                    "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
-                    "type": "FILEPATH"
-                },
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "VCPKG_TARGET_ARCHITECTURE": "x64",
-                "BUILD_TESTING": "ON"
-            },
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            }
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         },
-        {
-            "name": "ninja-windows-static",
-            "hidden": true,
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": {
-                    "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
-                    "type": "FILEPATH"
-                },
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "VCPKG_TARGET_ARCHITECTURE": "x64-windows-static",
-                "BUILD_TESTING": "ON",
-                "BUILD_SHARED_LIBS": "OFF"
-            },
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            }
-        },
-        {
-            "name": "xcode-base",
-            "hidden": true,
-            "generator": "Xcode",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "VCPKG_TARGET_ARCHITECTURE": "x64",
-                "VCPKG_TARGET_TRIPLET": "x64-osx",
-                "BUILD_TESTING": "ON"
-            },
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            }
-        },
-        {
-            "name": "xcode-dynamic",
-            "hidden": true,
-            "inherits": "xcode-base",
-            "cacheVariables": {
-                "VCPKG_CRT_LINKAGE": "dynamic",
-                "VCPKG_LIBRARY_LINKAGE": "dynamic",
-                "BUILD_SHARED": "ON"
-            }
-        },
-        {
-            "name": "xcode-static",
-            "hidden": true,
-            "inherits": "xcode-base",
-            "cacheVariables": {
-                "VCPKG_CRT_LINKAGE": "static",
-                "VCPKG_LIBRARY_LINKAGE": "static",
-                "BUILD_SHARED_LIBS": "OFF"
-            }
-        },
-        {
-            "name": "x64-windows-debug",
-            "inherits": "ninja-windows-static",
-            "displayName": "Windows x64 debug configuration",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            }
-        },
-        {
-            "name": "x64-windows-release-with-debug-info",
-            "inherits": "ninja-windows-static",
-            "displayName": "Windows x64 release with debug info configuration",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            }
-        },
-        {
-            "name": "x64-windows-release",
-            "inherits": "ninja-windows-static",
-            "displayName": "Windows release configuration",
-            "description": "This build is only available on Windows",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            }
-        },
-        {
-            "name": "ninja-macos-debug",
-            "inherits": "ninja-default",
-            "displayName": "MacOS ninja Debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "ninja-macos-release-with-debug-info",
-            "inherits": "ninja-default",
-            "displayName": "MacOS ninja Release with Debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "ninja-macos-release",
-            "inherits": "ninja-default",
-            "displayName": "MacOS ninja Release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-static-debug",
-            "inherits": "xcode-static",
-            "displayName": "Xcode Debug Static",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-static-release-with-debug-info",
-            "inherits": "xcode-static",
-            "displayName": "Xcode RelWithDebInfo Static",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-static-release",
-            "inherits": "xcode-static",
-            "displayName": "Xcode Release Static",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "BUILD_TESTING": "ON",
-                "VCPKG_TARGET_TRIPLET": "x64-osx"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-dynamic-debug",
-            "inherits": "xcode-dynamic",
-            "displayName": "Xcode Debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-dynamic-release-with-debug-info",
-            "inherits": "xcode-dynamic",
-            "displayName": "Xcode RelWithDebInfo",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "xcode-dynamic-release",
-            "inherits": "xcode-dynamic",
-            "displayName": "Xcode Release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
-        },
-        {
-            "name": "x64-linux-static-debug",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux Debug (static)",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "BUILD_SHARED": "OFF"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "x64-linux-static-release-with-debug-info",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux RelWithDebInfo (static)",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "BUILD_SHARED": "OFF"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "x64-linux-static-release",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux Release (static)",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "BUILD_SHARED": "OFF"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "x64-linux-debug",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux Debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "x64-linux-release-with-debug-info",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux RelWithDebInfo",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "x64-linux-release",
-            "inherits": "ninja-default",
-            "displayName": "x64 Linux Release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "xcode-lsdynatoapld-debug",
-            "displayName": "LsDynaToApdl Debug",
-            "configurePreset": "xcode-static-debug"
-        },
-        {
-            "name": "xcode-lsdynatoapld-release-with-debug-info",
-            "displayName": "LsDynaToApdl Release With Debug Info",
-            "configurePreset": "xcode-static-release-with-debug-info"
-        },
-        {
-            "name": "xcode-lsdynatoapld-release",
-            "displayName": "LsDynaToApdl Release",
-            "configurePreset": "xcode-static-release"
-        },
-        {
-            "name": "ninja-lsdynatoapld-debug",
-            "displayName": "LsDynaToApdl Debug",
-            "configurePreset": "ninja-macos-debug"
-        },
-        {
-            "name": "ninja-lsdynatoapld-release-with-debug-info",
-            "displayName": "LsDynaToApdl Release With Debug Info",
-            "configurePreset": "ninja-macos-release-with-debug-info"
-        },
-        {
-            "name": "ninja-lsdynatoapld-release",
-            "displayName": "LsDynaToApdl Release",
-            "configurePreset": "ninja-macos-release"
-        },
-        {
-            "name": "x64-windows-lsdynatoapld-debug-static",
-            "displayName": "LsDynaToApdl Debug (static)",
-            "configurePreset": "x64-windows-debug"
-        },
-        {
-            "name": "x64-windows-lsdynatoapld-release-with-debug-info",
-            "displayName": "LsDynaToApdl RelWithDebInfo (static)",
-            "configurePreset": "x64-windows-release-with-debug-info"
-        },
-        {
-            "name": "x64-windows-lsdynatoapld-release",
-            "displayName": "LsDynaToApdl Release (static)",
-            "configurePreset": "x64-windows-release"
-        },
-        {
-            "name": "x64-linux-static-lsdynatoapld-debug",
-            "displayName": "LsDynaToApdl Debug (static)",
-            "configurePreset": "x64-linux-static-debug"
-        },
-        {
-            "name": "x64-linux-static-lsdynatoapld-release-with-debug-info",
-            "displayName": "LsDynaToApdl RelWithDebInfo (static)",
-            "configurePreset": "x64-linux-static-release-with-debug-info"
-        },
-        {
-            "name": "x64-linux-static-lsdynatoapld-release",
-            "displayName": "LsDynaToApdl Release (static)",
-            "configurePreset": "x64-linux-static-release"
-        },
-        {
-            "name": "x64-linux-lsdynatoapld-debug",
-            "displayName": "LsDynaToApdl Debug",
-            "configurePreset": "x64-linux-debug"
-        },
-        {
-            "name": "x64-linux-lsdynatoapld-release-with-debug-info",
-            "displayName": "LsDynaToApdl RelWithDebInfo",
-            "configurePreset": "x64-linux-release-with-debug-info"
-        },
-        {
-            "name": "x64-linux-lsdynatoapld-release",
-            "displayName": "LsDynaToApdl Release",
-            "configurePreset": "x64-linux-release"
-        }
-    ],
-    "testPresets": [
-        {
-            "name": "default",
-            "hidden": true,
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": true,
-                "scheduleRandom": true
-            }
-        },
-        {
-            "name": "osx-test-release",
-            "displayName": "Test release",
-            "inherits": [
-                "default"
-            ],
-            "configurePreset": "ninja-macos-release"
-        },
-        {
-            "name": "x64-linux-test-release",
-            "displayName": "Test release",
-            "inherits": [
-                "default"
-            ],
-            "configurePreset": "x64-linux-release"
-        },
-        {
-            "name": "x64-windows-test-release",
-            "displayName": "Test release",
-            "inherits": [
-                "default"
-            ],
-            "configurePreset": "x64-windows-release"
-        }
-    ]
+        "VCPKG_MANIFEST_MODE": "ON"
+      }
+    },
+    {
+      "name": "x64-linux",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux",
+        "VCPKG_TARGET_ARCHITECTURE": "x64"
+      }
+    },
+    {
+      "name": "x64-macos",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-osx",
+        "VCPKG_TARGET_ARCHITECTURE": "x64",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64"
+      }
+    },
+    {
+      "name": "x64-windows",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+        "VCPKG_TARGET_ARCHITECTURE": "x64",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+      }
+    },
+    {
+      "name": "arm64-linux",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-linux",
+        "VCPKG_TARGET_ARCHITECTURE": "arm64"
+      }
+    },
+    {
+      "name": "arm64-macos",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx",
+        "VCPKG_TARGET_ARCHITECTURE": "arm64",
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "arm64-windows",
+      "hidden": true,
+      "inherits": "vcpkg",
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-windows-static",
+        "VCPKG_TARGET_ARCHITECTURE": "arm64",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+      }
+    },
+    {
+      "name": "cfg-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "cfg-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "cfg-relwithdebinfo",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "cc-gnu",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "cc-clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "cc-clang-cl",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+    {
+      "name": "x64-linux-debug",
+      "inherits": [
+        "x64-linux",
+        "cfg-debug"
+      ],
+      "displayName": "x64 Linux Debug (gnu)"
+    },
+    {
+      "name": "x64-linux-release",
+      "inherits": [
+        "x64-linux",
+        "cfg-release"
+      ],
+      "displayName": "x64 Linux Release (gnu)"
+    },
+    {
+      "name": "x64-linux-relwithdebinfo",
+      "inherits": [
+        "x64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Linux RelWithDebInfo (gnu)"
+    },
+    {
+      "name": "x64-linux-address",
+      "inherits": [
+        "x64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Linux address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "x64-linux-undefined",
+      "inherits": [
+        "x64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Linux undefined sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "undefined"
+      }
+    },
+    {
+      "name": "x64-linux-thread",
+      "inherits": [
+        "x64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Linux thread sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "thread"
+      }
+    },
+    {
+      "name": "x64-linux-coverage",
+      "inherits": [
+        "x64-linux",
+        "cfg-debug"
+      ],
+      "displayName": "x64 Linux coverage",
+      "cacheVariables": {
+        "COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "x64-macos-debug",
+      "inherits": [
+        "x64-macos",
+        "cfg-debug"
+      ],
+      "displayName": "x64 macOS Debug (apple-clang)"
+    },
+    {
+      "name": "x64-macos-release",
+      "inherits": [
+        "x64-macos",
+        "cfg-release"
+      ],
+      "displayName": "x64 macOS Release (apple-clang)"
+    },
+    {
+      "name": "x64-macos-relwithdebinfo",
+      "inherits": [
+        "x64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 macOS RelWithDebInfo (apple-clang)"
+    },
+    {
+      "name": "x64-macos-address",
+      "inherits": [
+        "x64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 macOS address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "x64-macos-undefined",
+      "inherits": [
+        "x64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 macOS undefined sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "undefined"
+      }
+    },
+    {
+      "name": "x64-macos-thread",
+      "inherits": [
+        "x64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 macOS thread sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "thread"
+      }
+    },
+    {
+      "name": "x64-macos-coverage",
+      "inherits": [
+        "x64-macos",
+        "cfg-debug"
+      ],
+      "displayName": "x64 macOS coverage",
+      "cacheVariables": {
+        "COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "x64-windows-debug",
+      "inherits": [
+        "x64-windows",
+        "cfg-debug"
+      ],
+      "displayName": "x64 Windows Debug (msvc)"
+    },
+    {
+      "name": "x64-windows-release",
+      "inherits": [
+        "x64-windows",
+        "cfg-release"
+      ],
+      "displayName": "x64 Windows Release (msvc)"
+    },
+    {
+      "name": "x64-windows-relwithdebinfo",
+      "inherits": [
+        "x64-windows",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Windows RelWithDebInfo (msvc)"
+    },
+    {
+      "name": "x64-windows-address",
+      "inherits": [
+        "x64-windows",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "x64 Windows address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "arm64-linux-debug",
+      "inherits": [
+        "arm64-linux",
+        "cfg-debug"
+      ],
+      "displayName": "arm64 Linux Debug (gnu)"
+    },
+    {
+      "name": "arm64-linux-release",
+      "inherits": [
+        "arm64-linux",
+        "cfg-release"
+      ],
+      "displayName": "arm64 Linux Release (gnu)"
+    },
+    {
+      "name": "arm64-linux-relwithdebinfo",
+      "inherits": [
+        "arm64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Linux RelWithDebInfo (gnu)"
+    },
+    {
+      "name": "arm64-linux-address",
+      "inherits": [
+        "arm64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Linux address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "arm64-linux-undefined",
+      "inherits": [
+        "arm64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Linux undefined sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "undefined"
+      }
+    },
+    {
+      "name": "arm64-linux-thread",
+      "inherits": [
+        "arm64-linux",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Linux thread sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "thread"
+      }
+    },
+    {
+      "name": "arm64-linux-coverage",
+      "inherits": [
+        "arm64-linux",
+        "cfg-debug"
+      ],
+      "displayName": "arm64 Linux coverage",
+      "cacheVariables": {
+        "COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "arm64-macos-debug",
+      "inherits": [
+        "arm64-macos",
+        "cfg-debug"
+      ],
+      "displayName": "arm64 macOS Debug (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-release",
+      "inherits": [
+        "arm64-macos",
+        "cfg-release"
+      ],
+      "displayName": "arm64 macOS Release (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-relwithdebinfo",
+      "inherits": [
+        "arm64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 macOS RelWithDebInfo (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-address",
+      "inherits": [
+        "arm64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 macOS address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "arm64-macos-undefined",
+      "inherits": [
+        "arm64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 macOS undefined sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "undefined"
+      }
+    },
+    {
+      "name": "arm64-macos-thread",
+      "inherits": [
+        "arm64-macos",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 macOS thread sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "thread"
+      }
+    },
+    {
+      "name": "arm64-macos-coverage",
+      "inherits": [
+        "arm64-macos",
+        "cfg-debug"
+      ],
+      "displayName": "arm64 macOS coverage",
+      "cacheVariables": {
+        "COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "arm64-windows-debug",
+      "inherits": [
+        "arm64-windows",
+        "cfg-debug"
+      ],
+      "displayName": "arm64 Windows Debug (msvc)"
+    },
+    {
+      "name": "arm64-windows-release",
+      "inherits": [
+        "arm64-windows",
+        "cfg-release"
+      ],
+      "displayName": "arm64 Windows Release (msvc)"
+    },
+    {
+      "name": "arm64-windows-relwithdebinfo",
+      "inherits": [
+        "arm64-windows",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Windows RelWithDebInfo (msvc)"
+    },
+    {
+      "name": "arm64-windows-address",
+      "inherits": [
+        "arm64-windows",
+        "cfg-relwithdebinfo"
+      ],
+      "displayName": "arm64 Windows address sanitizer",
+      "cacheVariables": {
+        "LSDYNATOAPDL_SANITIZER": "address"
+      }
+    },
+    {
+      "name": "x64-linux-clang-release",
+      "inherits": [
+        "x64-linux",
+        "cc-clang",
+        "cfg-release"
+      ],
+      "displayName": "x64 Linux Release (clang)"
+    },
+    {
+      "name": "x64-windows-clang-release",
+      "inherits": [
+        "x64-windows",
+        "cc-clang-cl",
+        "cfg-release"
+      ],
+      "displayName": "x64 Windows Release (clang-cl)"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64-linux-debug",
+      "configurePreset": "x64-linux-debug",
+      "displayName": "x64 Linux Debug (gnu)"
+    },
+    {
+      "name": "x64-linux-release",
+      "configurePreset": "x64-linux-release",
+      "displayName": "x64 Linux Release (gnu)"
+    },
+    {
+      "name": "x64-linux-relwithdebinfo",
+      "configurePreset": "x64-linux-relwithdebinfo",
+      "displayName": "x64 Linux RelWithDebInfo (gnu)"
+    },
+    {
+      "name": "x64-linux-address",
+      "configurePreset": "x64-linux-address",
+      "displayName": "x64 Linux address sanitizer"
+    },
+    {
+      "name": "x64-linux-undefined",
+      "configurePreset": "x64-linux-undefined",
+      "displayName": "x64 Linux undefined sanitizer"
+    },
+    {
+      "name": "x64-linux-thread",
+      "configurePreset": "x64-linux-thread",
+      "displayName": "x64 Linux thread sanitizer"
+    },
+    {
+      "name": "x64-linux-coverage",
+      "configurePreset": "x64-linux-coverage",
+      "displayName": "x64 Linux coverage"
+    },
+    {
+      "name": "x64-macos-debug",
+      "configurePreset": "x64-macos-debug",
+      "displayName": "x64 macOS Debug (apple-clang)"
+    },
+    {
+      "name": "x64-macos-release",
+      "configurePreset": "x64-macos-release",
+      "displayName": "x64 macOS Release (apple-clang)"
+    },
+    {
+      "name": "x64-macos-relwithdebinfo",
+      "configurePreset": "x64-macos-relwithdebinfo",
+      "displayName": "x64 macOS RelWithDebInfo (apple-clang)"
+    },
+    {
+      "name": "x64-macos-address",
+      "configurePreset": "x64-macos-address",
+      "displayName": "x64 macOS address sanitizer"
+    },
+    {
+      "name": "x64-macos-undefined",
+      "configurePreset": "x64-macos-undefined",
+      "displayName": "x64 macOS undefined sanitizer"
+    },
+    {
+      "name": "x64-macos-thread",
+      "configurePreset": "x64-macos-thread",
+      "displayName": "x64 macOS thread sanitizer"
+    },
+    {
+      "name": "x64-macos-coverage",
+      "configurePreset": "x64-macos-coverage",
+      "displayName": "x64 macOS coverage"
+    },
+    {
+      "name": "x64-windows-debug",
+      "configurePreset": "x64-windows-debug",
+      "displayName": "x64 Windows Debug (msvc)"
+    },
+    {
+      "name": "x64-windows-release",
+      "configurePreset": "x64-windows-release",
+      "displayName": "x64 Windows Release (msvc)"
+    },
+    {
+      "name": "x64-windows-relwithdebinfo",
+      "configurePreset": "x64-windows-relwithdebinfo",
+      "displayName": "x64 Windows RelWithDebInfo (msvc)"
+    },
+    {
+      "name": "x64-windows-address",
+      "configurePreset": "x64-windows-address",
+      "displayName": "x64 Windows address sanitizer"
+    },
+    {
+      "name": "arm64-linux-debug",
+      "configurePreset": "arm64-linux-debug",
+      "displayName": "arm64 Linux Debug (gnu)"
+    },
+    {
+      "name": "arm64-linux-release",
+      "configurePreset": "arm64-linux-release",
+      "displayName": "arm64 Linux Release (gnu)"
+    },
+    {
+      "name": "arm64-linux-relwithdebinfo",
+      "configurePreset": "arm64-linux-relwithdebinfo",
+      "displayName": "arm64 Linux RelWithDebInfo (gnu)"
+    },
+    {
+      "name": "arm64-linux-address",
+      "configurePreset": "arm64-linux-address",
+      "displayName": "arm64 Linux address sanitizer"
+    },
+    {
+      "name": "arm64-linux-undefined",
+      "configurePreset": "arm64-linux-undefined",
+      "displayName": "arm64 Linux undefined sanitizer"
+    },
+    {
+      "name": "arm64-linux-thread",
+      "configurePreset": "arm64-linux-thread",
+      "displayName": "arm64 Linux thread sanitizer"
+    },
+    {
+      "name": "arm64-linux-coverage",
+      "configurePreset": "arm64-linux-coverage",
+      "displayName": "arm64 Linux coverage"
+    },
+    {
+      "name": "arm64-macos-debug",
+      "configurePreset": "arm64-macos-debug",
+      "displayName": "arm64 macOS Debug (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-release",
+      "configurePreset": "arm64-macos-release",
+      "displayName": "arm64 macOS Release (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-relwithdebinfo",
+      "configurePreset": "arm64-macos-relwithdebinfo",
+      "displayName": "arm64 macOS RelWithDebInfo (apple-clang)"
+    },
+    {
+      "name": "arm64-macos-address",
+      "configurePreset": "arm64-macos-address",
+      "displayName": "arm64 macOS address sanitizer"
+    },
+    {
+      "name": "arm64-macos-undefined",
+      "configurePreset": "arm64-macos-undefined",
+      "displayName": "arm64 macOS undefined sanitizer"
+    },
+    {
+      "name": "arm64-macos-thread",
+      "configurePreset": "arm64-macos-thread",
+      "displayName": "arm64 macOS thread sanitizer"
+    },
+    {
+      "name": "arm64-macos-coverage",
+      "configurePreset": "arm64-macos-coverage",
+      "displayName": "arm64 macOS coverage"
+    },
+    {
+      "name": "arm64-windows-debug",
+      "configurePreset": "arm64-windows-debug",
+      "displayName": "arm64 Windows Debug (msvc)"
+    },
+    {
+      "name": "arm64-windows-release",
+      "configurePreset": "arm64-windows-release",
+      "displayName": "arm64 Windows Release (msvc)"
+    },
+    {
+      "name": "arm64-windows-relwithdebinfo",
+      "configurePreset": "arm64-windows-relwithdebinfo",
+      "displayName": "arm64 Windows RelWithDebInfo (msvc)"
+    },
+    {
+      "name": "arm64-windows-address",
+      "configurePreset": "arm64-windows-address",
+      "displayName": "arm64 Windows address sanitizer"
+    },
+    {
+      "name": "x64-linux-clang-release",
+      "configurePreset": "x64-linux-clang-release",
+      "displayName": "x64 Linux Release (clang)"
+    },
+    {
+      "name": "x64-windows-clang-release",
+      "configurePreset": "x64-windows-clang-release",
+      "displayName": "x64 Windows Release (clang-cl)"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "x64-linux-debug",
+      "configurePreset": "x64-linux-debug",
+      "displayName": "x64 Linux Debug (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-release",
+      "configurePreset": "x64-linux-release",
+      "displayName": "x64 Linux Release (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-relwithdebinfo",
+      "configurePreset": "x64-linux-relwithdebinfo",
+      "displayName": "x64 Linux RelWithDebInfo (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-address",
+      "configurePreset": "x64-linux-address",
+      "displayName": "x64 Linux address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-undefined",
+      "configurePreset": "x64-linux-undefined",
+      "displayName": "x64 Linux undefined sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-thread",
+      "configurePreset": "x64-linux-thread",
+      "displayName": "x64 Linux thread sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-coverage",
+      "configurePreset": "x64-linux-coverage",
+      "displayName": "x64 Linux coverage",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-debug",
+      "configurePreset": "x64-macos-debug",
+      "displayName": "x64 macOS Debug (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-release",
+      "configurePreset": "x64-macos-release",
+      "displayName": "x64 macOS Release (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-relwithdebinfo",
+      "configurePreset": "x64-macos-relwithdebinfo",
+      "displayName": "x64 macOS RelWithDebInfo (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-address",
+      "configurePreset": "x64-macos-address",
+      "displayName": "x64 macOS address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-undefined",
+      "configurePreset": "x64-macos-undefined",
+      "displayName": "x64 macOS undefined sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-thread",
+      "configurePreset": "x64-macos-thread",
+      "displayName": "x64 macOS thread sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-macos-coverage",
+      "configurePreset": "x64-macos-coverage",
+      "displayName": "x64 macOS coverage",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-windows-debug",
+      "configurePreset": "x64-windows-debug",
+      "displayName": "x64 Windows Debug (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-windows-release",
+      "configurePreset": "x64-windows-release",
+      "displayName": "x64 Windows Release (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-windows-relwithdebinfo",
+      "configurePreset": "x64-windows-relwithdebinfo",
+      "displayName": "x64 Windows RelWithDebInfo (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-windows-address",
+      "configurePreset": "x64-windows-address",
+      "displayName": "x64 Windows address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-debug",
+      "configurePreset": "arm64-linux-debug",
+      "displayName": "arm64 Linux Debug (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-release",
+      "configurePreset": "arm64-linux-release",
+      "displayName": "arm64 Linux Release (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-relwithdebinfo",
+      "configurePreset": "arm64-linux-relwithdebinfo",
+      "displayName": "arm64 Linux RelWithDebInfo (gnu)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-address",
+      "configurePreset": "arm64-linux-address",
+      "displayName": "arm64 Linux address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-undefined",
+      "configurePreset": "arm64-linux-undefined",
+      "displayName": "arm64 Linux undefined sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-thread",
+      "configurePreset": "arm64-linux-thread",
+      "displayName": "arm64 Linux thread sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-linux-coverage",
+      "configurePreset": "arm64-linux-coverage",
+      "displayName": "arm64 Linux coverage",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-debug",
+      "configurePreset": "arm64-macos-debug",
+      "displayName": "arm64 macOS Debug (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-release",
+      "configurePreset": "arm64-macos-release",
+      "displayName": "arm64 macOS Release (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-relwithdebinfo",
+      "configurePreset": "arm64-macos-relwithdebinfo",
+      "displayName": "arm64 macOS RelWithDebInfo (apple-clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-address",
+      "configurePreset": "arm64-macos-address",
+      "displayName": "arm64 macOS address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-undefined",
+      "configurePreset": "arm64-macos-undefined",
+      "displayName": "arm64 macOS undefined sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-thread",
+      "configurePreset": "arm64-macos-thread",
+      "displayName": "arm64 macOS thread sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-macos-coverage",
+      "configurePreset": "arm64-macos-coverage",
+      "displayName": "arm64 macOS coverage",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-windows-debug",
+      "configurePreset": "arm64-windows-debug",
+      "displayName": "arm64 Windows Debug (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-windows-release",
+      "configurePreset": "arm64-windows-release",
+      "displayName": "arm64 Windows Release (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-windows-relwithdebinfo",
+      "configurePreset": "arm64-windows-relwithdebinfo",
+      "displayName": "arm64 Windows RelWithDebInfo (msvc)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "arm64-windows-address",
+      "configurePreset": "arm64-windows-address",
+      "displayName": "arm64 Windows address sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-linux-clang-release",
+      "configurePreset": "x64-linux-clang-release",
+      "displayName": "x64 Linux Release (clang)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "x64-windows-clang-release",
+      "configurePreset": "x64-windows-clang-release",
+      "displayName": "x64 Windows Release (clang-cl)",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    }
+  ]
 }

@@ -1,0 +1,17 @@
+# Relocatable: the prefix is derived from where this file actually is, so a
+# package moved after installation — or installed with `cmake --install
+# --prefix` to somewhere other than the configured CMAKE_INSTALL_PREFIX — still
+# reports the right include and library directories.
+prefix=${pcfiledir}/@LSDYNATOAPDL_PC_PREFIX_RELATIVE@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: @PROJECT_NAME@
+Description: Convert LS-DYNA keyword decks into Ansys APDL input
+URL: https://github.com/frank1789/LsDynaToAPDL
+Version: @CMAKE_PROJECT_VERSION@
+Requires.private: @LSDYNATOAPDL_PC_REQUIRES_PRIVATE@
+Libs: -L${libdir} @LSDYNATOAPDL_PC_LIBS@
+Libs.private: @LSDYNATOAPDL_PC_LIBS_PRIVATE@
+Cflags: -I${includedir} @LSDYNATOAPDL_PC_CFLAGS@

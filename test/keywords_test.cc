@@ -1,13 +1,17 @@
-#include "keywords.h"
+#include "lsdyna/keywords.hh"
 
 #include <fmt/core.h>
 #include <gtest/gtest.h>
 
+namespace {
+
 class LsDynaKeywordMultipleParametersTests
     : public ::testing::TestWithParam<
-          std::tuple<std::string, syntax::lsdyna::KeywordDyna>> {
+          std::tuple<std::string, lsdynatoapdl::lsdyna::KeywordDyna>> {
  protected:
 };
+
+}  // namespace
 
 TEST_P(LsDynaKeywordMultipleParametersTests, ChecksStringValueFromEnum) {
   auto [expected, value] = GetParam();
@@ -18,15 +22,15 @@ TEST_P(LsDynaKeywordMultipleParametersTests, ChecksStringValueFromEnum) {
 INSTANTIATE_TEST_SUITE_P(
     KeywordsTests, LsDynaKeywordMultipleParametersTests,
     ::testing::Values(
-        std::make_tuple("$", syntax::lsdyna::KeywordDyna::Header),
-        std::make_tuple("KEYWORD", syntax::lsdyna::KeywordDyna::KeyWord),
-        std::make_tuple("NODE", syntax::lsdyna::KeywordDyna::Node),
+        std::make_tuple("$", lsdynatoapdl::lsdyna::KeywordDyna::Header),
+        std::make_tuple("KEYWORD", lsdynatoapdl::lsdyna::KeywordDyna::KeyWord),
+        std::make_tuple("NODE", lsdynatoapdl::lsdyna::KeywordDyna::Node),
         std::make_tuple("ELEMENTSHELL",
-                        syntax::lsdyna::KeywordDyna::ElementShell),
+                        lsdynatoapdl::lsdyna::KeywordDyna::ElementShell),
         std::make_tuple("ELEMENTSOLID",
-                        syntax::lsdyna::KeywordDyna::ElementSolid),
+                        lsdynatoapdl::lsdyna::KeywordDyna::ElementSolid),
         std::make_tuple("INITIALSTRAINSOLID",
-                        syntax::lsdyna::KeywordDyna::InitialStrainSolid),
+                        lsdynatoapdl::lsdyna::KeywordDyna::InitialStrainSolid),
         std::make_tuple("INITIALSTRESSSHELL",
-                        syntax::lsdyna::KeywordDyna::InitialStressShell),
-        std::make_tuple("END", syntax::lsdyna::KeywordDyna::End)));
+                        lsdynatoapdl::lsdyna::KeywordDyna::InitialStressShell),
+        std::make_tuple("END", lsdynatoapdl::lsdyna::KeywordDyna::End)));

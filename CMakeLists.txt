@@ -2,6 +2,29 @@ cmake_minimum_required(VERSION 3.30...4.3 FATAL_ERROR)
 
 set(CMAKE_POLICY_DEFAULT_CMP0091 NEW)
 
+# -----------------------------------------------------------------------------
+# vcpkg
+# -----------------------------------------------------------------------------
+# Every third-party dependency comes from vcpkg, in manifest mode, driven by
+# vcpkg.json. The toolchain file has to be selected before project(), so pick up
+# the in-tree submodule unless the caller supplied a toolchain of their own —
+# which the presets, and any distribution packager, do.
+set(LSDYNATOAPDL_VCPKG_TOOLCHAIN
+    "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND EXISTS "${LSDYNATOAPDL_VCPKG_TOOLCHAIN}")
+    set(CMAKE_TOOLCHAIN_FILE
+        "${LSDYNATOAPDL_VCPKG_TOOLCHAIN}"
+        CACHE FILEPATH "vcpkg toolchain file")
+    message(STATUS "Using the vcpkg submodule: ${CMAKE_TOOLCHAIN_FILE}")
+elseif(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    message(
+        FATAL_ERROR
+            "No toolchain file and no vcpkg submodule.\n"
+            "  Run: git submodule update --init --recursive\n"
+            "  or configure with -DCMAKE_TOOLCHAIN_FILE=<your vcpkg>/scripts/buildsystems/vcpkg.cmake"
+    )
+endif()
+
 project(
   LsDynaToApdl
   LANGUAGES CXX
@@ -34,7 +57,6 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static" OFF)
 option(BUILD_TESTING "Create tests using CMake" ON)
-option(COVERAGE "Build with code coverage enabled" OFF)
 option(BUILD_DOCUMENTATION "Build the documentation using Doxygen" OFF)
 
 # -----------------------------------------------------------------------------
@@ -45,31 +67,37 @@ set(CMAKE_PROJECT_VERSION
     ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}
     CACHE STATIC "" FORCE)
 
+# -----------------------------------------------------------------------------
+# C/C++ standard
+# -----------------------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# No C++20 modules are used. Scanning for them adds a pass to every build and
+# feeds clang-tidy GCC-only flags (-fmodules-ts, -fdeps-format) that it rejects.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
+# -----------------------------------------------------------------------------
+# Third-party dependencies and architecture handling
+# -----------------------------------------------------------------------------
+include(ArchitectureFlags)
+include(CxxFeatures)
+
+# Resolved by vcpkg from vcpkg.json. Keep that manifest and MODULE.bazel in
+# step when a dependency is added or removed.
+set(GFLAGS_USE_TARGET_NAMESPACE ON)
+find_package(fmt CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(gflags CONFIG REQUIRED)
+if(BUILD_TESTING)
+    find_package(GTest CONFIG REQUIRED)
+endif()
+
 # Build test related commands
 if(BUILD_TESTING)
     enable_testing()
-    find_package(GTest CONFIG REQUIRED)
     include(GoogleTest)
-
-    # ---------------------------------------------------------------------------
-    # Code coverage
-    # ---------------------------------------------------------------------------
-    if(COVERAGE)
-        add_library(coverage INTERFACE)
-        if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-            target_compile_options(
-        coverage
-        INTERFACE -O0 # no optimization
-                  -g # generate debug info
-                  -ftest-coverage -fprofile-arcs # sets all required flags
-      )
-            if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-                target_link_options(coverage INTERFACE --coverage)
-            else()
-                target_link_libraries(coverage INTERFACE --coverage)
-            endif()
-        endif()
-    endif()
 endif()
 
 # -----------------------------------------------------------------------------
@@ -93,13 +121,6 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     endif()
 endif()
 
-# -----------------------------------------------------------------------------
-# C/C++ standard extensions
-# -----------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -108,28 +129,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
 # -----------------------------------------------------------------------------
-# Additional libraries
+# Per-target settings: warnings, coverage, sanitizers
 # -----------------------------------------------------------------------------
-find_package(spdlog CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
-
-set(GFLAGS_USE_TARGET_NAMESPACE ON)
-find_package(gflags CONFIG REQUIRED)
-
-if(NOT WIN32)
-    set(CMAKE_CXX_FLAGS_DEBUG
-      "${CMAKE_CXX_FLAGS_DEBUG} -O0 -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral"
-  )
-    set(CMAKE_CXX_FLAGS_RELEASE
-      "-O3 -DNDEBUG -march=native -Wall -Wextra -Wunused -Wshadow -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Winvalid-pch -Wredundant-decls -Wmissing-format-attribute -Wformat-nonliteral"
-  )
-else()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /nologo /EHsc /Zi /W4 /utf-8 /arch:AVX2")
-    set(CMAKE_CXX_FLAGS_RELEASE "/nologo /EHsc /W4 /utf-8 /O2 /Ot /arch:AVX2")
-    if(MSVC)
-        add_compile_options($<$<CONFIG:>:/MT> $<$<CONFIG:Debug>:/MTd> $<$<CONFIG:Release>:/MT>)
-    endif()
-endif()
+include(ProjectTarget)
+include(ClangTidy)
 
 # -----------------------------------------------------------------------------
 # Build Documentation
@@ -163,15 +166,84 @@ endif()
 add_subdirectory(src)
 if(BUILD_TESTING)
     add_subdirectory(test)
+    lsdynatoapdl_add_coverage_report_target()
 endif()
 
+# -----------------------------------------------------------------------------
+# Installed package files
+# -----------------------------------------------------------------------------
+# A single target consumers can link against instead of picking modules by
+# hand. It also gives the generated config file the LsDynaToApdl::LsDynaToApdl
+# target its compatibility block expects — without it find_package() failed
+# with "get_property could not find TARGET LsDynaToApdl::LsDynaToApdl".
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(
+    ${PROJECT_NAME}
+    INTERFACE ${PROJECT_NAME}::apdl ${PROJECT_NAME}::capi
+              ${PROJECT_NAME}::common ${PROJECT_NAME}::logtools
+              ${PROJECT_NAME}::lsdyna)
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME})
+
 include(InstallBasicPackageFiles)
+# DEPENDENCIES becomes find_dependency() in the generated config. Without it a
+# consumer's find_package(LsDynaToApdl) fails on the imported fmt::fmt and
+# spdlog::spdlog targets the exported ones refer to.
 install_basic_package_files(${PROJECT_NAME}
-    VERSION   ${${PROJECT_NAME}_VERSION}
+    VERSION   ${CMAKE_PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
     VARS_PREFIX   ${PROJECT_NAME}
+    DEPENDENCIES  "fmt"
+    PRIVATE_DEPENDENCIES "spdlog"
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
+
+# -----------------------------------------------------------------------------
+# pkg-config
+# -----------------------------------------------------------------------------
+# For consumers that are not CMake projects — the C API is the whole point of
+# having one. A static build has to advertise every archive and the
+# LSDYNATOAPDL_STATIC_DEFINE macro, otherwise the export header decorates the
+# symbols with dllimport.
+set(LSDYNATOAPDL_PC_LIBS "-llsdynatoapdl_c")
+
+# Requires.private is left empty on purpose. fmt and spdlog reach this build
+# from vcpkg, the distro or FetchContent, and only some of those routes ship a
+# .pc file; naming them here makes pkg-config fail the *entire* query — even
+# --cflags — whenever fmt.pc is not on PKG_CONFIG_PATH. The private link line
+# carries the same information without that failure mode. A distribution
+# packager who knows the dependencies are pkg-config visible can override this.
+set(LSDYNATOAPDL_PC_REQUIRES_PRIVATE
+    ""
+    CACHE STRING "Value of Requires.private in the generated .pc file")
+
+if(BUILD_SHARED_LIBS)
+    set(LSDYNATOAPDL_PC_LIBS_PRIVATE "")
+    set(LSDYNATOAPDL_PC_CFLAGS
+        "-DLSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS}")
+else()
+    # A static consumer links the whole graph itself, and needs the export
+    # macros to resolve to nothing rather than to dllimport.
+    set(LSDYNATOAPDL_PC_LIBS_PRIVATE
+        "-llsdynatoapdl_lsdyna -llsdynatoapdl_apdl -llsdynatoapdl_common -lspdlog -lfmt"
+    )
+    set(LSDYNATOAPDL_PC_CFLAGS
+        "-DLSDYNATOAPDL_STATIC_DEFINE -DLSDYNATOAPDL_HAS_FLOAT_FROM_CHARS=${LSDYNATOAPDL_HAS_FLOAT_FROM_CHARS}"
+    )
+endif()
+
+# Walk back from <prefix>/<libdir>/pkgconfig to <prefix>; the depth varies
+# between lib, lib64 and lib/<triplet>, so compute it rather than assume it.
+file(RELATIVE_PATH LSDYNATOAPDL_PC_PREFIX_RELATIVE
+     "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig" "${CMAKE_INSTALL_PREFIX}")
+string(REGEX REPLACE "/$" "" LSDYNATOAPDL_PC_PREFIX_RELATIVE
+                     "${LSDYNATOAPDL_PC_PREFIX_RELATIVE}")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/lsdynatoapdl.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/lsdynatoapdl.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lsdynatoapdl.pc
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+        COMPONENT dev)
 
 # Add the uninstall target
 include(AddUninstallTarget)
@@ -190,6 +262,8 @@ message(STATUS "Compiler: ${CMAKE_COMPILER}\t${CMAKE_CXX_COMPILER}")
 message(STATUS "C++ flags (Debug): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "C++ flags (Release): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "Coverage:\t\t${COVERAGE}")
+message(STATUS "Sanitizers:\t${LSDYNATOAPDL_SANITIZER}")
+message(STATUS "Architecture:\t${LSDYNATOAPDL_ARCHITECTURE}")
 message(STATUS "Documentation:\t${BUILD_DOCUMENTATION}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS)
