@@ -393,6 +393,29 @@ pre-commit install --hook-type commit-msg
 Commits follow [Conventional Commits](https://www.conventionalcommits.org);
 `cz commit` writes a conforming message.
 
+### Releases
+
+Versioning is automatic, so the commit type decides the next version: `feat:`
+bumps the minor, `fix:`/`perf:`/`refactor:` the patch, and a `BREAKING CHANGE:`
+footer the major. Everything else (`docs:`, `chore:`, `style:`, `test:`, `ci:`,
+`build:`) ships without cutting a release.
+
+When those commits land on `master` and the build, sanitizer and portability
+jobs pass, the `release` job runs `cz bump`, which rewrites `CHANGELOG.md`, tags
+the commit, and publishes a GitHub release. Nothing records the version in a
+tracked file: `.cz.toml` and `cmake/GitVersion.cmake` both read it back from the
+tag with `git describe --tags`.
+
+Preview what the next push would release, without changing anything:
+
+```sh
+cz bump --dry-run
+```
+
+`CHANGELOG.md` is generated — never edit it by hand. Entries older than `v0.2.0`
+predate Conventional Commits and are kept, exactly as git-chglog emitted them,
+in [CHANGELOG-legacy.md](CHANGELOG-legacy.md).
+
 Style is enforced in two layers: `clang-format` for layout, and `clang-tidy`
 for everything layout cannot see — naming, modernisation and bug patterns. The
 tree is clang-tidy clean, so keep it that way:

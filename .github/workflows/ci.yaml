@@ -154,3 +154,78 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
       - run: bazel test //... -c opt --test_output=errors
+
+  # Semantic version and changelog, both derived from Conventional Commit
+  # subjects by commitizen. The tag it creates is the single source of truth:
+  # .cz.toml sets version_provider = "scm" and cmake/GitVersion.cmake reads the
+  # same `git describe --tags`, so nothing has to be edited to cut a release.
+  release:
+    name: release
+    # Gate on the jobs that prove the code actually works on every platform.
+    # Coverage only uploads a report, and Bazel is best-effort by policy
+    # (CLAUDE.md section 4), so neither should be able to block a release.
+    needs: [build, sanitizers, portability]
+    # Only master, and never in reaction to the bump commit this job itself
+    # pushes. Pushes made with GITHUB_TOKEN do not re-trigger workflows, so this
+    # guard is redundant today; it is what stops an infinite loop if the token
+    # is ever swapped for a PAT.
+    if: >-
+      github.event_name == 'push'
+      && github.ref == 'refs/heads/master'
+      && !startsWith(github.event.head_commit.message, 'bump:')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # commitizen resolves the current version through `git describe
+          # --tags`. The default shallow clone fetches no tags, which would make
+          # every run believe the project is still at 0.1.0.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Pinned to the same release as the commitizen hook in
+      # .pre-commit-config.yaml, so the rules that validate a message locally
+      # are the rules that compute the version here.
+      - run: pipx install commitizen==4.17.0
+
+      - name: Bump version and update changelog
+        id: bump
+        run: |
+          git config user.name 'Francesco Argentieri'
+          git config user.email 'francesco.argentieri89@gmail.com'
+          set +e
+          cz bump --yes --changelog
+          status=$?
+          set -e
+          # 21 is NO_COMMITS_TO_BUMP: a push carrying only docs/style/chore/test
+          # commits is a normal, non-releasable push, not a broken build.
+          if [ "$status" -eq 21 ]; then
+            echo 'Nothing eligible to release.'
+            echo 'released=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$status" -eq 0 ] || exit "$status"
+          echo 'released=true' >> "$GITHUB_OUTPUT"
+          echo "version=$(cz version --project)" >> "$GITHUB_OUTPUT"
+
+      - name: Push bump commit and tag
+        if: steps.bump.outputs.released == 'true'
+        run: git push --follow-tags origin HEAD:master
+
+      - name: Publish GitHub release
+        if: steps.bump.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # `cz changelog <rev>` refuses to run while changelog_incremental is
+          # enabled, so take the newest section straight out of the file that
+          # was just written.
+          awk '/^## /{n++} n==1' CHANGELOG.md > release-notes.md
+          gh release create "v${{ steps.bump.outputs.version }}" \
+            --title "v${{ steps.bump.outputs.version }}" \
+            --notes-file release-notes.md
