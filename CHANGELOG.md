@@ -8,7 +8,7 @@ Releases before `v0.2.0` predate this project's adoption of Conventional
 Commits, so commitizen cannot reconstruct them. They are kept verbatim, as
 git-chglog emitted them, in [CHANGELOG-legacy.md](CHANGELOG-legacy.md).
 
-## Unreleased
+## v0.2.0 (2026-08-11)
 
 ### Feat
 
