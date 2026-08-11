@@ -8,3 +8,11 @@ version_provider = "scm"
 major_version_zero = true
 update_changelog_on_bump = true
 changelog_file = "CHANGELOG.md"
+# Prepend only the new release instead of regenerating the whole file. The
+# hand-written preamble and the pointer to CHANGELOG-legacy.md are not
+# reproducible from commit subjects, and a full rewrite would drop them.
+changelog_incremental = true
+# Pre-0.2.0 history is not in Conventional Commit form; git-chglog also emitted
+# version headings (v0.2.0, v0.3.0, v0.4.1) that were never tagged. Keeping it
+# in CHANGELOG.md would make the incremental parser read v0.4.1 as the latest
+# release and emit nothing, so it lives in CHANGELOG-legacy.md instead.
