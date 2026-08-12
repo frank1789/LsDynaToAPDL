@@ -1,6 +1,11 @@
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "v$version"
+# A release tag records who cut it and when, and it is the only kind of tag
+# `git push --follow-tags` and a bare `git describe` will consider. commitizen
+# creates a lightweight tag unless this is set, which is how v0.2.0 was left
+# behind on the runner while its bump commit reached master.
+annotated_tag = true
 version_scheme = "semver"
 # Versions come from git tags, the same source cmake/GitVersion.cmake reads via
 # `git describe --tags`. Nothing hard-codes a version in a tracked file.
