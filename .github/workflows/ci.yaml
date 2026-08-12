@@ -193,6 +193,30 @@ jobs:
       # are the rules that compute the version here.
       - run: pipx install commitizen==4.17.0
 
+      # A release that pushed its bump commit but lost its tag leaves master
+      # unable to release again at all: changelog_incremental anchors on the
+      # newest heading in CHANGELOG.md, finds no tag to match it, and cz exits
+      # 16 on this and every later run. Recreate the tag before bumping so the
+      # branch heals itself instead of waiting for someone to notice.
+      - name: Restore a release tag left behind
+        run: |
+          git config user.name 'Francesco Argentieri'
+          git config user.email 'francesco.argentieri89@gmail.com'
+          # `## v0.2.0 (2026-08-11)` -> `v0.2.0`; plain awk, since the runner's
+          # /usr/bin/awk is mawk and has no gawk match() capture groups.
+          latest=$(awk '/^## v/ { print $2; exit }' CHANGELOG.md)
+          if [ -z "$latest" ] || git rev-parse -q --verify "refs/tags/$latest" >/dev/null; then
+            echo "Changelog and tags agree on ${latest:-no release}."
+            exit 0
+          fi
+          # Tag the bump commit that wrote the section, not HEAD: later commits
+          # may already sit on top, and a tag on those would date the release
+          # wrongly and hand `git describe` the wrong ancestor.
+          target=$(git log -1 --format=%H --grep="^bump: version .* ${latest#v}$")
+          echo "::warning::${latest} has no tag; restoring it on ${target:-HEAD}"
+          git tag -a "$latest" -m "$latest" "${target:-HEAD}"
+          git push origin "refs/tags/$latest"
+
       - name: Bump version and update changelog
         id: bump
         run: |
@@ -213,9 +237,17 @@ jobs:
           echo 'released=true' >> "$GITHUB_OUTPUT"
           echo "version=$(cz version --project)" >> "$GITHUB_OUTPUT"
 
+      # Name the tag explicitly rather than trusting --follow-tags, which skips
+      # lightweight tags and so pushed the bump commit alone; the version was
+      # then spent on master with no tag for `git describe` or `gh release` to
+      # find. --atomic keeps the pair honest: if the tag is rejected the branch
+      # update is rolled back with it, leaving the next run a clean retry.
       - name: Push bump commit and tag
         if: steps.bump.outputs.released == 'true'
-        run: git push --follow-tags origin HEAD:master
+        run: |
+          git push --atomic origin \
+            HEAD:refs/heads/master \
+            "refs/tags/v${{ steps.bump.outputs.version }}"
 
       - name: Publish GitHub release
         if: steps.bump.outputs.released == 'true'
