@@ -8,6 +8,12 @@ Releases before `v0.2.0` predate this project's adoption of Conventional
 Commits, so commitizen cannot reconstruct them. They are kept verbatim, as
 git-chglog emitted them, in [CHANGELOG-legacy.md](CHANGELOG-legacy.md).
 
+## v0.2.1 (2026-08-12)
+
+### Fix
+
+- **ci**: push the tag created by cz bump
+
 ## v0.2.0 (2026-08-11)
 
 ### Feat
